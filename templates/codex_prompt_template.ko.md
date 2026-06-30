@@ -10,7 +10,7 @@
 
 Requirement를 표현하는 규칙, 계약, 경계, 인수 기준을 적으세요.
 
-## Tests
+## Tests / Checks
 
 Spec을 보호해야 하는 tests 또는 checks를 적으세요.
 
@@ -28,5 +28,5 @@ Scope 밖에 있어야 하는 adjacent work를 적으세요.
 - 마지막에 final trace를 요약하세요.
 
 ```text
-Requirement -> Spec -> Tests -> Implementation
+Requirement -> Spec -> Tests/Checks -> Implementation
 ```

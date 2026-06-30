@@ -57,7 +57,7 @@ Examples:
 At the end of the task, the agent should summarize:
 
 ```text
-Requirement -> Spec -> Tests -> Implementation
+Requirement -> Spec -> Tests/Checks -> Implementation
 ```
 
 That final trace helps reviewers decide whether the work stayed inside the loop.

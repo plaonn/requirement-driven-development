@@ -10,7 +10,7 @@ State the stable requirement this task must satisfy.
 
 List the rules, contracts, boundaries, and acceptance criteria that express the requirement.
 
-## Tests
+## Tests / Checks
 
 List the tests or checks that should protect the spec.
 
@@ -28,5 +28,5 @@ List adjacent work that must stay out of scope.
 - Summarize the final trace:
 
 ```text
-Requirement -> Spec -> Tests -> Implementation
+Requirement -> Spec -> Tests/Checks -> Implementation
 ```

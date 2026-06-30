@@ -55,7 +55,7 @@ Agent는 implementation 중 adjacent work가 보여도 임의로 scope를 확장
 작업 끝에 agent는 다음 final trace를 요약해야 합니다.
 
 ```text
-Requirement -> Spec -> Tests -> Implementation
+Requirement -> Spec -> Tests/Checks -> Implementation
 ```
 
 PR이 없는 workflow에서는 이 final trace가 task 또는 change set의 review surface 역할도 할 수 있습니다. 자주 읽을 수 있을 만큼 compact해야 하지만, agent가 requirement를 바꿨는지, spec을 refine했는지, 다른 loop로 넘길 follow-up을 발견했는지는 드러나야 합니다.
