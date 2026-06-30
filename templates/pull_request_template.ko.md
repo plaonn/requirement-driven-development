@@ -4,7 +4,7 @@
 
 # Spec
 
-그 requirement를 표현하는 rules, boundaries, API contracts, acceptance criteria는 무엇입니까?
+그 requirement를 표현하는 규칙, 경계, API 계약, 인수 기준은 무엇입니까?
 
 # Tests
 
@@ -18,10 +18,10 @@ Spec을 보호하는 tests 또는 checks는 무엇입니까?
 
 의도적으로 scope 밖에 둔 것은 무엇입니까?
 
-# Requirement changes discovered
+# 발견된 requirement 변경
 
 구현이나 review 중 원래 requirement 변경 필요가 드러났습니까?
 
-# Review focus
+# 리뷰 초점
 
 Reviewer가 특히 봐야 할 것은 무엇입니까?

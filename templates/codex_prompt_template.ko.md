@@ -1,6 +1,6 @@
-# RDD Coding Prompt Template
+# RDD 코딩 프롬프트 템플릿
 
-이 task를 requirement-driven loop로 수행하세요.
+이 task를 요구사항 주도 루프로 수행하세요.
 
 ## Requirement
 
@@ -8,7 +8,7 @@
 
 ## Spec
 
-Requirement를 표현하는 rules, contracts, boundaries, acceptance criteria를 적으세요.
+Requirement를 표현하는 규칙, 계약, 경계, 인수 기준을 적으세요.
 
 ## Tests
 
@@ -18,7 +18,7 @@ Spec을 보호해야 하는 tests 또는 checks를 적으세요.
 
 Scope 밖에 있어야 하는 adjacent work를 적으세요.
 
-## Instructions
+## 지시사항
 
 - 이 loop에서는 requirement를 안정적으로 유지하세요.
 - 같은 requirement를 계속 표현하는 경우에만 spec과 test를 refine하세요.
