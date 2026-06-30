@@ -59,6 +59,35 @@ The parser should reject malformed input with actionable errors.
 This refactoring should isolate receipt formatting without changing pricing behavior.
 ```
 
+#### Loop requirements and durable requirements
+
+The requirement that defines a development loop is local to that loop, but it does not have to disappear after the loop ends.
+
+Some requirements are only task context. Others become durable product or system requirements that should keep guiding future design changes. When a requirement is meant to stay useful beyond one loop, it should preserve enough context to explain why the constraint exists.
+
+For long-lived requirements, useful fields include:
+
+```text
+Requirement:
+  The user, product, business, or technical need that should remain true.
+
+Rationale:
+  Why this need matters.
+
+Assumptions:
+  Conditions that make the requirement valid.
+
+Derived specs:
+  Current rules or contracts chosen to satisfy the requirement.
+
+Revisit when:
+  Conditions under which the requirement should be re-evaluated.
+```
+
+The goal is not to turn requirements into long essays. The goal is to keep enough intent that future maintainers can tell which specs protect active requirements and which specs are implementation choices that may change.
+
+A durable requirement set should be curated, not merely accumulated. If a new requirement conflicts with an existing one, the conflict should be resolved explicitly by superseding, narrowing, rejecting, or re-scoping one of them.
+
 ### Spec
 
 The spec translates the requirement into rules, contracts, boundaries, and acceptance criteria.

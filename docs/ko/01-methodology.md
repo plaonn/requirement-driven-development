@@ -58,6 +58,35 @@ Requirement는 작업이 존재하는 이유를 설명합니다.
 
 좋은 requirement가 항상 길 필요는 없지만, 성공과 관련 없는 변경을 구분할 수 있을 만큼은 명확해야 합니다.
 
+#### 루프 requirement와 지속 requirement
+
+개발 루프를 정의하는 requirement는 그 루프의 경계이지만, 루프가 끝났다고 반드시 사라져야 하는 것은 아닙니다.
+
+어떤 requirement는 단일 task context로 끝납니다. 반면 어떤 requirement는 이후 설계 변경을 계속 이끄는 제품 또는 시스템 requirement로 남아야 합니다. 루프 밖에서도 유효하게 남길 requirement라면, 그 제약이 왜 존재하는지 판단할 수 있을 만큼의 맥락을 보존해야 합니다.
+
+오래 살아야 하는 requirement에는 다음 필드가 유용합니다.
+
+```text
+Requirement:
+  계속 참이어야 하는 사용자, 제품, 비즈니스, 기술적 필요
+
+Rationale:
+  그 필요가 중요한 이유
+
+Assumptions:
+  requirement가 유효한 조건
+
+Derived specs:
+  requirement를 만족하기 위해 현재 선택한 규칙 또는 계약
+
+Revisit when:
+  requirement를 다시 검토해야 하는 조건
+```
+
+목표는 requirement를 긴 설명문으로 만드는 것이 아닙니다. 미래의 maintainer가 어떤 spec은 active requirement를 보호하기 때문에 조심해야 하고, 어떤 spec은 구현 선택이라 바꿀 수 있는지 판단할 수 있을 만큼 intent를 남기는 것입니다.
+
+지속 requirement set은 단순 누적물이 아니라 정리된 현재 truth여야 합니다. 새 requirement가 기존 requirement와 충돌하면 둘을 조용히 공존시키지 말고 supersede, narrow, reject, re-scope 같은 결정을 명시해야 합니다.
+
 ### Spec
 
 Spec은 requirement를 규칙, 계약, 경계, 인수 기준으로 옮깁니다.

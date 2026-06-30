@@ -61,3 +61,5 @@ Requirement -> Spec -> Tests -> Implementation
 ```
 
 That final trace helps reviewers decide whether the work stayed inside the loop.
+
+In a workflow without pull requests, this final trace can also serve as the review surface for the task or change set. It should be compact enough to read often, but explicit enough to show whether the agent changed the requirement, refined the spec, or found follow-up work that belongs to another loop.

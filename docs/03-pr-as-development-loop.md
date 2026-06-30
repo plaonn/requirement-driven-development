@@ -36,6 +36,40 @@ Requirement changes discovered:
   Did implementation or review show that the original requirement needs to change?
 ```
 
+## When there is no PR
+
+RDD does not require a pull request. A solo project, local-only repository, or agent-driven workflow can use the same loop at task, change-set, or small iteration scale:
+
+```text
+Requirement -> Spec -> Checks -> Implementation -> Self-review -> Record
+```
+
+In that workflow, the PR description is replaced by another review surface, such as a task note, agent final trace, commit message body, or local change log. A loop may produce one commit, several commits, or a final squashed commit. The important point is that the boundary decision remains visible before the change is treated as complete.
+
+A useful no-PR loop trace is:
+
+```text
+Requirement:
+  What need does this loop satisfy?
+
+Spec:
+  What rules or boundaries did this loop preserve or introduce?
+
+Checks:
+  What tests, builds, manual checks, or document reviews were performed?
+
+Implementation:
+  What changed?
+
+Non-goals:
+  What related work was intentionally left out?
+
+Follow-ups:
+  What discoveries belong to later loops?
+```
+
+The trace does not need to be long every time, and it does not have to live in every commit. Small obvious changes can stay lightweight. The trace becomes important when the requirement, boundary, or future design implication would otherwise be hard to reconstruct.
+
 ## Recommended PR structure
 
 Use this structure when a PR is large enough that reviewers need explicit context:

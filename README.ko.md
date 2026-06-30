@@ -60,6 +60,8 @@ RDD는 pull request 규모에서 특히 유용합니다.
 
 PR은 단순한 코드 변경 묶음이 아니라 작은 요구사항 주도 루프로 봐야 합니다.
 
+Pull request를 사용하지 않는 프로젝트에서는 같은 모델을 task 또는 change set 규모에 적용할 수 있습니다. 이때 review surface는 task note, commit message body, agent final trace 같은 가벼운 기록이 될 수 있으며, 핵심은 requirement boundary가 보이게 남는 것입니다.
+
 좋은 PR은 다음 관계를 드러냅니다.
 
 ```text

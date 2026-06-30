@@ -36,6 +36,40 @@ Non-goals:
   구현이나 리뷰 중 원래 requirement 변경 필요가 드러났는가?
 ```
 
+## PR이 없을 때
+
+RDD는 pull request를 반드시 요구하지 않습니다. 개인 프로젝트, local-only repository, agent-driven workflow에서는 같은 구조를 task, change set, 작은 iteration 규모에 적용할 수 있습니다.
+
+```text
+Requirement -> Spec -> Checks -> Implementation -> Self-review -> Record
+```
+
+이 흐름에서는 PR 설명을 task note, agent final trace, commit message body, local change log 같은 다른 review surface가 대신합니다. 하나의 loop는 commit 하나, 여러 commit, 또는 마지막 squash commit으로 남을 수 있습니다. 핵심은 변경을 완료된 것으로 취급하기 전에 loop boundary 결정이 보이게 남는 것입니다.
+
+PR 없는 loop에서 유용한 trace는 다음과 같습니다.
+
+```text
+Requirement:
+  이 loop가 만족하는 필요
+
+Spec:
+  이 loop가 보존하거나 도입한 규칙과 경계
+
+Checks:
+  수행한 tests, build, manual check, 문서 review
+
+Implementation:
+  바뀐 것
+
+Non-goals:
+  의도적으로 제외한 관련 작업
+
+Follow-ups:
+  이후 loop로 넘길 발견
+```
+
+Trace가 항상 길 필요는 없고, 모든 commit에 들어갈 필요도 없습니다. 작고 명확한 변경은 가볍게 유지할 수 있습니다. 다만 requirement, boundary, 미래 설계 영향이 나중에 재구성되기 어려운 경우에는 trace를 남기는 편이 좋습니다.
+
 ## Scope creep 감지
 
 Scope creep은 requirement와 연결되지 않은 유용해 보이는 작업으로 나타나는 경우가 많습니다.

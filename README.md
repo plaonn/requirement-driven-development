@@ -67,6 +67,8 @@ RDD is especially useful at pull request scale.
 
 A PR should not be treated as just a bundle of code changes. It should be treated as a small requirement-driven loop.
 
+When a project does not use pull requests, the same model can be applied at task or change-set scale. The review surface may be a task note, commit message body, agent final trace, or another lightweight record, as long as the requirement boundary remains visible.
+
 A good PR should make these relationships visible:
 
 ```text
