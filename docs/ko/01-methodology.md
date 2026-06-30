@@ -1,0 +1,94 @@
+# RDD 방법론
+
+요구사항 주도 개발(RDD)은 작은 개발 루프를 그 루프를 이끄는 requirement와 정렬된 상태로 유지하기 위한 가벼운 방법론입니다.
+
+RDD의 기본 주장은 단순합니다.
+
+```text
+개발 루프는 requirement, spec, test, implementation, review가 서로 추적 가능할 때 건강하다.
+```
+
+## 용어 원칙
+
+이 문서는 한국어 독자를 위한 companion 문서이지만, software development에서 널리 쓰이는 영어 용어는 일부 유지합니다.
+
+- requirement: 요구사항
+- spec: 명세 또는 규칙
+- test: 테스트 또는 실행 가능한 검사
+- implementation: 구현
+- review: 리뷰
+- loop boundary: 루프 경계
+
+## 개발 루프
+
+개발 루프는 pull request, task, ticket, story, bug fix, 작은 agile iteration일 수 있습니다.
+
+RDD는 의도적으로 작은 루프를 대상으로 합니다. product discovery, roadmap planning, Scrum, Kanban, XP, TDD를 대체하지 않습니다. 그런 실천 위에 일상 개발 작업을 위한 traceability model을 제공합니다.
+
+## 루프 경계
+
+RDD에서 모든 루프에는 안정적인 requirement가 필요합니다.
+
+그 requirement가 루프의 경계를 정의합니다.
+
+```text
+Inside the loop:
+  spec refinement
+  example 추가
+  test 추가
+  implementation 단순화
+  acceptance criteria 명확화
+
+Outside the loop:
+  underlying requirement 변경
+  다른 사용자 필요로 goal 확장
+  관련 없는 fix 혼합
+  기회주의적 behavior change 추가
+```
+
+Requirement는 틀릴 수 있고, 불완전할 수 있고, 학습 이후 바뀔 수 있습니다.
+
+RDD는 그 가능성을 부정하지 않습니다. 다만 requirement가 바뀌면 루프 경계도 바뀐 것이므로, 그 변경을 명시해야 한다고 봅니다.
+
+## 각 계층의 역할
+
+### Requirement
+
+Requirement는 작업이 존재하는 이유를 설명합니다.
+
+좋은 requirement가 항상 길 필요는 없지만, 성공과 관련 없는 변경을 구분할 수 있을 만큼은 명확해야 합니다.
+
+### Spec
+
+Spec은 requirement를 규칙, 계약, 경계, acceptance criteria로 옮깁니다.
+
+팀이 requirement를 더 잘 이해하면서 spec은 루프 안에서 진화할 수 있습니다.
+
+### Test
+
+Test는 spec의 일부를 실행 가능하게 만듭니다.
+
+Test는 requirement 자체가 아닙니다. 현재 spec 해석을 보호하는 장치입니다.
+
+### Implementation
+
+Implementation은 test와 원래 requirement를 만족합니다.
+
+Test 통과는 필요조건이지만 충분조건은 아닙니다. Implementation이 requirement intent를 어기거나 loop boundary를 확장하면 RDD 관점에서는 문제가 있습니다.
+
+### Review
+
+Review는 전체 trace를 확인합니다.
+
+```text
+Requirement -> Spec -> Test -> Implementation
+```
+
+좋은 review는 code가 동작하는지만 보지 않고, 그 작업이 여전히 현재 루프에 속하는지도 확인합니다.
+
+## 핵심 규칙
+
+```text
+Spec and test refinement may happen inside the loop.
+Requirement change must be made explicit as a loop boundary change.
+```

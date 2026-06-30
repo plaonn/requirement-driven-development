@@ -1,5 +1,7 @@
 # RDD: Requirement Driven Development
 
+한국어: [README.ko.md](README.ko.md)
+
 **Requirement Driven Development (RDD)** is a lightweight development methodology for keeping each development loop anchored to a stable requirement and traceable from intent to implementation.
 
 It treats a pull request, task, ticket, or small agile iteration as a closed loop:
@@ -99,6 +101,9 @@ Possible responses:
 ## Repository structure
 
 ```text
+README.md
+README.ko.md
+
 docs/
   01-methodology.md
   02-rdd-sdd-tdd-loop.md
@@ -106,15 +111,29 @@ docs/
   04-review-method.md
   05-examples.md
   06-ai-agent-usage.md
+  ko/
+    01-methodology.md
+    02-rdd-sdd-tdd-loop.md
+    03-pr-as-development-loop.md
+    04-review-method.md
+    05-examples.md
+    06-ai-agent-usage.md
 
 templates/
   pull_request_template.md
   codex_prompt_template.md
+  pull_request_template.ko.md
+  codex_prompt_template.ko.md
 
 examples/
   order-cancel-example.md
   refactoring-example.md
+  ko/
+    order-cancel-example.md
+    refactoring-example.md
 ```
+
+Korean companion documents are provided for readers who prefer Korean. The English documents remain the canonical public structure.
 
 ## License
 
