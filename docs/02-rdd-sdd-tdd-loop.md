@@ -108,9 +108,9 @@ This often happens when specification work becomes detached from the original re
 
 ### Implementation-driven loop
 
-The implementation starts shaping the purpose of the PR.
+The implementation starts shaping the purpose of the loop.
 
-This often creates hidden scope creep: useful-looking changes enter the PR without being connected to the loop requirement.
+This often creates hidden scope creep: useful-looking changes enter the loop without being connected to the loop requirement.
 
 ## RDD's practical stance
 

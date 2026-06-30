@@ -29,7 +29,7 @@ The implementation should keep the fulfillment boundary explicit. Refund and cou
 
 ### Review focus
 
-Reviewers should check that the PR satisfies cancellation before fulfillment without expanding into order editing, fulfillment rollback, or broad refund policy redesign.
+Reviewers should check that the loop satisfies cancellation before fulfillment without expanding into order editing, fulfillment rollback, or broad refund policy redesign.
 
 ### What would count as requirement change
 
@@ -68,4 +68,4 @@ Reviewers should compare behavior before and after the refactor, especially tota
 
 If receipt wording changes intentionally, that is a behavior or spec change and should be explicit.
 
-If a pricing bug is discovered, open a follow-up instead of hiding it inside the refactoring PR unless the current loop is explicitly re-scoped.
+If a pricing bug is discovered, open a follow-up instead of hiding it inside the refactoring loop unless the current loop is explicitly re-scoped.

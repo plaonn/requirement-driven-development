@@ -80,6 +80,6 @@ Spec은 자세하지만 잘못된 사용자 또는 제품 필요를 인코딩합
 
 ### 구현 주도 루프
 
-Implementation이 PR의 목적을 형성하기 시작합니다.
+Implementation이 loop의 목적을 형성하기 시작합니다.
 
-이 경우 유용해 보이는 변경이 requirement와 연결되지 않은 채 PR에 들어오며 숨은 scope creep이 생깁니다.
+이 경우 유용해 보이는 변경이 requirement와 연결되지 않은 채 loop에 들어오며 숨은 scope creep이 생깁니다.

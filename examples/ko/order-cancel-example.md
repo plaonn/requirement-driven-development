@@ -32,7 +32,7 @@ Coupon restoration은 cancellation loop 안에서 새 promotion 규칙을 만들
 - Fulfillment 경계가 명확한가?
 - Refund와 coupon effect가 cancellation 규칙에 연결되어 있는가?
 - 반복 cancellation attempt가 안전하게 처리되는가?
-- PR이 order editing 또는 fulfillment rollback으로 확장되지 않았는가?
+- loop가 order editing 또는 fulfillment rollback으로 확장되지 않았는가?
 
 ## Requirement 변경 예시
 

@@ -32,7 +32,7 @@ Coupon restoration should follow existing coupon policy rather than inventing a 
 - Is the fulfillment boundary clear?
 - Are refund and coupon effects tied to cancellation rules?
 - Are repeated cancellation attempts handled safely?
-- Did the PR avoid expanding into order editing or fulfillment rollback?
+- Did the loop avoid expanding into order editing or fulfillment rollback?
 
 ## Requirement change examples
 

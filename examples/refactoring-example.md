@@ -28,10 +28,10 @@ If code movement touches pricing paths, tests should show that totals, discounts
 - Did formatting move behind a clear boundary?
 - Did pricing behavior remain unchanged?
 - Are any receipt wording changes intentional and documented?
-- Did the PR avoid hiding bug fixes inside a refactoring loop?
+- Did the loop avoid hiding bug fixes inside a refactoring loop?
 
 ## Requirement change examples
 
 If receipt wording changes intentionally, that is a behavior or spec change and should be explicit.
 
-If a pricing bug is discovered, open a follow-up instead of hiding it inside the refactoring PR unless explicitly re-scoped.
+If a pricing bug is discovered, open a follow-up instead of hiding it inside the refactoring loop unless explicitly re-scoped.
