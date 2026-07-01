@@ -17,6 +17,8 @@ Give agents instructions in this shape:
 ```text
 Requirement:
   The stable requirement this task must satisfy.
+  Include rationale, failure prevented, assumptions, and revisit conditions when the requirement may outlive one loop.
+  If the task belongs to a larger root goal, state the current narrower stage.
 
 Spec:
   Rules, contracts, acceptance criteria, and boundaries.
@@ -29,6 +31,9 @@ Non-goals:
 
 Stop conditions:
   Conditions that require reporting back instead of continuing.
+
+Automation boundary:
+  For state-changing work, state what may be automated now, what requires human review, and what should not be automated yet.
 ```
 
 ## Stop conditions

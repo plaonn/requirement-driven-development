@@ -9,8 +9,11 @@ RDD review는 개발 루프가 requirement에서 implementation까지 추적 가
 ### 1. Requirement
 
 - [ ] Driving requirement가 명확한가?
+- [ ] 원하는 동작뿐 아니라 작업이 존재하는 이유도 설명하는가?
+- [ ] 막으려는 실패, regression, risk가 드러나는가?
 - [ ] 성공과 관련 없는 변경을 구분할 수 있을 만큼 구체적인가?
 - [ ] PR, task, ticket이 여전히 명시된 requirement와 맞는가?
+- [ ] 더 큰 root goal이 있다면, 현재 loop의 좁은 requirement가 그 아래 단계로 명확히 표현됐는가?
 
 ### 2. Spec
 
@@ -37,15 +40,25 @@ RDD review는 개발 루프가 requirement에서 implementation까지 추적 가
 - [ ] 관련 없는 동작이 loop에 들어왔는가?
 - [ ] Refactoring이 동작 변경을 만들었는가?
 - [ ] 구현 편의가 public contract를 확장했는가?
+- [ ] 구현 선택이 rationale 없이 requirement로 승격됐는가?
 - [ ] 인접한 fix가 분리됐거나 명시적으로 포함됐는가?
 
-### 6. 변경 경계
+### 6. Automation boundary
+
+사용자, 운영, 금융, safety-sensitive 작업 또는 다른 state-changing work를 자동화하는 loop라면 이 항목을 사용합니다.
+
+- [ ] 지금 자동화해도 되는 일이 명확한가?
+- [ ] 준비는 가능하지만 사람 review가 필요한 일이 명확한가?
+- [ ] 아직 자동화하지 말아야 할 일이 명확한가?
+- [ ] 장기 목표가 더 넓은 자동화라면, 현재 safety stage가 명시됐는가?
+
+### 7. 변경 경계
 
 - [ ] 구현 중 requirement가 바뀌었는가?
 - [ ] 바뀌었다면 loop가 명시적으로 re-scope, split, restart됐는가?
 - [ ] Requirement 변경이 reviewer에게 보이는 곳에 설명됐는가?
 
-### 7. Non-goals
+### 8. Non-goals
 
 - [ ] 제외된 항목이 명시되어 있는가?
 - [ ] Reviewer가 빠진 일을 실수로 오해하지 않도록 되어 있는가?

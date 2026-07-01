@@ -59,6 +59,47 @@ The parser should reject malformed input with actionable errors.
 This refactoring should isolate receipt formatting without changing pricing behavior.
 ```
 
+#### Purpose-bearing requirements
+
+A requirement should preserve purpose, not only desired behavior. When the rationale is missing, teams often mistake an implementation choice for a durable requirement.
+
+For a requirement that may guide more than one small change, ask:
+
+```text
+Root goal:
+  What larger user, product, business, or operational outcome is this loop serving?
+
+Requirement:
+  What must remain true in this loop?
+
+Rationale:
+  Why does this requirement matter now?
+
+Failure prevented:
+  What bad outcome, regression, or risk does this requirement prevent?
+
+Assumptions:
+  What must be true for this requirement to remain valid?
+
+Revisit when:
+  What future signal should cause the team to narrow, supersede, or discard it?
+```
+
+The root goal is especially useful when a project has a long-term direction that cannot be implemented safely in one step. For example, a long-term goal may be automation, while the current loop only allows read-only analysis or approval-gated execution. RDD should express that as staged requirements, not as a contradiction.
+
+Automation-heavy loops should also state an automation boundary:
+
+```text
+Automate now:
+  Work the system may perform without additional review.
+
+Require review:
+  Work that may be prepared, but needs explicit human approval.
+
+Do not automate yet:
+  Adjacent work that remains out of scope until a later requirement is confirmed.
+```
+
 #### Loop requirements and durable requirements
 
 The requirement that defines a development loop is local to that loop, but it does not have to disappear after the loop ends.
@@ -73,6 +114,9 @@ Requirement:
 
 Rationale:
   Why this need matters.
+
+Failure prevented:
+  What would go wrong if the derived spec were removed or weakened.
 
 Assumptions:
   Conditions that make the requirement valid.

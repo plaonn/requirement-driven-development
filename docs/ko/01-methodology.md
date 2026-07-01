@@ -58,6 +58,47 @@ Requirement는 작업이 존재하는 이유를 설명합니다.
 
 좋은 requirement가 항상 길 필요는 없지만, 성공과 관련 없는 변경을 구분할 수 있을 만큼은 명확해야 합니다.
 
+#### 목적을 보존하는 requirement
+
+Requirement는 원하는 동작만이 아니라 목적도 보존해야 합니다. 목적이 빠지면 구현 선택이 지속 requirement처럼 굳어지기 쉽습니다.
+
+한 번의 작은 변경을 넘어 계속 판단 기준이 될 수 있는 requirement라면 다음을 확인합니다.
+
+```text
+Root goal:
+  이 loop가 기여하는 더 큰 사용자, 제품, 비즈니스, 운영 목적
+
+Requirement:
+  이 loop 안에서 계속 참이어야 하는 것
+
+Rationale:
+  이 requirement가 지금 중요한 이유
+
+Failure prevented:
+  이 requirement가 막는 나쁜 결과, regression, risk
+
+Assumptions:
+  requirement가 유효하려면 참이어야 하는 조건
+
+Revisit when:
+  requirement를 narrow, supersede, discard해야 할 미래 신호
+```
+
+Root goal은 장기 방향을 한 번에 안전하게 구현할 수 없는 프로젝트에서 특히 유용합니다. 예를 들어 장기 목적은 자동화일 수 있지만, 현재 loop에서는 read-only analysis나 approval-gated execution만 허용할 수 있습니다. RDD는 이것을 충돌로 보지 않고 staged requirement로 표현해야 합니다.
+
+자동화가 중요한 loop에서는 automation boundary도 함께 적습니다.
+
+```text
+Automate now:
+  추가 review 없이 시스템이 수행해도 되는 일
+
+Require review:
+  시스템이 준비할 수 있지만 명시적 사람 승인이 필요한 일
+
+Do not automate yet:
+  나중 requirement가 확인될 때까지 scope 밖에 두는 인접 작업
+```
+
 #### 루프 requirement와 지속 requirement
 
 개발 루프를 정의하는 requirement는 그 루프의 경계이지만, 루프가 끝났다고 반드시 사라져야 하는 것은 아닙니다.
@@ -72,6 +113,9 @@ Requirement:
 
 Rationale:
   그 필요가 중요한 이유
+
+Failure prevented:
+  derived spec이 제거되거나 약해졌을 때 생길 문제
 
 Assumptions:
   requirement가 유효한 조건

@@ -9,8 +9,11 @@ Use this checklist for pull requests, tickets, tasks, and small iteration review
 ### 1. Requirement
 
 - [ ] Is the driving requirement clear?
+- [ ] Does it explain why the work exists, not only what behavior is desired?
+- [ ] Does it name the failure, regression, or risk it is meant to prevent?
 - [ ] Is it specific enough to distinguish success from unrelated change?
 - [ ] Does the PR, task, or ticket still match the stated requirement?
+- [ ] If there is a larger root goal, is this loop's narrower requirement clearly staged under it?
 
 ### 2. Spec
 
@@ -37,15 +40,25 @@ Use this checklist for pull requests, tickets, tasks, and small iteration review
 - [ ] Did unrelated behavior enter the loop?
 - [ ] Did refactoring introduce behavior changes?
 - [ ] Did implementation convenience expand the public contract?
+- [ ] Did an implementation choice get promoted into a requirement without rationale?
 - [ ] Are adjacent fixes separated or explicitly included?
 
-### 6. Change boundary
+### 6. Automation boundary
+
+Use this section when the loop automates user, operational, financial, safety-sensitive, or otherwise state-changing work.
+
+- [ ] Is it clear what may be automated now?
+- [ ] Is it clear what may be prepared but still requires human review?
+- [ ] Is it clear what should not be automated yet?
+- [ ] If the long-term goal is broader automation, is the current safety stage explicit?
+
+### 7. Change boundary
 
 - [ ] Did the requirement change during implementation?
 - [ ] If it changed, was the loop explicitly re-scoped, split, or restarted?
 - [ ] Are requirement changes described where reviewers can see them?
 
-### 7. Non-goals
+### 8. Non-goals
 
 - [ ] Are excluded items explicit?
 - [ ] Are reviewers protected from assuming omitted work is accidental?
