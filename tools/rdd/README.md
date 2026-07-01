@@ -36,12 +36,29 @@ The first slice intentionally stays narrow:
 The parser recognizes ATX Markdown headings such as `# Requirement` and
 `## Tests`. Headings inside fenced code blocks are ignored.
 
+The parser also recognizes compact RDD hierarchy blocks:
+
+```md
+### R0: Root goal title
+
+- Requirement: ...
+- Rationale: ...
+- Failure prevented: ...
+- Assumptions: ...
+- Revisit when: ...
+```
+
+`R0` is treated as a root goal candidate. `R1`, `R2`, and later blocks are
+treated as requirement entries when they contain recognized bullet fields.
+
 Recognized RDD fields include:
 
 - Root goal
 - Requirement
 - Rationale
 - Failure prevented
+- Assumptions
+- Revisit when
 - Spec
 - Tests / Checks
 - Implementation

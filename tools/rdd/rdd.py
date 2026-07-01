@@ -23,6 +23,8 @@ FIELD_LABELS = {
     "requirement": "Requirement",
     "rationale": "Rationale",
     "failure_prevented": "Failure prevented",
+    "assumptions": "Assumptions",
+    "revisit_when": "Revisit when",
     "spec": "Spec",
     "checks": "Tests / Checks",
     "implementation": "Implementation",
@@ -42,7 +44,6 @@ SECTION_ALIASES = {
     "goal": "root_goal",
     "goals": "root_goal",
     "requirement": "requirement",
-    "requirements": "requirement",
     "candidate requirement": "requirement",
     "candidate requirements": "requirement",
     "요구사항": "requirement",
@@ -109,6 +110,13 @@ SECTION_ALIASES = {
     "follow ups": "requirement_changes",
     "follow-ups": "requirement_changes",
     "후속 작업": "requirement_changes",
+    "assumption": "assumptions",
+    "assumptions": "assumptions",
+    "가정": "assumptions",
+    "revisit": "revisit_when",
+    "revisit when": "revisit_when",
+    "재검토 조건": "revisit_when",
+    "다시 볼 때": "revisit_when",
 }
 
 REQUIRED_FIELDS = (
@@ -172,11 +180,8 @@ def is_fence(line: str) -> bool:
     return stripped.startswith("```") or stripped.startswith("~~~")
 
 
-def parse_markdown(path: Path, root: Path) -> list[Section]:
-    text = path.read_text(encoding="utf-8")
-    lines = text.splitlines()
+def markdown_headings(lines: list[str]) -> list[tuple[int, int, str, str | None]]:
     headings: list[tuple[int, int, str, str | None]] = []
-    sections: list[Section] = []
     in_fence = False
 
     for index, line in enumerate(lines):
@@ -189,6 +194,14 @@ def parse_markdown(path: Path, root: Path) -> list[Section]:
             level = len(match.group(1))
             heading = match.group(2).strip()
             headings.append((index, level, heading, heading_to_field(heading)))
+    return headings
+
+
+def parse_markdown(path: Path, root: Path) -> list[Section]:
+    text = path.read_text(encoding="utf-8")
+    lines = text.splitlines()
+    headings = markdown_headings(lines)
+    sections: list[Section] = []
 
     for heading_index, (start, level, heading, field) in enumerate(headings):
         if not field:
@@ -209,6 +222,83 @@ def parse_markdown(path: Path, root: Path) -> list[Section]:
                     text=body,
                 )
             )
+    return sections
+
+
+def parse_field_bullets(lines: list[str]) -> dict[str, str]:
+    fields: dict[str, list[str]] = {}
+    current_field: str | None = None
+
+    for line in lines:
+        match = re.match(r"^-\s+([^:]+):\s*(.*)$", line)
+        if match:
+            field = heading_to_field(match.group(1))
+            if field:
+                current_field = field
+                fields.setdefault(field, [])
+                value = match.group(2).strip()
+                if value:
+                    fields[field].append(value)
+                continue
+            current_field = None
+            continue
+
+        if current_field and (line.startswith("  ") or line.startswith("\t")):
+            continuation = line.strip()
+            if continuation:
+                fields[current_field].append(continuation)
+            continue
+
+        if line.strip():
+            current_field = None
+
+    return {field: "\n".join(parts).strip() for field, parts in fields.items() if parts}
+
+
+def parse_rdd_hierarchy(path: Path, root: Path) -> list[Section]:
+    text = path.read_text(encoding="utf-8")
+    lines = text.splitlines()
+    headings = markdown_headings(lines)
+    sections: list[Section] = []
+
+    for heading_index, (start, level, heading, _field) in enumerate(headings):
+        match = re.match(r"^R(\d+)\s*:\s*(.+)$", heading.strip(), re.IGNORECASE)
+        if not match:
+            continue
+
+        requirement_number = int(match.group(1))
+        title = match.group(2).strip()
+        end = len(lines)
+        for next_start, next_level, _next_heading, _next_field in headings[heading_index + 1 :]:
+            if next_level <= level:
+                end = next_start
+                break
+
+        bullet_fields = parse_field_bullets(lines[start + 1 : end])
+        heading_label = heading.strip()
+
+        if requirement_number == 0:
+            sections.append(
+                Section(
+                    field="root_goal",
+                    file=str(path.relative_to(root)),
+                    heading=heading_label,
+                    level=level,
+                    text=bullet_fields.get("requirement") or title,
+                )
+            )
+
+        for field, value in bullet_fields.items():
+            sections.append(
+                Section(
+                    field=field,
+                    file=str(path.relative_to(root)),
+                    heading=heading_label,
+                    level=level,
+                    text=value,
+                )
+            )
+
     return sections
 
 
@@ -242,6 +332,8 @@ def build_trace(source: Path) -> dict:
     fields: dict[str, list[Section]] = {key: [] for key in FIELD_LABELS}
     for path in files:
         for section in parse_markdown(path, root):
+            fields.setdefault(section.field, []).append(section)
+        for section in parse_rdd_hierarchy(path, root):
             fields.setdefault(section.field, []).append(section)
 
     field_data = {

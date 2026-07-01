@@ -36,6 +36,27 @@ Avoid inventing missing requirements.
 - Do not write source files.
 """
 
+HIERARCHY_SAMPLE = """# Requirements
+
+## Requirement Hierarchy
+
+### R0: Reduce attention
+
+- Status: confirmed
+- Requirement: Reduce operator attention for asset management.
+- Rationale: Avoid repeated manual account checks.
+- Failure prevented: Building unrelated provider experiments.
+- Assumptions: Read-only analysis comes first.
+- Revisit when: Full automation is considered.
+
+### R1: Keep analysis read-only
+
+- Status: confirmed
+- Requirement: Analysis commands must not submit orders.
+- Rationale: Reports should be safe to run repeatedly.
+- Failure prevented: Read-only reports causing live side effects.
+"""
+
 
 class RddToolTest(unittest.TestCase):
     def test_trace_extracts_expected_fields(self):
@@ -82,6 +103,23 @@ class RddToolTest(unittest.TestCase):
             trace = rdd.build_trace(path)
 
         self.assertEqual(trace["fields"]["requirement"][0]["text"], "Numbered heading.")
+
+    def test_rdd_hierarchy_bullet_fields(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            path = Path(tmp) / "requirements.md"
+            path.write_text(HIERARCHY_SAMPLE, encoding="utf-8")
+            trace = rdd.build_trace(path)
+
+        self.assertEqual(trace["fields"]["root_goal"][0]["heading"], "R0: Reduce attention")
+        self.assertEqual(
+            trace["fields"]["root_goal"][0]["text"],
+            "Reduce operator attention for asset management.",
+        )
+        self.assertEqual(len(trace["fields"]["requirement"]), 2)
+        self.assertIn("rationale", trace["fields"])
+        self.assertIn("failure_prevented", trace["fields"])
+        self.assertEqual(trace["fields"]["assumptions"][0]["text"], "Read-only analysis comes first.")
+        self.assertNotIn("spec", trace["fields"])
 
 
 if __name__ == "__main__":
