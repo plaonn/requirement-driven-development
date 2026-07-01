@@ -28,6 +28,10 @@ What is intentionally out of scope?
 
 If this PR automates state-changing work, what may be automated now, what still requires human review, and what should not be automated yet?
 
+# Boundary clarification
+
+If the root goal, rationale, failure prevented, implementation-choice boundary, or automation boundary was unclear, what questions were answered before this PR scope was finalized?
+
 # Requirement changes discovered
 
 Did implementation or review reveal that the original requirement needs to change?

@@ -28,6 +28,10 @@ Spec을 보호하는 tests 또는 checks는 무엇입니까?
 
 이 PR이 state-changing work를 자동화한다면, 지금 자동화해도 되는 일, 아직 human review가 필요한 일, 아직 자동화하지 말아야 하는 일은 무엇입니까?
 
+# Boundary clarification
+
+Root goal, rationale, failure prevented, 구현 선택과 requirement의 경계, automation boundary가 불명확했다면 PR scope를 확정하기 전에 어떤 질문에 답했습니까?
+
 # 발견된 requirement 변경
 
 구현이나 review 중 원래 requirement 변경 필요가 드러났습니까?

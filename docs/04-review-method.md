@@ -68,6 +68,8 @@ Use this section when the loop automates user, operational, financial, safety-se
 
 Start with the requirement, not the diff.
 
+If the requirement's root goal, rationale, failure prevented, implementation-choice boundary, or automation boundary is unclear, do boundary clarification before writing a full trace. Ask the smallest set of questions needed to settle the loop boundary, then continue the review.
+
 Then read the spec and tests before judging implementation details. This keeps review anchored to the loop boundary and prevents the implementation from silently redefining the goal.
 
 End by checking whether any discoveries during implementation changed the requirement. If they did, treat that as a boundary decision, not just a code review comment.

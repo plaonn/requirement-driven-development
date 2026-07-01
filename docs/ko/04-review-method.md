@@ -68,4 +68,6 @@ RDD review는 개발 루프가 requirement에서 implementation까지 추적 가
 
 Diff가 아니라 requirement부터 봅니다.
 
+Requirement의 root goal, rationale, failure prevented, 구현 선택과 requirement의 경계, automation boundary가 불명확하면 full trace를 쓰기 전에 boundary clarification을 합니다. Loop boundary를 정하는 데 필요한 최소 질문을 먼저 하고, 그 뒤 review를 이어갑니다.
+
 그다음 구현 세부사항을 판단하기 전에 spec과 test를 읽습니다. 이렇게 하면 review가 루프 경계에 고정되고, implementation이 조용히 목표를 재정의하는 일을 막을 수 있습니다.

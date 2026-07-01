@@ -40,12 +40,15 @@ Automation boundary:
 
 Agents should stop or report when:
 
+- the root goal, rationale, failure prevented, or automation boundary is unclear enough that deriving a full trace would require guessing,
 - the requirement appears wrong or incomplete,
 - implementation suggests an adjacent feature,
 - tests need to be changed in a way that alters the requirement,
 - a discovered bug belongs to a different requirement,
 - non-goals appear necessary to complete the task,
 - the requested change requires a broader architecture or API decision.
+
+When this happens, the agent should use boundary clarification: ask the smallest set of questions needed to settle the loop boundary before continuing.
 
 ## Scope discipline
 

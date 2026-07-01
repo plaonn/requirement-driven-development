@@ -99,6 +99,20 @@ Do not automate yet:
   나중 requirement가 확인될 때까지 scope 밖에 두는 인접 작업
 ```
 
+#### Boundary clarification
+
+때로 가장 유용한 RDD 단계는 full trace를 쓰는 것이 아니라, 먼저 멈춰서 loop boundary를 확인하는 것입니다.
+
+다음이 불명확하면 spec, test, implementation을 파생하기 전에 boundary clarification을 합니다.
+
+- loop가 기여하는 root goal
+- requirement가 막으려는 rationale 또는 failure
+- 어떤 제약이 지속 requirement인지 구현 선택인지
+- state-changing work의 automation boundary
+- 더 큰 장기 goal 아래의 현재 safety stage
+
+이 경우 candidate requirement를 confirm, reject, narrow, supersede하는 데 필요한 최소 질문을 먼저 합니다. 빈 rationale을 추측으로 채우지 않습니다. Boundary가 명확해진 뒤 일반 RDD trace를 이어갑니다.
+
 #### 루프 requirement와 지속 requirement
 
 개발 루프를 정의하는 requirement는 그 루프의 경계이지만, 루프가 끝났다고 반드시 사라져야 하는 것은 아닙니다.

@@ -100,6 +100,20 @@ Do not automate yet:
   Adjacent work that remains out of scope until a later requirement is confirmed.
 ```
 
+#### Boundary clarification
+
+Sometimes the most useful RDD step is not writing a full trace. It is stopping early to clarify the loop boundary.
+
+Use boundary clarification before deriving specs, tests, or implementation when any of these are unclear:
+
+- the root goal the loop serves,
+- the rationale or failure the requirement is meant to prevent,
+- whether a constraint is a durable requirement or an implementation choice,
+- the automation boundary for state-changing work,
+- the current safety stage under a broader long-term goal.
+
+In that case, ask the smallest set of questions needed to confirm, reject, narrow, or supersede the candidate requirement. Do not fill the gap by inventing rationale. Once the boundary is clear, continue with the ordinary RDD trace.
+
 #### Loop requirements and durable requirements
 
 The requirement that defines a development loop is local to that loop, but it does not have to disappear after the loop ends.

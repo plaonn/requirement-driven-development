@@ -38,12 +38,15 @@ Automation boundary:
 
 Agent는 다음 상황에서 멈추거나 보고해야 합니다.
 
+- root goal, rationale, failure prevented, automation boundary가 불명확해 full trace를 만들려면 추측이 필요할 때
 - Requirement가 틀렸거나 불완전해 보일 때
 - Implementation이 adjacent feature를 제안하게 만들 때
 - Test 변경이 requirement 자체를 바꾸는 방향일 때
 - 발견한 bug가 다른 requirement에 속할 때
 - Non-goal이 task 완료에 필요해 보일 때
 - 요청된 변경이 더 넓은 architecture 또는 API decision을 요구할 때
+
+이 경우 agent는 boundary clarification을 사용해야 합니다. 계속 진행하기 전에 loop boundary를 정하는 데 필요한 최소 질문을 먼저 합니다.
 
 ## Scope 관리
 

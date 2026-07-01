@@ -34,6 +34,7 @@ List adjacent work that must stay out of scope.
 ## Instructions
 
 - Keep the requirement stable for this loop.
+- If the root goal, rationale, failure prevented, or automation boundary is unclear, ask boundary clarification questions before producing a full trace.
 - Do not treat implementation choices as requirements unless their rationale is explicit.
 - If a long-term goal and the current safety stage appear to conflict, express them as staged requirements.
 - Refine specs and tests only when they still express the same requirement.

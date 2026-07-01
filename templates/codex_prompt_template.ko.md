@@ -34,6 +34,7 @@ Scope 밖에 있어야 하는 adjacent work를 적으세요.
 ## 지시사항
 
 - 이 loop에서는 requirement를 안정적으로 유지하세요.
+- root goal, rationale, failure prevented, automation boundary가 불명확하면 full trace를 만들기 전에 boundary clarification 질문을 먼저 하세요.
 - rationale이 명시되지 않은 구현 선택을 requirement로 취급하지 마세요.
 - 장기 goal과 현재 safety stage가 충돌해 보이면 staged requirement로 표현하세요.
 - 같은 requirement를 계속 표현하는 경우에만 spec과 test를 refine하세요.
