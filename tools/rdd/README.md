@@ -36,6 +36,17 @@ The first slice intentionally stays narrow:
 The parser recognizes ATX Markdown headings such as `# Requirement` and
 `## Tests`. Headings inside fenced code blocks are ignored.
 
+The parser also recognizes inline field labels in bullet or plain-line form:
+
+```md
+- Requirement: ...
+- Rationale: ...
+
+요구사항: ...
+근거: ...
+방지 실패: ...
+```
+
 The parser also recognizes compact RDD hierarchy blocks:
 
 ```md
@@ -67,6 +78,10 @@ Recognized RDD fields include:
 - Boundary clarification
 - Review focus
 - Requirement changes discovered
+
+English and Korean companion labels are supported for common RDD fields. The
+alias set also covers retroactive review outputs such as recovered requirements,
+derived specs, retroactive coverage, and automation boundary decisions.
 
 Missing required fields are reported as boundary clarification questions. The
 automation boundary is reported as a conditional gap because it is required only

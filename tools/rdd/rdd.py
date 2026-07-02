@@ -47,6 +47,7 @@ SECTION_ALIASES = {
     "candidate requirement": "requirement",
     "candidate requirements": "requirement",
     "요구사항": "requirement",
+    "복원된 requirement": "requirement",
     "rationale": "rationale",
     "why this matters": "rationale",
     "why this exists": "rationale",
@@ -58,17 +59,27 @@ SECTION_ALIASES = {
     "risk prevented": "failure_prevented",
     "risk": "failure_prevented",
     "risks": "failure_prevented",
+    "방지 실패": "failure_prevented",
     "예방하는 실패": "failure_prevented",
     "실패 방지": "failure_prevented",
+    "실패 예방": "failure_prevented",
     "방지하는 위험": "failure_prevented",
     "위험": "failure_prevented",
     "spec": "spec",
     "specs": "spec",
     "specification": "spec",
     "acceptance criteria": "spec",
+    "derived spec": "spec",
+    "derived specs": "spec",
+    "derived specs tests": "spec",
+    "derived specs/tests": "spec",
+    "spec trace": "spec",
     "명세": "spec",
     "규칙": "spec",
     "인수 기준": "spec",
+    "파생 규칙": "spec",
+    "파생 명세": "spec",
+    "파생 specs tests": "spec",
     "tests": "checks",
     "test": "checks",
     "checks": "checks",
@@ -82,9 +93,12 @@ SECTION_ALIASES = {
     "implementation notes": "implementation",
     "implementation note": "implementation",
     "what changed": "implementation",
+    "implementation choices": "implementation",
     "구현": "implementation",
     "구현 메모": "implementation",
     "변경 내용": "implementation",
+    "구현 선택": "implementation",
+    "구현 선택지": "implementation",
     "non goals": "non_goals",
     "non-goals": "non_goals",
     "non goal": "non_goals",
@@ -94,14 +108,41 @@ SECTION_ALIASES = {
     "범위 밖": "non_goals",
     "제외 항목": "non_goals",
     "automation boundary": "automation_boundary",
+    "automate now": "automation_boundary",
+    "require human review": "automation_boundary",
+    "require review": "automation_boundary",
+    "do not automate yet": "automation_boundary",
     "자동화 경계": "automation_boundary",
+    "지금 자동화": "automation_boundary",
+    "사람 리뷰 필요": "automation_boundary",
+    "리뷰 필요": "automation_boundary",
+    "아직 자동화하지 않음": "automation_boundary",
     "boundary clarification": "boundary_clarification",
     "boundary clarification questions": "boundary_clarification",
+    "boundary questions first": "boundary_clarification",
+    "open questions": "boundary_clarification",
+    "unresolved requirement candidates": "boundary_clarification",
+    "question needed": "boundary_clarification",
+    "adoption boundary": "boundary_clarification",
     "경계 확인": "boundary_clarification",
     "경계 명확화": "boundary_clarification",
     "경계 확인 질문": "boundary_clarification",
+    "열린 질문": "boundary_clarification",
+    "미해결 requirement 후보": "boundary_clarification",
+    "미해결 요구사항 후보": "boundary_clarification",
+    "필요한 질문": "boundary_clarification",
+    "승격 경계": "boundary_clarification",
     "review focus": "review_focus",
+    "retroactive coverage": "review_focus",
+    "change risk": "review_focus",
+    "evidence": "review_focus",
+    "known trace": "review_focus",
     "리뷰 초점": "review_focus",
+    "소급 coverage": "review_focus",
+    "소급 커버리지": "review_focus",
+    "변경 위험": "review_focus",
+    "근거 문서": "review_focus",
+    "확인된 trace": "review_focus",
     "requirement changes discovered": "requirement_changes",
     "requirement change examples": "requirement_changes",
     "what would count as requirement change": "requirement_changes",
@@ -116,6 +157,7 @@ SECTION_ALIASES = {
     "revisit": "revisit_when",
     "revisit when": "revisit_when",
     "재검토 조건": "revisit_when",
+    "재검토 시점": "revisit_when",
     "다시 볼 때": "revisit_when",
 }
 
@@ -225,34 +267,90 @@ def parse_markdown(path: Path, root: Path) -> list[Section]:
     return sections
 
 
-def parse_field_bullets(lines: list[str]) -> dict[str, str]:
-    fields: dict[str, list[str]] = {}
-    current_field: str | None = None
+def parse_inline_field_lines(
+    lines: list[str],
+    *,
+    allow_plain: bool,
+    respect_fences: bool,
+) -> list[tuple[int, str, str]]:
+    parsed: list[tuple[int, str, str]] = []
+    current_index: int | None = None
+    in_fence = False
 
-    for line in lines:
-        match = re.match(r"^-\s+([^:]+):\s*(.*)$", line)
+    prefix = r"(?:[-*]\s+)?"
+    if allow_plain:
+        pattern = re.compile(rf"^\s*{prefix}([^:\n]{{1,80}}):\s*(.*)$")
+    else:
+        pattern = re.compile(r"^\s*[-*]\s+([^:\n]{1,80}):\s*(.*)$")
+
+    for line_number, line in enumerate(lines):
+        if respect_fences and is_fence(line):
+            in_fence = not in_fence
+            current_index = None
+            continue
+        if in_fence:
+            continue
+
+        match = pattern.match(line)
         if match:
             field = heading_to_field(match.group(1))
             if field:
-                current_field = field
-                fields.setdefault(field, [])
-                value = match.group(2).strip()
-                if value:
-                    fields[field].append(value)
+                parsed.append((line_number, field, match.group(2).strip()))
+                current_index = len(parsed) - 1
                 continue
-            current_field = None
+            current_index = None
             continue
 
-        if current_field and (line.startswith("  ") or line.startswith("\t")):
+        if current_index is not None and (line.startswith("  ") or line.startswith("\t")):
             continuation = line.strip()
             if continuation:
-                fields[current_field].append(continuation)
+                item_line, item_field, item_value = parsed[current_index]
+                parsed[current_index] = (item_line, item_field, "\n".join(part for part in (item_value, continuation) if part))
             continue
 
         if line.strip():
-            current_field = None
+            current_index = None
+
+    return [(line_number, field, value) for line_number, field, value in parsed if value]
+
+
+def parse_field_lines(lines: list[str], *, allow_plain: bool = True) -> dict[str, str]:
+    fields: dict[str, list[str]] = {}
+    for _line_number, field, value in parse_inline_field_lines(lines, allow_plain=allow_plain, respect_fences=True):
+        fields.setdefault(field, []).append(value)
 
     return {field: "\n".join(parts).strip() for field, parts in fields.items() if parts}
+
+
+def nearest_heading(headings: list[tuple[int, int, str, str | None]], line_number: int) -> tuple[int, str]:
+    current_level = 0
+    current_heading = "inline field"
+    for heading_line, level, heading, _field in headings:
+        if heading_line >= line_number:
+            break
+        current_level = level
+        current_heading = heading
+    return current_level, current_heading
+
+
+def parse_inline_fields(path: Path, root: Path) -> list[Section]:
+    text = path.read_text(encoding="utf-8")
+    lines = text.splitlines()
+    headings = markdown_headings(lines)
+    sections: list[Section] = []
+
+    for line_number, field, value in parse_inline_field_lines(lines, allow_plain=True, respect_fences=True):
+        level, heading = nearest_heading(headings, line_number)
+        sections.append(
+            Section(
+                field=field,
+                file=str(path.relative_to(root)),
+                heading=heading,
+                level=level,
+                text=value,
+            )
+        )
+    return sections
 
 
 def parse_rdd_hierarchy(path: Path, root: Path) -> list[Section]:
@@ -274,7 +372,7 @@ def parse_rdd_hierarchy(path: Path, root: Path) -> list[Section]:
                 end = next_start
                 break
 
-        bullet_fields = parse_field_bullets(lines[start + 1 : end])
+        bullet_fields = parse_field_lines(lines[start + 1 : end], allow_plain=True)
         heading_label = heading.strip()
 
         if requirement_number == 0:
@@ -333,8 +431,11 @@ def build_trace(source: Path) -> dict:
     for path in files:
         for section in parse_markdown(path, root):
             fields.setdefault(section.field, []).append(section)
+        for section in parse_inline_fields(path, root):
+            fields.setdefault(section.field, []).append(section)
         for section in parse_rdd_hierarchy(path, root):
             fields.setdefault(section.field, []).append(section)
+    fields = dedupe_fields(fields)
 
     field_data = {
         key: [asdict(section) for section in sections]
@@ -350,6 +451,19 @@ def build_trace(source: Path) -> dict:
         "gaps": gaps,
         "boundary_questions": [gap["question"] for gap in gaps],
     }
+
+
+def dedupe_fields(fields: dict[str, list[Section]]) -> dict[str, list[Section]]:
+    deduped: dict[str, list[Section]] = {}
+    for field, sections in fields.items():
+        seen: set[tuple[str, str, str, str]] = set()
+        for section in sections:
+            key = (section.field, section.file, section.heading, section.text)
+            if key in seen:
+                continue
+            seen.add(key)
+            deduped.setdefault(field, []).append(section)
+    return deduped
 
 
 def gap_items(fields: dict[str, list[Section]]) -> list[dict[str, str]]:

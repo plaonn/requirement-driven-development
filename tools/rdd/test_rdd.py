@@ -57,6 +57,57 @@ HIERARCHY_SAMPLE = """# Requirements
 - Failure prevented: Read-only reports causing live side effects.
 """
 
+KOREAN_HIERARCHY_SAMPLE = """# 요구사항 계층 문서
+
+## R0: 토큰 낭비를 줄이는 안전한 스케줄링
+
+상태: 활성
+요구사항: 실행 가능한 작업이 있을 때만 Codex를 호출한다.
+근거: 반복 polling에서 불필요한 토큰 사용을 줄여야 한다.
+방지 실패: 대기 작업이 없는데도 Codex를 호출하는 상태.
+파생 규칙: pause, cooldown, dependency gate를 먼저 평가한다.
+재검토 시점: 실행 모델이 바뀔 때.
+
+## R1: 리뷰 전 적용 금지
+
+요구사항: 완료된 작업은 리뷰 전 source-of-truth에 반영하지 않는다.
+근거: worker 결과와 운영자 승인 상태를 분리해야 한다.
+방지 실패: 검토되지 않은 변경이 완료로 취급되는 상태.
+"""
+
+RETROACTIVE_REVIEW_SAMPLE = """# Retroactive Review
+
+## Root Goal
+
+- Goal: Adopt RDD without rewriting existing project history.
+  Rationale: The project already has specs and tests but incomplete requirement trace.
+
+## Retroactive Coverage
+
+- What appears already traceable: review/apply safety behavior.
+- What is inferred but not confirmed: long-term automation direction.
+- Specs/tests without recovered rationale: legacy retry behavior.
+
+## Candidate Requirements
+
+- R1: Keep review state trustworthy
+  Requirement: Accept/apply output must agree with persisted task state.
+  Rationale: Operators decide whether to retry or clean up from this output.
+  Failure prevented: A successful mutation appearing as a lock failure.
+  Derived specs/tests: idempotent already-applied accept returns success.
+  Revisit when: accept/apply state transitions are redesigned.
+
+## Automation Boundary
+
+- Automate now: read-only review bundle generation.
+- Require human review: source-of-truth requirement adoption.
+- Do not automate yet: broad policy changes.
+
+## Non-goals
+
+- Do not rewrite historical task logs.
+"""
+
 
 class RddToolTest(unittest.TestCase):
     def test_trace_extracts_expected_fields(self):
@@ -120,6 +171,51 @@ class RddToolTest(unittest.TestCase):
         self.assertIn("failure_prevented", trace["fields"])
         self.assertEqual(trace["fields"]["assumptions"][0]["text"], "Read-only analysis comes first.")
         self.assertNotIn("spec", trace["fields"])
+
+    def test_korean_plain_hierarchy_fields(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            path = Path(tmp) / "requirements.ko.md"
+            path.write_text(KOREAN_HIERARCHY_SAMPLE, encoding="utf-8")
+            trace = rdd.build_trace(path)
+
+        self.assertEqual(
+            trace["fields"]["root_goal"][0]["text"],
+            "실행 가능한 작업이 있을 때만 Codex를 호출한다.",
+        )
+        self.assertEqual(len(trace["fields"]["requirement"]), 2)
+        self.assertEqual(
+            trace["fields"]["rationale"][0]["text"],
+            "반복 polling에서 불필요한 토큰 사용을 줄여야 한다.",
+        )
+        self.assertEqual(
+            trace["fields"]["failure_prevented"][0]["text"],
+            "대기 작업이 없는데도 Codex를 호출하는 상태.",
+        )
+        self.assertEqual(trace["fields"]["spec"][0]["text"], "pause, cooldown, dependency gate를 먼저 평가한다.")
+        self.assertEqual(trace["fields"]["revisit_when"][0]["text"], "실행 모델이 바뀔 때.")
+
+    def test_retroactive_review_output_shape(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            path = Path(tmp) / "retroactive.md"
+            path.write_text(RETROACTIVE_REVIEW_SAMPLE, encoding="utf-8")
+            trace = rdd.build_trace(path)
+
+        root_goals = [item["text"] for item in trace["fields"]["root_goal"]]
+        requirements = [item["text"] for item in trace["fields"]["requirement"]]
+        rationales = [item["text"] for item in trace["fields"]["rationale"]]
+        failures = [item["text"] for item in trace["fields"]["failure_prevented"]]
+        specs = [item["text"] for item in trace["fields"]["spec"]]
+        review_focus = [item["text"] for item in trace["fields"]["review_focus"]]
+        automation = [item["text"] for item in trace["fields"]["automation_boundary"]]
+
+        self.assertIn("Adopt RDD without rewriting existing project history.", root_goals)
+        self.assertIn("Accept/apply output must agree with persisted task state.", requirements)
+        self.assertIn("Operators decide whether to retry or clean up from this output.", rationales)
+        self.assertIn("A successful mutation appearing as a lock failure.", failures)
+        self.assertIn("idempotent already-applied accept returns success.", specs)
+        self.assertTrue(any("review/apply safety behavior." in text for text in review_focus))
+        self.assertTrue(any("read-only review bundle generation." in text for text in automation))
+        self.assertEqual(trace["fields"]["non_goals"][0]["text"], "- Do not rewrite historical task logs.")
 
 
 if __name__ == "__main__":
