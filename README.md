@@ -113,6 +113,7 @@ docs/
   04-review-method.md
   05-examples.md
   06-ai-agent-usage.md
+  07-retroactive-rdd-review.md
   ko/
     01-methodology.md
     02-rdd-sdd-tdd-loop.md
@@ -120,6 +121,11 @@ docs/
     04-review-method.md
     05-examples.md
     06-ai-agent-usage.md
+    07-retroactive-rdd-review.md
+
+skills/
+  rdd-retroactive-review/
+    SKILL.md
 
 templates/
   pull_request_template.md
@@ -136,6 +142,8 @@ examples/
 ```
 
 Korean companion documents are provided for readers who prefer Korean. The English documents remain the canonical public structure.
+
+The `skills/` directory contains optional agent workflow instructions that apply the public methodology. RDD itself is not agent-specific.
 
 ## License
 

@@ -100,6 +100,7 @@ docs/
   04-review-method.md
   05-examples.md
   06-ai-agent-usage.md
+  07-retroactive-rdd-review.md
   ko/
     01-methodology.md
     02-rdd-sdd-tdd-loop.md
@@ -107,6 +108,11 @@ docs/
     04-review-method.md
     05-examples.md
     06-ai-agent-usage.md
+    07-retroactive-rdd-review.md
+
+skills/
+  rdd-retroactive-review/
+    SKILL.md
 
 templates/
   pull_request_template.md
@@ -123,6 +129,8 @@ examples/
 ```
 
 영어 문서가 공개 기본 구조이며, 한국어 문서는 한국어 독자를 위한 companion 문서입니다.
+
+`skills/` 디렉터리는 공개 방법론을 agent workflow로 적용하기 위한 optional 지침입니다. RDD 자체는 agent-specific 방법론이 아닙니다.
 
 ## 라이선스
 
