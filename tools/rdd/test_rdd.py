@@ -217,6 +217,36 @@ class RddToolTest(unittest.TestCase):
         self.assertTrue(any("read-only review bundle generation." in text for text in automation))
         self.assertEqual(trace["fields"]["non_goals"][0]["text"], "- Do not rewrite historical task logs.")
 
+    def test_existing_project_with_trace_gaps_recommends_retroactive_review(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            docs = root / "docs"
+            docs.mkdir()
+            (docs / "SPEC.md").write_text(
+                "# Spec\n\nThe current CLI lists sessions.\n",
+                encoding="utf-8",
+            )
+            (docs / "ROADMAP.md").write_text(
+                "# Roadmap\n\n- Add notifications later.\n",
+                encoding="utf-8",
+            )
+
+            trace = rdd.build_trace(root)
+            rendered = rdd.render_gaps_markdown(trace)
+
+        self.assertEqual(trace["recommendations"][0]["kind"], "retroactive_review_recommended")
+        self.assertEqual(trace["recommendations"][0]["guide"], "docs/07-retroactive-rdd-review.md")
+        self.assertIn("read-only retroactive RDD coverage review", rendered)
+        self.assertIn("docs/07-retroactive-rdd-review.md", rendered)
+
+    def test_file_scan_does_not_recommend_retroactive_review(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            path = Path(tmp) / "SPEC.md"
+            path.write_text("# Spec\n\nOne file.\n", encoding="utf-8")
+            trace = rdd.build_trace(path)
+
+        self.assertEqual(trace["recommendations"], [])
+
 
 if __name__ == "__main__":
     unittest.main()

@@ -87,6 +87,12 @@ Missing required fields are reported as boundary clarification questions. The
 automation boundary is reported as a conditional gap because it is required only
 for automation or state-changing work.
 
+When a directory scan finds current-truth surfaces such as README, SPEC,
+ROADMAP, docs, or test documentation but the core requirement trace is
+incomplete, `gaps` also recommends starting with a read-only retroactive RDD
+coverage review before promoting recovered candidates into source-of-truth docs
+or implementation work.
+
 ## JSON
 
 JSON output uses schema version `rdd.trace.v1`.

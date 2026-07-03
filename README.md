@@ -61,6 +61,23 @@ Spec/test refinement inside the loop is normal.
 Requirement change means the loop boundary changed.
 ```
 
+## Existing projects
+
+When applying RDD to an existing project, do not treat existing specs, tests, or
+implementation behavior as proof that the project already has confirmed
+requirements.
+
+Start with [Retroactive RDD Review](docs/07-retroactive-rdd-review.md). The
+first pass should be read-only: recover candidate requirements, identify trace
+gaps, and decide what needs confirmation before anything is promoted into
+source-of-truth docs.
+
+A `SPEC.md`, roadmap, test suite, or stable implementation can be useful
+evidence, but it is not enough by itself. If the root goal, rationale, failure
+prevented, or loop boundary is missing or unclear, keep the recovered item as a
+candidate and clarify the boundary before implementation or documentation
+adoption.
+
 ## PR-scale RDD
 
 RDD is especially useful at pull request scale.

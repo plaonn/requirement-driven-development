@@ -90,6 +90,14 @@ Requirement가 바뀌면 루프 경계가 바뀐 것이다.
 
 구현이나 리뷰 중 원래 requirement가 잘못됐거나 불완전하다는 사실을 발견할 수 있습니다. 그 자체는 자연스러운 일입니다. 다만 requirement가 바뀌었다면 test 수정이나 spec refinement로 조용히 흡수하지 말고, PR을 re-scope하거나 분리하거나 follow-up으로 넘겨야 합니다.
 
+## 기존 프로젝트에 적용할 때
+
+기존 프로젝트에 RDD를 적용할 때는 기존 spec, test, 구현 동작을 confirmed requirement의 증명으로 취급하지 않습니다.
+
+먼저 [소급 RDD 리뷰](docs/ko/07-retroactive-rdd-review.md)에서 시작합니다. 첫 pass는 read-only로 두고, candidate requirement를 복원하고, trace gap을 찾고, 무엇을 source-of-truth 문서로 승격하기 전에 확인해야 하는지 정합니다.
+
+`SPEC.md`, roadmap, test suite, 안정적인 구현은 유용한 evidence가 될 수 있지만 그 자체로 충분하지 않습니다. Root goal, rationale, failure prevented, loop boundary가 빠져 있거나 불명확하면 복원된 항목은 candidate로 유지하고, 구현이나 문서 adoption 전에 boundary를 먼저 확인합니다.
+
 ## 문서 구조
 
 ```text

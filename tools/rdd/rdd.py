@@ -175,6 +175,14 @@ CONDITIONAL_FIELDS = (
     "automation_boundary",
 )
 
+CURRENT_TRUTH_FILENAMES = {
+    "readme.md",
+    "readme.ko.md",
+    "spec.md",
+    "roadmap.md",
+    "tasks.md",
+}
+
 GAP_QUESTIONS = {
     "root_goal": "What larger user, product, business, technical, or operational goal does this loop serve?",
     "requirement": "What stable requirement defines this loop boundary?",
@@ -443,12 +451,14 @@ def build_trace(source: Path) -> dict:
         if sections
     }
     gaps = gap_items(fields)
+    recommendations = recommendation_items(source, files, fields)
     return {
         "schema_version": SCHEMA_VERSION,
         "source": str(source),
         "files": [str(path.relative_to(root)) for path in files],
         "fields": field_data,
         "gaps": gaps,
+        "recommendations": recommendations,
         "boundary_questions": [gap["question"] for gap in gaps],
     }
 
@@ -489,6 +499,45 @@ def gap_items(fields: dict[str, list[Section]]) -> list[dict[str, str]]:
                 }
             )
     return gaps
+
+
+def has_current_truth_surface(files: list[Path]) -> bool:
+    for path in files:
+        lower_name = path.name.lower()
+        lower_parts = [part.lower() for part in path.parts]
+        if lower_name in CURRENT_TRUTH_FILENAMES:
+            return True
+        if "docs" in lower_parts and lower_name.endswith(".md"):
+            return True
+        if "tests" in lower_parts and lower_name.endswith(".md"):
+            return True
+    return False
+
+
+def recommendation_items(source: Path, files: list[Path], fields: dict[str, list[Section]]) -> list[dict[str, str]]:
+    if not source.is_dir():
+        return []
+    if not files or not has_current_truth_surface(files):
+        return []
+
+    missing_core_trace = any(
+        not fields.get(field)
+        for field in ("root_goal", "requirement", "rationale", "failure_prevented")
+    )
+    if not missing_core_trace:
+        return []
+
+    return [
+        {
+            "kind": "retroactive_review_recommended",
+            "guide": "docs/07-retroactive-rdd-review.md",
+            "message": (
+                "This directory has current-truth surfaces but incomplete requirement trace. "
+                "Start with a read-only retroactive RDD coverage review before promoting "
+                "recovered candidates into source-of-truth docs or implementation work."
+            ),
+        }
+    ]
 
 
 def render_section_items(items: list[dict], max_items: int, max_chars: int) -> str:
@@ -533,9 +582,22 @@ def render_gap_markdown(trace: dict) -> list[str]:
     return lines
 
 
+def render_recommendation_markdown(trace: dict) -> list[str]:
+    recommendations = trace.get("recommendations", [])
+    if not recommendations:
+        return []
+
+    lines = ["## RDD review recommendations"]
+    for item in recommendations:
+        lines.append(f"- {item['message']} Guide: `{item['guide']}`")
+    lines.append("")
+    return lines
+
+
 def render_gaps_markdown(trace: dict) -> str:
     lines = ["# RDD Trace Gaps", "", f"Source: `{trace['source']}`", ""]
     lines.extend(render_gap_markdown(trace))
+    lines.extend(render_recommendation_markdown(trace))
     return "\n".join(lines).rstrip() + "\n"
 
 
@@ -607,6 +669,7 @@ def command_gaps(args: argparse.Namespace) -> int:
                 "schema_version": trace["schema_version"],
                 "source": trace["source"],
                 "gaps": trace["gaps"],
+                "recommendations": trace["recommendations"],
                 "boundary_questions": trace["boundary_questions"],
             }
         )
