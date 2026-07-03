@@ -1,6 +1,6 @@
 ---
 name: rdd-retroactive-review
-description: Review an existing project through RDD by recovering candidate requirements from current docs, specs, tests, implementation behavior, safety invariants, or task notes. Use when asked to apply RDD retroactively, reconstruct requirements, distinguish durable requirements from implementation choices, find trace gaps, or produce confirmation questions before changing code or docs.
+description: Review an existing project through RDD by recovering candidate requirements from current docs, specs, tests, implementation behavior, safety invariants, or task notes. Use when asked to apply RDD retroactively, review an existing project from an RDD perspective, reconstruct requirements, distinguish durable requirements from implementation choices, find trace gaps, or produce confirmation questions before changing code or docs.
 ---
 
 # RDD Retroactive Review
