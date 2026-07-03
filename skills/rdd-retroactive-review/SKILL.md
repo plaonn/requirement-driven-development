@@ -74,6 +74,7 @@ When the target project was not originally developed with RDD, default to a cove
 6. Use Boundary Questions First when needed.
    - If root goal, rationale, failure prevented, implementation-choice boundary, or automation boundary is central but under-evidenced, do not produce a full hierarchy first.
    - If the project has substantial pre-RDD history and the user asks to "apply RDD" broadly, default to Boundary Questions First unless they explicitly asked only for a draft candidate index.
+   - If the user asks to review an existing project "from an RDD perspective", do not start with a normal findings-first code review. Start with Boundary Questions First unless the user explicitly asked only for a read-only candidate index or implementation risk audit.
 
 ## Output Contract
 

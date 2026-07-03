@@ -65,6 +65,11 @@
 
 pre-RDD 히스토리가 많은 프로젝트에서는 full requirement hierarchy가 이른 경우가 많습니다.
 
+누군가 기존 프로젝트를 "RDD 관점에서" 검토하거나 RDD를 넓게 적용해 달라고 요청하면
+일반적인 findings-first code review로 시작하지 않습니다. 사용자가 read-only candidate
+index나 implementation risk audit만 명시적으로 요청한 경우가 아니라면 Boundary
+Questions First로 시작합니다.
+
 다음이 불명확하면 hierarchy를 만들기 전에 boundary clarification을 합니다.
 
 - 복원된 requirement들이 기여하는 root goal

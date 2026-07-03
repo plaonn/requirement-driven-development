@@ -66,6 +66,11 @@ Existing behavior is evidence, not proof of requirement. Tests are evidence, not
 
 For projects with substantial pre-RDD history, a full requirement hierarchy is often premature.
 
+When someone asks to review an existing project "from an RDD perspective" or to
+apply RDD broadly, do not start with a normal findings-first code review. Start
+with Boundary Questions First unless the user explicitly asked only for a
+read-only candidate index or implementation risk audit.
+
 Use boundary clarification before producing a hierarchy when these are unclear:
 
 - the root goal the recovered requirements serve,
