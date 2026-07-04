@@ -12,6 +12,10 @@ Requirement -> Spec -> Test -> Implementation -> Review
 
 RDD는 SDD나 TDD를 대체하지 않습니다. RDD는 그 위에 요구사항 경계를 둡니다. spec과 test는 이해가 깊어지며 다듬어질 수 있지만, 루프를 정의하는 요구사항은 안정적으로 유지되어야 합니다. 요구사항이 바뀌면 루프 경계가 바뀐 것이므로 명시적으로 re-scope해야 합니다.
 
+## Root goal
+
+RDD는 작은 개발 루프가 그 루프를 정당화하는 requirement와 계속 정렬되도록 돕습니다. 그래서 spec, test, implementation, review가 추적 가능하게 남고, scope 변경은 명시적인 결정으로 드러납니다.
+
 ## 용어 원칙
 
 이 한국어 문서는 개발자가 실제로 쓰는 영어 용어를 일부 유지합니다. 핵심 개념은 처음 등장할 때 한국어와 영어를 함께 사용하고, 이후에는 문맥상 자연스러운 표현을 사용합니다.

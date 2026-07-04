@@ -12,6 +12,10 @@ Requirement -> Spec -> Test -> Implementation -> Review
 
 TDD makes tests the immediate feedback mechanism. SDD makes specs the explicit contract. RDD puts the requirement above both: specs and tests may evolve as understanding improves, but the requirement that defines the loop should remain stable. If the requirement changes, the loop should be explicitly re-scoped.
 
+## Root goal
+
+RDD helps teams keep small development loops aligned with the requirement that justifies them, so specs, tests, implementation, and review remain traceable and scope changes are made explicit.
+
 ## Core idea
 
 Every development loop should answer five questions:
