@@ -146,6 +146,14 @@ The goal is not to turn requirements into long essays. The goal is to keep enoug
 
 A durable requirement set should be curated, not merely accumulated. If a new requirement conflicts with an existing one, the conflict should be resolved explicitly by superseding, narrowing, rejecting, or re-scoping one of them.
 
+#### Requirement document structure
+
+When a project keeps durable requirements in source-of-truth documents, keep the entry point easy to scan. A top-level `REQUIREMENTS.md` can hold the root goal, requirement hierarchy, and links to detail documents.
+
+If one requirement grows enough to need its own rationale, assumptions, derived specs, tests, decisions, or revisit history, prefer splitting that detail into a narrower document such as `docs/requirements/R1-project-navigation.md`. Keep the index document as the current-truth map rather than turning it into a long discussion archive.
+
+The split point is not raw file length. Split when the document no longer matches the way people or agents need to load context for a task. Do not split a requirement set that must always be read together to understand the active contract.
+
 ### Spec
 
 The spec translates the requirement into rules, contracts, boundaries, and acceptance criteria.

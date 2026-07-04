@@ -145,6 +145,14 @@ Revisit when:
 
 지속 requirement set은 단순 누적물이 아니라 정리된 현재 truth여야 합니다. 새 requirement가 기존 requirement와 충돌하면 둘을 조용히 공존시키지 말고 supersede, narrow, reject, re-scope 같은 결정을 명시해야 합니다.
 
+#### Requirement 문서 구조
+
+프로젝트가 지속 requirement를 source-of-truth 문서로 유지한다면, entry point는 빠르게 훑을 수 있어야 합니다. 최상위 `REQUIREMENTS.md`는 root goal, requirement hierarchy, 세부 문서 링크를 담는 역할을 할 수 있습니다.
+
+특정 requirement가 자체 rationale, assumptions, derived specs, tests, decisions, revisit history를 가질 만큼 커지면, 그 세부 내용은 `docs/requirements/R1-project-navigation.md` 같은 더 좁은 문서로 분리하는 편을 선호합니다. Index 문서는 긴 논의 archive가 아니라 현재 truth map으로 유지합니다.
+
+분리 기준은 단순 파일 길이가 아닙니다. 사람이나 agent가 task를 수행할 때 필요한 context loading unit과 문서 단위가 어긋날 때 분리합니다. Active contract를 이해하려면 항상 함께 읽어야 하는 requirement set이라면 불필요하게 나누지 않습니다.
+
 ### Spec
 
 Spec은 requirement를 규칙, 계약, 경계, 인수 기준으로 옮깁니다.
