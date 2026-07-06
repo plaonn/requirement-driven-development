@@ -82,6 +82,12 @@ prevented, or loop boundary is missing or unclear, keep the recovered item as a
 candidate and clarify the boundary before implementation or documentation
 adoption.
 
+Some confirmed decisions should remain scoped policies rather than durable
+requirements. Temporary experiment policies, provider workarounds, and
+operator-run-specific risk decisions should carry acceptance scope, promotion
+rules, and expiration rules so they do not harden into permanent requirements by
+accident.
+
 ## PR-scale RDD
 
 RDD is especially useful at pull request scale.

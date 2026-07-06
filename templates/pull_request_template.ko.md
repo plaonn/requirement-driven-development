@@ -8,6 +8,14 @@
 
 이 PR이 더 큰 root goal의 일부라면 현재 어떤 좁은 stage를 다룹니까?
 
+# Decision classification
+
+이 결정은 durable requirement, temporary experiment policy, provider workaround, implementation choice, promotion candidate, expired/superseded policy 중 무엇입니까?
+
+Accepted라면 acceptance scope는 무엇입니까?
+
+Temporary 또는 scoped decision이라면 policy horizon, promotion rule, expiration rule, canonical owner는 무엇입니까?
+
 # Spec
 
 그 requirement를 표현하는 규칙, 경계, API 계약, 인수 기준은 무엇입니까?
@@ -30,7 +38,7 @@ Spec을 보호하는 tests 또는 checks는 무엇입니까?
 
 # Boundary clarification
 
-Root goal, rationale, failure prevented, 구현 선택과 requirement의 경계, automation boundary가 불명확했다면 PR scope를 확정하기 전에 어떤 질문에 답했습니까?
+Root goal, rationale, failure prevented, decision class, 구현 선택과 requirement의 경계, automation boundary가 불명확했다면 PR scope를 확정하기 전에 어떤 질문에 답했습니까?
 
 # 발견된 requirement 변경
 

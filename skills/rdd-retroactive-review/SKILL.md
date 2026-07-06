@@ -1,6 +1,6 @@
 ---
 name: rdd-retroactive-review
-description: Review an existing project through RDD by recovering candidate requirements from current docs, specs, tests, implementation behavior, safety invariants, or task notes. Use when asked to apply RDD retroactively, review an existing project from an RDD perspective, reconstruct requirements, distinguish durable requirements from implementation choices, find trace gaps, or produce confirmation questions before changing code or docs.
+description: Review an existing project through RDD by recovering candidate requirements from current docs, specs, tests, implementation behavior, safety invariants, policies, workarounds, or task notes. Use when asked to apply RDD retroactively, review an existing project from an RDD perspective, reconstruct requirements, distinguish durable requirements from temporary policies, provider workarounds, or implementation choices, find trace gaps, or produce confirmation questions before changing code or docs.
 ---
 
 # RDD Retroactive Review
@@ -44,10 +44,16 @@ When the target project was not originally developed with RDD, default to a cove
    - Note whether the project appears to have substantial pre-RDD history.
 
 2. Inventory existing claims.
-   - Extract explicit specs, invariants, contracts, acceptance criteria, test expectations, non-goals, safety defaults, and repeated constraints.
+   - Extract explicit specs, invariants, contracts, acceptance criteria, test expectations, non-goals, safety defaults, policies, workarounds, and repeated constraints.
    - Keep implementation facts separate from stated behavior contracts.
 
-3. Infer candidate requirements.
+3. Classify decisions before promotion.
+   - Mark important decisions as `Durable Requirement`, `Temporary Experiment Policy`, `Provider Workaround`, `Implementation Choice`, `Promotion Candidate`, or `Expired/Superseded Policy`.
+   - If a decision is `accepted`, record whether acceptance is system-wide, beta-only, operator-run-specific, or code-unlock accepted but implementation blocked.
+   - For temporary policies or scoped decisions, record decision class, durability, acceptance scope, policy horizon, promotion rule, expiration rule, and canonical owner when available.
+   - Do not promote a temporary policy into a durable requirement without a promotion rule.
+
+4. Infer candidate requirements.
    - For each important spec or invariant, ask what user, product, operational, safety, or technical need it appears to protect.
    - A candidate requirement must explain who or what benefits, what failure or risk is prevented, and why the constraint matters.
    - Recover the root goal before classifying lower-level requirements when a larger product or operational goal exists.
@@ -59,19 +65,19 @@ When the target project was not originally developed with RDD, default to a cove
    - Do not treat repeated implementation behavior as `confirmed` merely because it exists in code and tests.
    - If purpose cannot be recovered, report a trace gap rather than a complete requirement.
 
-4. Recover rationale and assumptions.
+5. Recover rationale and assumptions.
    - Record why the requirement likely matters.
    - Record what would go wrong if the derived spec were removed or weakened.
    - Record assumptions that would make the requirement invalid or worth revisiting.
    - If rationale or assumptions cannot be recovered, ask a question instead of filling the gap with certainty.
 
-5. Separate change risk.
+6. Separate change risk.
    - `change-dangerous`: appears to protect an active requirement or safety invariant.
    - `change-review-needed`: linked to an inferred requirement or unresolved assumption.
    - `change-likely-safe`: likely implementation structure without product meaning.
    - Treat missing traceability as review-needed, not automatically safe.
 
-6. Use Boundary Questions First when needed.
+7. Use Boundary Questions First when needed.
    - If root goal, rationale, failure prevented, implementation-choice boundary, or automation boundary is central but under-evidenced, do not produce a full hierarchy first.
    - If the project has substantial pre-RDD history and the user asks to "apply RDD" broadly, default to Boundary Questions First unless they explicitly asked only for a draft candidate index.
    - If the user asks to review an existing project "from an RDD perspective", do not start with a normal findings-first code review. Start with Boundary Questions First unless the user explicitly asked only for a read-only candidate index or implementation risk audit.
@@ -122,6 +128,16 @@ Candidate Requirements
   Evidence:
   Revisit when:
 
+Decision Register
+- D?: [short title]
+  Decision class:
+  Durability:
+  Acceptance scope:
+  Policy horizon:
+  Promotion rule:
+  Expiration rule:
+  Canonical owner:
+
 Unresolved Requirement Candidates
 - Spec/invariant:
   Possible requirement:
@@ -146,6 +162,12 @@ Open Questions
 Implementation Choices
 - Likely safe to change, assuming the candidate requirements remain satisfied:
 
+Stale Proposal Checks
+- Old proposal/current-policy confusion:
+- Blocked decision still active:
+- README/spec behavior mismatch:
+- Disabled path documented as enabled:
+
 RDD Observations
 - What this review suggests about the RDD workflow, templates, or documentation:
 ```
@@ -157,6 +179,7 @@ RDD Observations
 - Do not treat a first-pass candidate hierarchy as proof that the project now satisfies RDD.
 - Do not call recovered requirements current truth unless confirmed.
 - Do not convert retroactive candidates into public source-of-truth docs without a separate adoption loop.
+- Do not promote temporary experiment policies, provider workarounds, or operator-run risk decisions into durable requirements without a promotion rule.
 - Do not output requirements that only say what the system must do.
 - If an item has no recoverable rationale, classify it as a traceability gap.
 - Do not let a current safety stage erase a broader root goal, and do not let a broad root goal erase the current safety boundary.

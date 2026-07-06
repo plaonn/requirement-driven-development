@@ -102,6 +102,8 @@ Requirement가 바뀌면 루프 경계가 바뀐 것이다.
 
 `SPEC.md`, roadmap, test suite, 안정적인 구현은 유용한 evidence가 될 수 있지만 그 자체로 충분하지 않습니다. Root goal, rationale, failure prevented, loop boundary가 빠져 있거나 불명확하면 복원된 항목은 candidate로 유지하고, 구현이나 문서 adoption 전에 boundary를 먼저 확인합니다.
 
+확인된 decision 중 일부는 durable requirement가 아니라 scoped policy로 남아야 합니다. Temporary experiment policy, provider workaround, operator-run-specific risk decision에는 acceptance scope, promotion rule, expiration rule을 붙여 임시 조건이 실수로 영구 requirement처럼 굳어지지 않게 합니다.
+
 ## 문서 구조
 
 ```text

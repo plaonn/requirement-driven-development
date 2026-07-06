@@ -94,8 +94,20 @@ RETROACTIVE_REVIEW_SAMPLE = """# Retroactive Review
   Requirement: Accept/apply output must agree with persisted task state.
   Rationale: Operators decide whether to retry or clean up from this output.
   Failure prevented: A successful mutation appearing as a lock failure.
+  Decision class: Durable Requirement.
   Derived specs/tests: idempotent already-applied accept returns success.
   Revisit when: accept/apply state transitions are redesigned.
+
+## Decision Register
+
+- D1: Limit US live beta orders
+  Decision class: Temporary Experiment Policy.
+  Durability: Temporary.
+  Acceptance scope: beta-only policy accepted.
+  Policy horizon: Next manual review.
+  Promotion rule: Promote only if repeated across markets or providers.
+  Expiration rule: Expires after the beta run or superseding review.
+  Canonical owner: Operations lead.
 
 ## Automation Boundary
 
@@ -207,12 +219,18 @@ class RddToolTest(unittest.TestCase):
         specs = [item["text"] for item in trace["fields"]["spec"]]
         review_focus = [item["text"] for item in trace["fields"]["review_focus"]]
         automation = [item["text"] for item in trace["fields"]["automation_boundary"]]
+        decision_classes = [item["text"] for item in trace["fields"]["decision_class"]]
+        acceptance_scopes = [item["text"] for item in trace["fields"]["acceptance_scope"]]
+        promotion_rules = [item["text"] for item in trace["fields"]["promotion_rule"]]
 
         self.assertIn("Adopt RDD without rewriting existing project history.", root_goals)
         self.assertIn("Accept/apply output must agree with persisted task state.", requirements)
         self.assertIn("Operators decide whether to retry or clean up from this output.", rationales)
         self.assertIn("A successful mutation appearing as a lock failure.", failures)
         self.assertIn("idempotent already-applied accept returns success.", specs)
+        self.assertIn("Temporary Experiment Policy.", decision_classes)
+        self.assertIn("beta-only policy accepted.", acceptance_scopes)
+        self.assertIn("Promote only if repeated across markets or providers.", promotion_rules)
         self.assertTrue(any("review/apply safety behavior." in text for text in review_focus))
         self.assertTrue(any("read-only review bundle generation." in text for text in automation))
         self.assertEqual(trace["fields"]["non_goals"][0]["text"], "- Do not rewrite historical task logs.")

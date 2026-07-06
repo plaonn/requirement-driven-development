@@ -100,6 +100,58 @@ Do not automate yet:
   Adjacent work that remains out of scope until a later requirement is confirmed.
 ```
 
+#### Decision classes
+
+RDD should not treat every decision as a durable requirement.
+
+Use a decision class when a rule, limit, workaround, or review condition needs to be recorded but may not deserve promotion into the durable requirement set:
+
+```text
+Durable Requirement:
+  A product, system, safety, business, or technical need that should keep guiding future loops.
+
+Temporary Experiment Policy:
+  A bounded rule for a beta, live test, trial amount, market, date range, operator run, or limited experiment.
+
+Provider Workaround:
+  A constraint caused by a specific provider, platform, API, app check, or external dependency behavior.
+
+Implementation Choice:
+  A current design or code structure chosen to satisfy the requirement, but not itself the requirement.
+
+Promotion Candidate:
+  A repeated policy or workaround that may become a durable requirement if evidence accumulates.
+
+Expired/Superseded Policy:
+  A policy that should no longer guide new work except as historical context.
+```
+
+The word `accepted` should always carry scope. For example:
+
+```text
+Acceptance scope:
+  system-wide requirement accepted
+  beta-only policy accepted
+  operator-run-specific risk accepted
+  code-unlock condition accepted but implementation blocked
+```
+
+For policy or decision records, useful fields include:
+
+```text
+Decision class:
+Durability:
+Acceptance scope:
+Policy horizon:
+Promotion rule:
+Expiration rule:
+Canonical owner:
+```
+
+A decision is a stronger candidate for requirement promotion when it applies across multiple experiments, prevents financial, security, safety, or external side effects if violated, remains true across provider changes, affects multiple implementation surfaces, or requires both operator flow and tests to follow it.
+
+Keep a decision as a policy rather than a durable requirement when it applies only to a specific symbol, amount, market, provider check result, beta run, date range, or one or two experiments. Temporary policies are valid RDD artifacts; the risk is letting them read like permanent system requirements without a promotion or expiration rule.
+
 #### Boundary clarification
 
 Sometimes the most useful RDD step is not writing a full trace. It is stopping early to clarify the loop boundary.
@@ -108,7 +160,7 @@ Use boundary clarification before deriving specs, tests, or implementation when 
 
 - the root goal the loop serves,
 - the rationale or failure the requirement is meant to prevent,
-- whether a constraint is a durable requirement or an implementation choice,
+- whether a constraint is a durable requirement, temporary policy, provider workaround, or implementation choice,
 - the automation boundary for state-changing work,
 - the current safety stage under a broader long-term goal.
 
@@ -123,6 +175,9 @@ Some requirements are only task context. Others become durable product or system
 For long-lived requirements, useful fields include:
 
 ```text
+Decision class:
+  Durable Requirement.
+
 Requirement:
   The user, product, business, or technical need that should remain true.
 

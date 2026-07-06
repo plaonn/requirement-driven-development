@@ -99,6 +99,58 @@ Do not automate yet:
   나중 requirement가 확인될 때까지 scope 밖에 두는 인접 작업
 ```
 
+#### Decision class
+
+RDD는 모든 decision을 지속 requirement로 취급하지 않습니다.
+
+Rule, limit, workaround, review condition을 기록해야 하지만 durable requirement set으로 승격할지 불확실하다면 decision class를 사용합니다.
+
+```text
+Durable Requirement:
+  앞으로의 loop도 계속 이끌어야 하는 제품, 시스템, safety, 비즈니스, 기술적 필요
+
+Temporary Experiment Policy:
+  beta, live test, 시험 금액, 시장, 기간, operator run, 제한된 experiment에만 적용되는 규칙
+
+Provider Workaround:
+  특정 provider, platform, API, app check, 외부 dependency 동작 때문에 생긴 제약
+
+Implementation Choice:
+  requirement를 만족하기 위해 현재 선택한 설계나 코드 구조. 그 자체가 requirement는 아님
+
+Promotion Candidate:
+  evidence가 쌓이면 durable requirement가 될 수 있는 반복 policy 또는 workaround
+
+Expired/Superseded Policy:
+  새 작업을 이끌면 안 되고 historical context로만 남는 policy
+```
+
+`accepted`라는 말에는 항상 scope가 붙어야 합니다.
+
+```text
+Acceptance scope:
+  system-wide requirement accepted
+  beta-only policy accepted
+  operator-run-specific risk accepted
+  code-unlock condition accepted but implementation blocked
+```
+
+Policy나 decision record에는 다음 필드가 유용합니다.
+
+```text
+Decision class:
+Durability:
+Acceptance scope:
+Policy horizon:
+Promotion rule:
+Expiration rule:
+Canonical owner:
+```
+
+Decision이 여러 experiment에 반복 적용되고, 위반 시 금융/보안/safety/external side effect 위험이 크고, provider가 바뀌어도 유지될 원칙이며, 여러 implementation surface에 영향을 주고, operator flow와 test가 함께 따라야 한다면 requirement 승격 후보가 됩니다.
+
+특정 종목, 금액, 시장, provider check 결과, beta run, 기간, 한두 번의 experiment에만 적용된다면 durable requirement보다 policy로 남기는 편이 맞습니다. Temporary policy도 유효한 RDD artifact입니다. 문제는 promotion 또는 expiration rule 없이 영구 system requirement처럼 읽히는 것입니다.
+
 #### Boundary clarification
 
 때로 가장 유용한 RDD 단계는 full trace를 쓰는 것이 아니라, 먼저 멈춰서 loop boundary를 확인하는 것입니다.
@@ -107,7 +159,7 @@ Do not automate yet:
 
 - loop가 기여하는 root goal
 - requirement가 막으려는 rationale 또는 failure
-- 어떤 제약이 지속 requirement인지 구현 선택인지
+- 어떤 제약이 지속 requirement, temporary policy, provider workaround, implementation choice인지
 - state-changing work의 automation boundary
 - 더 큰 장기 goal 아래의 현재 safety stage
 
@@ -122,6 +174,9 @@ Do not automate yet:
 오래 살아야 하는 requirement에는 다음 필드가 유용합니다.
 
 ```text
+Decision class:
+  Durable Requirement.
+
 Requirement:
   계속 참이어야 하는 사용자, 제품, 비즈니스, 기술적 필요
 

@@ -41,6 +41,8 @@ Use this checklist for pull requests, tickets, tasks, and small iteration review
 - [ ] Did refactoring introduce behavior changes?
 - [ ] Did implementation convenience expand the public contract?
 - [ ] Did an implementation choice get promoted into a requirement without rationale?
+- [ ] Did a temporary experiment policy or provider workaround get promoted into a durable requirement without a promotion rule?
+- [ ] If a decision is accepted, is the acceptance scope explicit?
 - [ ] Are adjacent fixes separated or explicitly included?
 
 ### 6. Automation boundary
@@ -68,7 +70,7 @@ Use this section when the loop automates user, operational, financial, safety-se
 
 Start with the requirement, not the diff.
 
-If the requirement's root goal, rationale, failure prevented, implementation-choice boundary, or automation boundary is unclear, do boundary clarification before writing a full trace. Ask the smallest set of questions needed to settle the loop boundary, then continue the review.
+If the requirement's root goal, rationale, failure prevented, decision class, implementation-choice boundary, or automation boundary is unclear, do boundary clarification before writing a full trace. Ask the smallest set of questions needed to settle the loop boundary, then continue the review.
 
 Then read the spec and tests before judging implementation details. This keeps review anchored to the loop boundary and prevents the implementation from silently redefining the goal.
 

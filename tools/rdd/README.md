@@ -75,13 +75,21 @@ Recognized RDD fields include:
 - Implementation
 - Non-goals
 - Automation boundary
+- Decision class
+- Durability
+- Acceptance scope
+- Policy horizon
+- Promotion rule
+- Expiration rule
+- Canonical owner
 - Boundary clarification
 - Review focus
 - Requirement changes discovered
 
 English and Korean companion labels are supported for common RDD fields. The
 alias set also covers retroactive review outputs such as recovered requirements,
-derived specs, retroactive coverage, and automation boundary decisions.
+derived specs, retroactive coverage, automation boundary decisions, and scoped
+policy or decision records.
 
 Missing required fields are reported as boundary clarification questions. The
 automation boundary is reported as a conditional gap because it is required only

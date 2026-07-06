@@ -10,7 +10,7 @@
 
 - 기존 프로젝트에 spec, test, docs, implementation behavior는 있지만 driving requirement가 불명확한 경우
 - 팀이 과거를 다시 쓰지 않고 RDD를 도입하고 싶은 경우
-- reviewer가 durable requirement와 implementation choice를 구분해야 하는 경우
+- reviewer가 durable requirement, temporary policy, provider workaround, implementation choice를 구분해야 하는 경우
 - safety 또는 automation boundary가 있어 보이지만 rationale이 문서화되어 있지 않은 경우
 - source-of-truth requirement 문서를 쓰기 전에 candidate requirement index가 필요한 경우
 
@@ -22,18 +22,34 @@
 
 기존 동작은 evidence이지 requirement 증명이 아닙니다. Test도 evidence이지 product intent 증명이 아닙니다. 반복되는 제약은 중요할 수 있지만, purpose, rationale, failure prevented를 복원하거나 확인하기 전에는 프로젝트 truth로 승격하지 않아야 합니다.
 
+Confirmed 또는 accepted decision이 모두 system-wide requirement인 것은 아닙니다. 소급 리뷰는 temporary experiment policy, provider workaround, operator-run-specific risk decision이 해당 scope 안에서 유효하다고 확인하면서도 durable requirement set 밖에 둘 수 있습니다.
+
 ## 리뷰 순서
 
 1. Current truth를 읽습니다.
    현재 docs, specs, tests, public contracts, safety notes, active task surface에서 시작합니다. 오래된 roadmap note나 완료된 work log보다 현재 truth를 우선합니다.
 
 2. Existing claims를 inventory합니다.
-   명시된 spec, invariant, acceptance criteria, non-goal, safety default, 반복되는 constraint를 추출합니다. Implementation fact와 stated behavior contract를 분리합니다.
+   명시된 spec, invariant, acceptance criteria, non-goal, safety default, policy, workaround, 반복되는 constraint를 추출합니다. Implementation fact와 stated behavior contract를 분리합니다.
 
-3. Candidate requirement를 추론합니다.
+3. 승격 전에 decision을 분류합니다.
+   중요한 decision을 다음 중 하나로 표시합니다.
+
+   ```text
+   Durable Requirement
+   Temporary Experiment Policy
+   Provider Workaround
+   Implementation Choice
+   Promotion Candidate
+   Expired/Superseded Policy
+   ```
+
+   Decision이 `accepted`라면 system-wide requirement accepted, beta-only policy accepted, operator-run-specific risk accepted, code-unlock condition accepted but implementation blocked 중 어떤 의미인지 기록합니다.
+
+4. Candidate requirement를 추론합니다.
    중요한 spec이 어떤 사용자, 제품, 비즈니스, 운영, safety, 기술적 필요를 보호하는지 묻습니다. 유용한 candidate requirement는 시스템이 무엇을 하는지가 아니라 왜 그 동작이 중요한지를 설명합니다.
 
-4. Confidence를 표시합니다.
+5. Confidence를 표시합니다.
 
    ```text
    confirmed:
@@ -46,7 +62,7 @@
      그럴듯하지만 evidence가 부족함.
    ```
 
-5. Change risk를 분리합니다.
+6. Change risk를 분리합니다.
 
    ```text
    change-dangerous:
@@ -61,6 +77,26 @@
 
    Traceability가 없다는 것은 자동으로 안전하다는 뜻이 아니라 review-needed입니다.
 
+## Policy와 promotion boundary
+
+Temporary policy도 유효한 RDD record입니다. 미래 독자가 permanent requirement로 오해하지 않도록 lifecycle context를 남겨야 합니다.
+
+다음 필드를 사용할 수 있습니다.
+
+```text
+Decision class:
+Durability:
+Acceptance scope:
+Policy horizon:
+Promotion rule:
+Expiration rule:
+Canonical owner:
+```
+
+Policy가 여러 experiment에 반복 적용되고, 위반 시 금융/보안/safety/external side effect 위험이 크고, provider가 바뀌어도 유지되며, 여러 implementation surface에 영향을 주거나 operator flow와 test가 함께 따라야 한다면 durable requirement 승격 후보입니다.
+
+특정 종목, 금액, 시장, provider app check 결과, beta/live-test convenience, 제한된 기간, 한두 번의 experiment에 묶여 있고 폐기될 수 있다면 policy로 남깁니다.
+
 ## Boundary Questions First
 
 pre-RDD 히스토리가 많은 프로젝트에서는 full requirement hierarchy가 이른 경우가 많습니다.
@@ -74,7 +110,7 @@ Questions First로 시작합니다.
 
 - 복원된 requirement들이 기여하는 root goal
 - rationale 또는 failure prevented
-- 어떤 constraint가 durable requirement이고 어떤 것이 implementation choice인지
+- 어떤 constraint가 durable requirement, temporary policy, provider workaround, implementation choice인지
 - state-changing work의 automation boundary
 - 사용자가 read-only review, candidate index, confirmed project truth, future loop용 RDD 중 무엇을 원하는지
 
@@ -104,6 +140,19 @@ Retroactive Coverage
 
 이 요약은 first-pass review가 full adoption으로 오해되는 것을 막습니다.
 
+## Stale proposal detection
+
+소급 리뷰는 과거 decision이 현재 policy처럼 읽히는지도 확인해야 합니다.
+
+다음을 묻습니다.
+
+- 과거 proposal이 active policy처럼 읽히는가?
+- blocked decision이 roadmap에서 still active처럼 보이는가?
+- README 예제가 current spec과 다르게 행동하는가?
+- disabled path가 docs에서는 enabled처럼 보이는가?
+
+그렇다면 편집 전에 먼저 분류합니다. 해당 항목은 durable requirement가 되는 대신 promotion, expiration, superseding, policy record 이동이 필요할 수 있습니다.
+
 ## Candidate requirement 형태
 
 Evidence가 충분할 때 다음 형태를 사용합니다.
@@ -112,6 +161,7 @@ Evidence가 충분할 때 다음 형태를 사용합니다.
 Candidate Requirement
 - Title:
   Status: confirmed | inferred | unclear
+  Decision class: Durable Requirement
   Requirement:
   Rationale:
   Failure prevented:
@@ -131,6 +181,7 @@ Rationale, failure prevented, assumptions를 복원할 수 없다면 그 항목�
 
 - coverage summary
 - candidate requirements
+- 분류된 temporary policies 또는 provider workarounds
 - trace gaps
 - confirmation questions
 - change-risk guidance
@@ -159,6 +210,16 @@ Root Goal
 Candidate Requirements
 - R?: ...
 
+Decision Register
+- D?: ...
+  Decision class:
+  Durability:
+  Acceptance scope:
+  Policy horizon:
+  Promotion rule:
+  Expiration rule:
+  Canonical owner:
+
 Unresolved Requirement Candidates
 - Spec/invariant:
   Possible requirement:
@@ -182,6 +243,12 @@ Open Questions
 
 Implementation Choices
 - Likely safe to change, assuming the candidate requirements remain satisfied:
+
+Stale Proposal Checks
+- Old proposal/current-policy confusion:
+- Blocked decision still active:
+- README/spec behavior mismatch:
+- Disabled path documented as enabled:
 ```
 
 보고서는 자주 읽을 수 있을 만큼 작게 유지합니다. 다음 결정을 위해 필요한 영역만 확장합니다.
@@ -193,5 +260,6 @@ Implementation Choices
 - first-pass candidate hierarchy를 프로젝트가 이제 RDD를 만족한다는 증거로 취급하지 않습니다.
 - 복원된 requirement를 확인 없이 current truth라고 부르지 않습니다.
 - 별도 adoption loop 없이 retroactive candidate를 public source-of-truth docs로 전환하지 않습니다.
+- Promotion rule 없이 temporary experiment policy, provider workaround, operator-run risk decision을 durable requirement로 승격하지 않습니다.
 - Implementation convenience가 requirement를 다시 정의하게 두지 않습니다.
 - Uncertainty를 지우지 않습니다.
