@@ -16,6 +16,14 @@ TDD makes tests the immediate feedback mechanism. SDD makes specs the explicit c
 
 RDD helps teams keep small development loops aligned with the requirement that justifies them, so specs, tests, implementation, and review remain traceable and scope changes are made explicit.
 
+## Relationship to requirements engineering
+
+RDD is not a replacement for requirements engineering. Requirements engineering covers the broader work of eliciting, analyzing, negotiating, specifying, validating, and managing requirements across a system or product lifecycle.
+
+RDD operates at a narrower boundary. It assumes that a candidate requirement has been sufficiently elicited and validated for the current development loop, then helps the team keep that requirement traceable through spec, tests, implementation, and review. It does not replace stakeholder discovery, product discovery, requirement prioritization, conflict resolution, or system-wide requirements management.
+
+See [RDD and Requirements Engineering](docs/08-rdd-and-requirements-engineering.md) for the detailed boundary.
+
 ## Core idea
 
 Every development loop should answer five questions:
@@ -141,6 +149,7 @@ docs/
   05-examples.md
   06-ai-agent-usage.md
   07-retroactive-rdd-review.md
+  08-rdd-and-requirements-engineering.md
   ko/
     01-methodology.md
     02-rdd-sdd-tdd-loop.md
@@ -149,6 +158,7 @@ docs/
     05-examples.md
     06-ai-agent-usage.md
     07-retroactive-rdd-review.md
+    08-rdd-and-requirements-engineering.md
 
 skills/
   rdd-retroactive-review/

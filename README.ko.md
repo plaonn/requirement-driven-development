@@ -16,6 +16,14 @@ RDD는 SDD나 TDD를 대체하지 않습니다. RDD는 그 위에 요구사항 �
 
 RDD는 작은 개발 루프가 그 루프를 정당화하는 requirement와 계속 정렬되도록 돕습니다. 그래서 spec, test, implementation, review가 추적 가능하게 남고, scope 변경은 명시적인 결정으로 드러납니다.
 
+## 요구공학과의 관계
+
+RDD는 요구공학(Requirements Engineering)을 대체하지 않습니다. 요구공학은 system 또는 product lifecycle 전체에서 요구사항을 도출하고, 분석하고, 협상하고, 명세하고, 검증하고, 관리하는 더 넓은 분야입니다.
+
+RDD의 경계는 더 좁습니다. 현재 개발 loop에 사용할 candidate requirement가 충분히 도출되고 검증되었다고 전제한 뒤, 그 requirement가 spec, test, implementation, review까지 추적 가능하게 유지되도록 돕습니다. Stakeholder discovery, product discovery, requirement prioritization, conflict resolution, system-wide requirements management는 RDD가 대체하지 않습니다.
+
+자세한 경계는 [RDD와 요구공학](docs/ko/08-rdd-and-requirements-engineering.md)에서 설명합니다.
+
 ## 용어 원칙
 
 이 한국어 문서는 개발자가 실제로 쓰는 영어 용어를 일부 유지합니다. 핵심 개념은 처음 등장할 때 한국어와 영어를 함께 사용하고, 이후에는 문맥상 자연스러운 표현을 사용합니다.
@@ -115,6 +123,7 @@ docs/
   05-examples.md
   06-ai-agent-usage.md
   07-retroactive-rdd-review.md
+  08-rdd-and-requirements-engineering.md
   ko/
     01-methodology.md
     02-rdd-sdd-tdd-loop.md
@@ -123,6 +132,7 @@ docs/
     05-examples.md
     06-ai-agent-usage.md
     07-retroactive-rdd-review.md
+    08-rdd-and-requirements-engineering.md
 
 skills/
   rdd-retroactive-review/
