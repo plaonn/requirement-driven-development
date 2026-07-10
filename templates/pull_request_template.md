@@ -14,6 +14,26 @@ What failure, regression, or risk does it prevent?
 
 If this PR belongs to a larger root goal, what narrower stage does this requirement cover?
 
+# Requirement validity
+
+Validity scope:
+Is this a loop-local requirement, durable requirement, or temporary/scoped policy?
+
+Assumptions:
+If durable, what conditions must remain true?
+
+Revisit when:
+If durable, what observable signals should trigger revalidation?
+
+Expiration rule:
+If this is a temporary or scoped policy, what event or condition ends its validity?
+
+Revalidation outcome:
+If a revisit signal occurred, was the requirement retained, narrowed, superseded, or discarded?
+
+Affected traces:
+Which specs, tests, implementation, docs, or active loops are affected?
+
 # Decision classification
 
 Is this a durable requirement, temporary experiment policy, provider workaround, implementation choice, promotion candidate, or expired/superseded policy?

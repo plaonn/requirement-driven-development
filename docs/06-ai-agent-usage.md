@@ -23,6 +23,11 @@ Requirement:
   Include rationale, failure prevented, assumptions, and revisit conditions when the requirement may outlive one loop.
   If the task belongs to a larger root goal, state the current narrower stage.
 
+Requirement validity:
+  Loop-local requirement, durable requirement, or temporary/scoped policy.
+  Durable requirements need assumptions and observable revisit signals.
+  Temporary/scoped policies need an expiration rule.
+
 Spec:
   Rules, contracts, acceptance criteria, and boundaries.
 
@@ -45,6 +50,7 @@ Agents should stop or report when:
 
 - the root goal, rationale, failure prevented, or automation boundary is unclear enough that deriving a full trace would require guessing,
 - the prompt provides a goal or desired outcome but no requirement that states what must be true,
+- an assumption has failed or a revisit signal occurred and the requirement has not been revalidated,
 - the requirement appears wrong or incomplete,
 - implementation suggests an adjacent feature,
 - tests need to be changed in a way that alters the requirement,
@@ -53,6 +59,8 @@ Agents should stop or report when:
 - the requested change requires a broader architecture or API decision.
 
 When this happens, the agent should use boundary clarification: ask the smallest set of questions needed to settle the loop boundary before continuing.
+
+After a revisit signal, the agent should not silently keep using the requirement. It should report the evidence, request or recover a `retain`, `narrow`, `supersede`, or `discard` decision, and identify affected specs, tests, implementation, docs, and active loops.
 
 ## Scope discipline
 

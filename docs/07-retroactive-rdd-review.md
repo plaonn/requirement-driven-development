@@ -78,6 +78,9 @@ Not every confirmed or accepted decision is a system-wide requirement. A review 
 
    Missing traceability is review-needed, not automatically safe.
 
+7. Recover validity conditions.
+   Classify each requirement candidate as loop-local or durable. Durable candidates need recoverable assumptions and observable revisit signals. If the item is temporary or scoped, keep it in the policy decision register with an expiration rule instead of promoting it into the durable requirement set. If evidence shows that a signal already occurred, mark the candidate under review instead of treating historical stability as current validity.
+
 ## Policy and promotion boundary
 
 Temporary policies are valid RDD records. They should be recorded with enough lifecycle context that future readers do not mistake them for permanent requirements.
@@ -163,6 +166,7 @@ Candidate Requirement
 - Title:
   Status: confirmed | inferred | unclear
   Decision class: Durable Requirement
+  Validity scope: Loop-local requirement | Durable requirement
   Need or goal context:
   Requirement:
   Rationale:
@@ -171,6 +175,7 @@ Candidate Requirement
   Derived specs/tests:
   Evidence:
   Revisit when:
+  Revisit signal status: not observed | observed | unclear
 ```
 
 If rationale, failure prevented, or assumptions cannot be recovered, keep the item as an unresolved candidate or trace gap.
@@ -214,6 +219,8 @@ Candidate Requirements
   Need or goal context:
   Requirement:
   Status:
+  Validity scope:
+  Revisit signal status:
 
 Decision Register
 - D?: ...
@@ -268,4 +275,5 @@ Keep the report small enough to review. Expand only the parts needed for the nex
 - Do not convert retroactive candidates into public source-of-truth docs without a separate adoption loop.
 - Do not promote temporary experiment policies, provider workarounds, or operator-run risk decisions into durable requirements without a promotion rule.
 - Do not let implementation convenience redefine the requirement.
+- Do not treat historical stability, passing tests, or repeated implementation behavior as proof that a requirement is still valid after an assumption fails or revisit signal occurs.
 - Do not erase uncertainty.

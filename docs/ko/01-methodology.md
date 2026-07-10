@@ -229,11 +229,14 @@ Decision이 여러 experiment에 반복 적용되고, 위반 시 금융/보안/s
 
 어떤 requirement는 단일 task context로 끝납니다. 반면 어떤 requirement는 이후 설계 변경을 계속 이끄는 제품 또는 시스템 requirement로 남아야 합니다. 루프 밖에서도 유효하게 남길 requirement라면, 그 제약이 왜 존재하는지 판단할 수 있을 만큼의 맥락을 보존해야 합니다.
 
-오래 살아야 하는 requirement에는 다음 필드가 유용합니다.
+오래 살아야 하는 requirement에는 다음 필드를 기록합니다.
 
 ```text
 Decision class:
   Durable Requirement.
+
+Validity scope:
+  Durable.
 
 Requirement:
   계속 참이어야 하는 제품, 시스템, safety, 비즈니스, 기술적 capability, quality, constraint 또는 condition
@@ -258,11 +261,59 @@ Revisit when:
 
 지속 requirement set은 단순 누적물이 아니라 정리된 현재 truth여야 합니다. 새 requirement가 기존 requirement와 충돌하면 둘을 조용히 공존시키지 말고 supersede, narrow, reject, re-scope 같은 결정을 명시해야 합니다.
 
+#### Requirement validity lifecycle
+
+Loop 안에서 requirement를 안정적으로 유지한다는 것이 영구적으로 유효하다는 뜻은 아닙니다. RDD는 기존 requirement를 더 이상 신뢰할 수 있는 anchor로 보기 어려운 순간을 인식할 수 있을 만큼의 정보를 보존해야 합니다.
+
+Validity scope를 분류합니다.
+
+```text
+Loop-local requirement:
+  현재 development loop에서 유효함
+  Loop boundary가 기본 lifetime임
+
+Durable requirement:
+  미래 loop도 계속 이끌기 위한 requirement
+  Assumptions와 observable revisit signal이 필수임
+
+Temporary/scoped policy:
+  명시된 policy horizon, experiment, provider, market, operating context에서만 유효한 constraint
+  현재 작업을 고정한다는 이유만으로 durable requirement set에 승격하면 안 됨
+  Expiration rule이 필수임
+```
+
+Durable requirement에는 다음을 기록합니다.
+
+```text
+Validity scope:
+  Durable.
+
+Assumptions:
+  Requirement가 유효하려면 계속 참이어야 하는 condition
+
+Revisit when:
+  Revalidation을 trigger하는 observable signal
+```
+
+유용한 revisit signal에는 assumption이 거짓이 되는 경우, stakeholder need나 root goal이 바뀌는 경우, 새 evidence가 rationale을 반박하는 경우, 법률이나 external dependency가 바뀌는 경우, 더 새로운 accepted requirement와 충돌하는 경우, derived spec이 명시된 failure를 더 이상 막지 못하는 경우가 포함됩니다.
+
+Revisit signal 자체가 자동 invalidation decision은 아닙니다. Signal이 관찰되면 다음을 수행합니다.
+
+```text
+1. 영향받는 새 작업에서 requirement를 under review로 표시함
+2. Need, goal, rationale, failure prevented, assumptions를 revalidate함
+3. retain | narrow | supersede | discard 중 하나를 결정함
+4. Evidence와 replacement requirement가 있으면 기록함
+5. Derived spec, test, implementation, docs, active loop에 결정을 전파함
+```
+
+Revalidation 결과 requirement가 연결된 need 또는 goal을 더 이상 만족하지 않거나 validity assumption이 더 이상 성립하지 않는다고 결론 내리는 순간 invalidation boundary가 명시됩니다. 이미 작업이 진행 중이라면 그 결론은 loop-boundary event이며, 영향받는 loop를 re-scope, split 또는 stop해야 합니다.
+
 #### Requirement 문서 구조
 
 프로젝트가 지속 requirement를 source-of-truth 문서로 유지한다면, entry point는 빠르게 훑을 수 있어야 합니다. 최상위 `REQUIREMENTS.md`는 root goal, requirement hierarchy, 세부 문서 링크를 담는 역할을 할 수 있습니다.
 
-특정 requirement가 자체 rationale, assumptions, derived specs, tests, decisions, revisit history를 가질 만큼 커지면, 그 세부 내용은 `docs/requirements/R1-project-navigation.md` 같은 더 좁은 문서로 분리하는 편을 선호합니다. Index 문서는 긴 논의 archive가 아니라 현재 truth map으로 유지합니다.
+특정 requirement가 자체 rationale, validity condition, derived specs, tests, decisions, revisit history를 가질 만큼 커지면, 그 세부 내용은 `docs/requirements/R1-project-navigation.md` 같은 더 좁은 문서로 분리하는 편을 선호합니다. Index 문서는 긴 논의 archive가 아니라 현재 truth map으로 유지합니다.
 
 분리 기준은 단순 파일 길이가 아닙니다. 사람이나 agent가 task를 수행할 때 필요한 context loading unit과 문서 단위가 어긋날 때 분리합니다. Active contract를 이해하려면 항상 함께 읽어야 하는 requirement set이라면 불필요하게 나누지 않습니다.
 

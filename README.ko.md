@@ -99,6 +99,23 @@ Loop 안에서 spec/test를 다듬는 것은 정상이다.
 Requirement 변경은 loop boundary가 바뀐 것이다.
 ```
 
+## Requirement validity lifecycle
+
+RDD는 기존 requirement가 더 이상 유효하지 않을 수 있는 순간을 인식할 수 있게 해야 합니다. Test가 통과한다는 이유로 requirement가 여전히 필요하다고 가정하지 않고, requirement가 stale해지기 전에 validity condition을 기록합니다.
+
+```text
+Validity scope:
+  Loop-local requirement | Durable requirement | Temporary/scoped policy
+
+Assumptions:
+  Requirement가 유효하려면 계속 참이어야 하는 condition
+
+Revisit when:
+  Revalidation을 trigger하는 observable signal
+```
+
+Temporary 또는 scoped constraint는 durable requirement set으로 승격하지 않고 expiration rule을 가진 policy로 유지하는 것이 기본입니다. Revisit signal이 발생했다고 requirement가 자동으로 invalid되는 것은 아닙니다. 그것은 boundary event입니다. 연결된 need, goal, rationale, assumptions를 revalidate한 뒤 requirement를 `retain`, `narrow`, `supersede`, `discard` 중 하나로 명시적으로 처리합니다. 그 결정을 영향받는 spec, test, implementation, active loop에 전파합니다.
+
 ## 기존 프로젝트
 
 기존 프로젝트에 RDD를 적용할 때는 기존 spec, test, 구현 동작을 confirmed requirement의 증명으로 취급하지 않습니다.

@@ -8,6 +8,12 @@ Formatting과 pricing이 결합되어 있어 receipt presentation 변경이 위�
 
 Pricing 동작을 바꾸지 않고 receipt formatting을 pricing calculation에서 분리합니다.
 
+## Requirement validity
+
+- Validity scope: Loop-local.
+- Assumptions: 이 refactoring loop에서는 pricing behavior와 receipt wording을 바꾸지 않습니다.
+- Revisit when: Task가 pricing behavior 또는 receipt wording을 의도적으로 바꾸려 할 때이며, behavior-preserving refactor로 계속하지 않고 re-scope합니다.
+
 ## Spec
 
 - Pricing totals는 그대로 유지됩니다.

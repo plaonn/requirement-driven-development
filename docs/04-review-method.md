@@ -17,27 +17,36 @@ Use this checklist for pull requests, tickets, tasks, and small iteration review
 - [ ] Does the PR, task, or ticket still match the stated requirement?
 - [ ] If there is a larger root goal, is this loop's narrower requirement clearly staged under it?
 
-### 2. Spec
+### 2. Requirement validity
+
+- [ ] Is the item a loop-local requirement, durable requirement, or temporary/scoped policy?
+- [ ] If durable, are the assumptions and observable `Revisit when` signals explicit?
+- [ ] If it is a temporary or scoped policy, is the expiration rule explicit?
+- [ ] Has any assumption failed or revisit signal occurred?
+- [ ] If revalidation occurred, is the outcome `retain`, `narrow`, `supersede`, or `discard`?
+- [ ] Were affected specs, tests, implementation, docs, and active loops updated or stopped?
+
+### 3. Spec
 
 - [ ] Does the spec express the requirement correctly?
 - [ ] Are important rules, boundaries, API contracts, and acceptance criteria visible?
 - [ ] Are edge cases handled as spec refinement rather than hidden assumptions?
 
-### 3. Tests
+### 4. Tests
 
 - [ ] Do tests protect meaningful rules?
 - [ ] Are tests derived from the spec rather than incidental implementation details?
 - [ ] Are important negative cases or boundaries covered?
 - [ ] If tests changed, do they still protect the same requirement?
 
-### 4. Implementation
+### 5. Implementation
 
 - [ ] Does the implementation satisfy the tests?
 - [ ] Does it satisfy the original requirement, not only the tests?
 - [ ] Is the change as narrow as the loop requires?
 - [ ] Are implementation details consistent with the stated spec?
 
-### 5. Scope
+### 6. Scope
 
 - [ ] Did unrelated behavior enter the loop?
 - [ ] Did refactoring introduce behavior changes?
@@ -47,7 +56,7 @@ Use this checklist for pull requests, tickets, tasks, and small iteration review
 - [ ] If a decision is accepted, is the acceptance scope explicit?
 - [ ] Are adjacent fixes separated or explicitly included?
 
-### 6. Automation boundary
+### 7. Automation boundary
 
 Use this section when the loop automates user, operational, financial, safety-sensitive, or otherwise state-changing work.
 
@@ -56,13 +65,13 @@ Use this section when the loop automates user, operational, financial, safety-se
 - [ ] Is it clear what should not be automated yet?
 - [ ] If the long-term goal is broader automation, is the current safety stage explicit?
 
-### 7. Change boundary
+### 8. Change boundary
 
 - [ ] Did the requirement change during implementation?
 - [ ] If it changed, was the loop explicitly re-scoped, split, or restarted?
 - [ ] Are requirement changes described where reviewers can see them?
 
-### 8. Non-goals
+### 9. Non-goals
 
 - [ ] Are excluded items explicit?
 - [ ] Are reviewers protected from assuming omitted work is accidental?
@@ -70,10 +79,10 @@ Use this section when the loop automates user, operational, financial, safety-se
 
 ## Practical review flow
 
-Start with the requirement, not the diff.
+Start with the requirement and its validity conditions, not the diff.
 
 If the requirement's root goal, rationale, failure prevented, decision class, implementation-choice boundary, or automation boundary is unclear, do boundary clarification before writing a full trace. Ask the smallest set of questions needed to settle the loop boundary, then continue the review.
 
 Then read the spec and tests before judging implementation details. This keeps review anchored to the loop boundary and prevents the implementation from silently redefining the goal.
 
-End by checking whether any discoveries during implementation changed the requirement. If they did, treat that as a boundary decision, not just a code review comment.
+End by checking whether any assumption failed, revisit signal occurred, or discovery during implementation changed the requirement. If so, revalidate the requirement and treat the outcome as a boundary decision, not just a code review comment.

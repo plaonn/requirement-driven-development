@@ -22,10 +22,12 @@ FIELD_LABELS = {
     "root_goal": "Root goal",
     "need": "Need",
     "requirement": "Requirement",
+    "validity_scope": "Requirement validity",
     "rationale": "Rationale",
     "failure_prevented": "Failure prevented",
     "assumptions": "Assumptions",
     "revisit_when": "Revisit when",
+    "revisit_signal_status": "Revisit signal status",
     "spec": "Spec",
     "checks": "Tests / Checks",
     "implementation": "Implementation",
@@ -41,6 +43,8 @@ FIELD_LABELS = {
     "boundary_clarification": "Boundary clarification",
     "review_focus": "Review focus",
     "requirement_changes": "Requirement changes discovered",
+    "revalidation_outcome": "Revalidation outcome",
+    "affected_traces": "Affected traces",
 }
 
 SECTION_ALIASES = {
@@ -66,6 +70,11 @@ SECTION_ALIASES = {
     "candidate requirements": "requirement",
     "요구사항": "requirement",
     "복원된 requirement": "requirement",
+    "requirement validity": "validity_scope",
+    "validity scope": "validity_scope",
+    "validity": "validity_scope",
+    "유효성 범위": "validity_scope",
+    "requirement 유효성": "validity_scope",
     "rationale": "rationale",
     "why this matters": "rationale",
     "why this exists": "rationale",
@@ -190,6 +199,16 @@ SECTION_ALIASES = {
     "follow ups": "requirement_changes",
     "follow-ups": "requirement_changes",
     "후속 작업": "requirement_changes",
+    "revalidation outcome": "revalidation_outcome",
+    "revalidation result": "revalidation_outcome",
+    "disposition": "revalidation_outcome",
+    "재검증 결과": "revalidation_outcome",
+    "처분": "revalidation_outcome",
+    "affected traces": "affected_traces",
+    "affected trace": "affected_traces",
+    "propagation": "affected_traces",
+    "영향받는 trace": "affected_traces",
+    "전파": "affected_traces",
     "assumption": "assumptions",
     "assumptions": "assumptions",
     "가정": "assumptions",
@@ -198,11 +217,15 @@ SECTION_ALIASES = {
     "재검토 조건": "revisit_when",
     "재검토 시점": "revisit_when",
     "다시 볼 때": "revisit_when",
+    "revisit signal status": "revisit_signal_status",
+    "revisit status": "revisit_signal_status",
+    "재검토 신호 상태": "revisit_signal_status",
 }
 
 REQUIRED_FIELDS = (
     "root_goal",
     "requirement",
+    "validity_scope",
     "rationale",
     "failure_prevented",
     "spec",
@@ -225,12 +248,16 @@ CURRENT_TRUTH_FILENAMES = {
 GAP_QUESTIONS = {
     "root_goal": "What larger user, product, business, technical, or operational goal does this loop serve?",
     "requirement": "What stable requirement defines this loop boundary?",
+    "validity_scope": "Is this a loop-local requirement, durable requirement, or temporary/scoped policy?",
     "rationale": "Why does this requirement matter now?",
     "failure_prevented": "What bad outcome, regression, or scope failure does this requirement prevent?",
     "spec": "What rules, boundaries, contracts, or acceptance criteria express the requirement?",
     "checks": "What tests, builds, reviews, or manual checks protect the spec?",
     "non_goals": "What adjacent work is intentionally out of scope for this loop?",
     "automation_boundary": "If this loop automates state-changing work, what may run now, what needs human review, and what must not be automated yet?",
+    "assumptions": "What conditions must remain true for this durable requirement to stay valid?",
+    "revisit_when": "What observable signals should trigger revalidation of this durable requirement?",
+    "expiration_rule": "What event or condition expires this temporary or scoped policy?",
 }
 
 SKIP_DIRS = {".git", ".hg", ".svn", ".mypy_cache", ".pytest_cache", "__pycache__", "node_modules"}
@@ -535,6 +562,31 @@ def gap_items(fields: dict[str, list[Section]]) -> list[dict[str, str]]:
                     "label": FIELD_LABELS[field],
                     "kind": "conditional",
                     "question": GAP_QUESTIONS[field],
+                }
+            )
+
+    validity_text = "\n".join(
+        section.text.lower() for section in fields.get("validity_scope", [])
+    )
+    if "durable" in validity_text:
+        for field in ("assumptions", "revisit_when"):
+            if not fields.get(field):
+                gaps.append(
+                    {
+                        "field": field,
+                        "label": FIELD_LABELS[field],
+                        "kind": "missing",
+                        "question": GAP_QUESTIONS[field],
+                    }
+                )
+    if any(term in validity_text for term in ("temporary", "scoped")):
+        if not fields.get("expiration_rule"):
+            gaps.append(
+                {
+                    "field": "expiration_rule",
+                    "label": FIELD_LABELS["expiration_rule"],
+                    "kind": "missing",
+                    "question": GAP_QUESTIONS["expiration_rule"],
                 }
             )
     return gaps

@@ -21,6 +21,11 @@ Requirement:
   requirement가 loop 이후에도 유지될 수 있다면 rationale, failure prevented, assumptions, revisit 조건을 포함
   더 큰 root goal의 일부라면 현재 좁은 stage를 명시
 
+Requirement validity:
+  Loop-local requirement, durable requirement, temporary/scoped policy 중 하나
+  Durable requirement에는 assumptions와 observable revisit signal이 필요
+  Temporary/scoped policy에는 expiration rule이 필요
+
 Spec:
   규칙, 계약, 인수 기준, 경계
 
@@ -43,6 +48,7 @@ Agent는 다음 상황에서 멈추거나 보고해야 합니다.
 
 - root goal, rationale, failure prevented, automation boundary가 불명확해 full trace를 만들려면 추측이 필요할 때
 - Prompt에 goal 또는 desired outcome은 있지만 무엇이 참이어야 하는지 말하는 requirement가 없을 때
+- Assumption이 깨졌거나 revisit signal이 발생했지만 requirement가 revalidate되지 않았을 때
 - Requirement가 틀렸거나 불완전해 보일 때
 - Implementation이 adjacent feature를 제안하게 만들 때
 - Test 변경이 requirement 자체를 바꾸는 방향일 때
@@ -51,6 +57,8 @@ Agent는 다음 상황에서 멈추거나 보고해야 합니다.
 - 요청된 변경이 더 넓은 architecture 또는 API decision을 요구할 때
 
 이 경우 agent는 boundary clarification을 사용해야 합니다. 계속 진행하기 전에 loop boundary를 정하는 데 필요한 최소 질문을 먼저 합니다.
+
+Revisit signal이 발생한 뒤 agent는 requirement를 조용히 계속 사용하면 안 됩니다. Evidence를 보고하고 `retain`, `narrow`, `supersede`, `discard` decision을 요청하거나 복원하며, 영향받는 spec, test, implementation, docs, active loop를 식별해야 합니다.
 
 ## Scope 관리
 

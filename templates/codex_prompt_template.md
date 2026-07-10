@@ -25,6 +25,16 @@ For automation or state-changing work, also state:
 - Require human review.
 - Do not automate yet.
 
+## Requirement validity
+
+Classify the item as a loop-local requirement, durable requirement, or temporary/scoped policy.
+
+- Validity scope: loop-local requirement, durable requirement, or temporary/scoped policy.
+- Assumptions: conditions that must remain true for a durable requirement.
+- Revisit when: observable signals that trigger revalidation of a durable requirement.
+- Expiration rule: the event or condition that ends a temporary or scoped policy.
+- If a revisit signal has occurred, stop deriving new work until the requirement is revalidated as `retain`, `narrow`, `supersede`, or `discard` and affected downstream traces are identified.
+
 ## Spec
 
 List the rules, contracts, boundaries, and acceptance criteria that express the requirement.
@@ -41,6 +51,7 @@ List adjacent work that must stay out of scope.
 
 - Keep the requirement stable for this loop.
 - Keep the need or goal as justification context; use the requirement to state what must be true.
+- Do not treat loop stability as permanent validity. Apply the requirement-validity rules before continuing when a revisit signal occurs.
 - If the root goal, rationale, failure prevented, or automation boundary is unclear, ask boundary clarification questions before producing a full trace.
 - Do not treat implementation choices, provider workarounds, or temporary experiment policies as durable requirements unless their rationale and promotion rule are explicit.
 - If a decision is marked accepted, state whether it is system-wide, beta-only, operator-run-specific, or blocked from implementation.

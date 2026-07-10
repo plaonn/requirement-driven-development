@@ -67,10 +67,12 @@ Recognized RDD fields include:
 - Root goal
 - Need / goal context
 - Requirement
+- Requirement validity / validity scope
 - Rationale
 - Failure prevented
 - Assumptions
 - Revisit when
+- Revisit signal status
 - Spec
 - Tests / Checks
 - Implementation
@@ -86,6 +88,8 @@ Recognized RDD fields include:
 - Boundary clarification
 - Review focus
 - Requirement changes discovered
+- Revalidation outcome
+- Affected traces
 
 English and Korean companion labels are supported for common RDD fields. The
 alias set also covers retroactive review outputs such as recovered requirements,
@@ -95,6 +99,12 @@ policy or decision records.
 Missing required fields are reported as boundary clarification questions. The
 automation boundary is reported as a conditional gap because it is required only
 for automation or state-changing work.
+
+Validity scope is part of the core trace. When a trace declares a durable
+requirement, `gaps` also requires assumptions and observable `Revisit when`
+signals. When it declares a temporary or scoped policy, `gaps` requires an
+expiration rule. Revalidation outcomes and affected traces are extracted when
+present but are only needed after a revisit signal occurs.
 
 When a directory scan finds current-truth surfaces such as README, SPEC,
 ROADMAP, docs, or test documentation but the core requirement trace is

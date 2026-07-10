@@ -8,6 +8,12 @@
 
 사용자는 fulfillment가 시작되기 전 order를 cancel할 수 있습니다.
 
+## Requirement validity
+
+- Validity scope: Durable.
+- Assumptions: Fulfillment start가 신뢰할 수 있는 operational boundary이며, 그 boundary 전 cancellation이 계속 허용됩니다.
+- Revisit when: Order lifecycle, fulfillment boundary, 법적 의무 또는 refund policy가 바뀔 때입니다.
+
 ## Spec
 
 - Fulfillment 전 order는 cancel할 수 있습니다.

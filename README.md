@@ -86,6 +86,23 @@ Spec/test refinement inside the loop is normal.
 Requirement change means the loop boundary changed.
 ```
 
+## Requirement validity lifecycle
+
+RDD should make it possible to recognize when an existing requirement may no longer be valid. It does this by recording validity conditions before the requirement becomes stale, not by assuming that a passing test proves the requirement is still needed.
+
+```text
+Validity scope:
+  Loop-local requirement | Durable requirement | Temporary/scoped policy
+
+Assumptions:
+  Conditions that must remain true for the requirement to stay valid.
+
+Revisit when:
+  Observable signals that trigger revalidation.
+```
+
+A temporary or scoped constraint should normally remain a policy with an expiration rule rather than be promoted into the durable requirement set. A revisit signal does not automatically invalidate a requirement. It marks a boundary event: revalidate the linked need, goal, rationale, and assumptions, then explicitly `retain`, `narrow`, `supersede`, or `discard` the requirement. Propagate that decision to affected specs, tests, implementation, and active loops.
+
 ## Existing projects
 
 When applying RDD to an existing project, do not treat existing specs, tests, or

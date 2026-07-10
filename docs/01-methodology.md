@@ -216,11 +216,14 @@ The requirement that defines a development loop is local to that loop, but it do
 
 Some requirements are only task context. Others become durable product or system requirements that should keep guiding future design changes. When a requirement is meant to stay useful beyond one loop, it should preserve enough context to explain why the constraint exists.
 
-For long-lived requirements, useful fields include:
+For long-lived requirements, record these fields:
 
 ```text
 Decision class:
   Durable Requirement.
+
+Validity scope:
+  Durable.
 
 Requirement:
   The product, system, safety, business, or technical capability, quality, constraint, or condition that should remain true.
@@ -245,11 +248,59 @@ The goal is not to turn requirements into long essays. The goal is to keep enoug
 
 A durable requirement set should be curated, not merely accumulated. If a new requirement conflicts with an existing one, the conflict should be resolved explicitly by superseding, narrowing, rejecting, or re-scoping one of them.
 
+#### Requirement validity lifecycle
+
+Requirement stability inside a loop does not mean permanent validity. RDD should preserve enough information to recognize when an existing requirement may no longer be a trustworthy anchor.
+
+Classify its validity scope:
+
+```text
+Loop-local requirement:
+  Valid for the current development loop.
+  The loop boundary is its default lifetime.
+
+Durable requirement:
+  Intended to guide future loops.
+  Assumptions and observable revisit signals are required.
+
+Temporary/scoped policy:
+  A constraint that is valid only for a stated policy horizon, experiment, provider, market, or operating context.
+  It should not be promoted into the durable requirement set merely because it currently anchors work.
+  An expiration rule is required.
+```
+
+For a durable requirement, record:
+
+```text
+Validity scope:
+  Durable.
+
+Assumptions:
+  Conditions that must remain true for the requirement to stay valid.
+
+Revisit when:
+  Observable signals that trigger revalidation.
+```
+
+Useful revisit signals include an assumption becoming false, the stakeholder need or root goal changing, new evidence defeating the rationale, a law or external dependency changing, a newer accepted requirement conflicting with it, or the derived spec no longer preventing the stated failure.
+
+A revisit signal is not itself an automatic invalidation decision. When a signal is observed:
+
+```text
+1. Mark the requirement as under review for affected new work.
+2. Revalidate its need, goal, rationale, failure prevented, and assumptions.
+3. Decide: retain | narrow | supersede | discard.
+4. Record the evidence and replacement requirement when applicable.
+5. Propagate the decision to derived specs, tests, implementation, docs, and active loops.
+```
+
+The invalidation boundary becomes explicit when revalidation concludes that the requirement no longer serves its linked need or goal, or that its validity assumptions no longer hold. If work is already in progress, that conclusion is a loop-boundary event and the affected loop must be re-scoped, split, or stopped.
+
 #### Requirement document structure
 
 When a project keeps durable requirements in source-of-truth documents, keep the entry point easy to scan. A top-level `REQUIREMENTS.md` can hold the root goal, requirement hierarchy, and links to detail documents.
 
-If one requirement grows enough to need its own rationale, assumptions, derived specs, tests, decisions, or revisit history, prefer splitting that detail into a narrower document such as `docs/requirements/R1-project-navigation.md`. Keep the index document as the current-truth map rather than turning it into a long discussion archive.
+If one requirement grows enough to need its own rationale, validity conditions, derived specs, tests, decisions, or revisit history, prefer splitting that detail into a narrower document such as `docs/requirements/R1-project-navigation.md`. Keep the index document as the current-truth map rather than turning it into a long discussion archive.
 
 The split point is not raw file length. Split when the document no longer matches the way people or agents need to load context for a task. Do not split a requirement set that must always be read together to understand the active contract.
 

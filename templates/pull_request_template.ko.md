@@ -14,6 +14,26 @@
 
 이 PR이 더 큰 root goal의 일부라면 현재 requirement는 어떤 좁은 stage를 다룹니까?
 
+# Requirement validity
+
+Validity scope:
+이 항목은 loop-local requirement, durable requirement, temporary/scoped policy 중 무엇입니까?
+
+Assumptions:
+Durable이라면 어떤 condition이 계속 참이어야 합니까?
+
+Revisit when:
+Durable이라면 어떤 observable signal이 revalidation을 trigger합니까?
+
+Expiration rule:
+Temporary 또는 scoped policy라면 어떤 event 또는 condition이 validity를 끝냅니까?
+
+Revalidation outcome:
+Revisit signal이 발생했다면 requirement를 retain, narrow, supersede, discard 중 어떻게 처리했습니까?
+
+Affected traces:
+어떤 spec, test, implementation, docs, active loop가 영향을 받습니까?
+
 # Decision classification
 
 이 결정은 durable requirement, temporary experiment policy, provider workaround, implementation choice, promotion candidate, expired/superseded policy 중 무엇입니까?

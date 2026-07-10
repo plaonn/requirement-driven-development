@@ -12,6 +12,12 @@
 
 사용자는 fulfillment가 시작되기 전 order를 cancel할 수 있습니다.
 
+### Requirement validity
+
+- Validity scope: Durable.
+- Assumptions: Fulfillment start가 신뢰할 수 있는 operational boundary이며, 그 boundary 전 cancellation이 계속 허용됩니다.
+- Revisit when: Order lifecycle, fulfillment boundary, 법적 의무 또는 refund policy가 바뀔 때입니다.
+
 ### Spec
 
 - Fulfillment 전 order는 cancel할 수 있습니다.
@@ -50,6 +56,12 @@ Formatting과 pricing이 결합되어 있어 receipt presentation 변경이 위�
 ### Requirement
 
 Pricing 동작을 바꾸지 않고 receipt formatting을 pricing calculation에서 분리합니다.
+
+### Requirement validity
+
+- Validity scope: Loop-local.
+- Assumptions: 이 refactoring loop에서는 pricing behavior와 receipt wording을 바꾸지 않습니다.
+- Revisit when: Task가 pricing behavior 또는 receipt wording을 의도적으로 바꾸려 할 때이며, behavior-preserving refactor로 계속하지 않고 re-scope합니다.
 
 ### Spec
 

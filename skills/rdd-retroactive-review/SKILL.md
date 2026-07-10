@@ -72,13 +72,19 @@ When the target project was not originally developed with RDD, default to a cove
    - Record assumptions that would make the requirement invalid or worth revisiting.
    - If rationale or assumptions cannot be recovered, ask a question instead of filling the gap with certainty.
 
-6. Separate change risk.
+6. Recover validity conditions.
+   - Classify a requirement candidate as `Loop-local requirement` or `Durable requirement`.
+   - Durable candidates need assumptions and observable revisit signals.
+   - If the item is temporary or scoped, keep it in the policy decision register with an expiration rule instead of promoting it into the durable requirement set.
+   - If a revisit signal already occurred, mark the candidate under review and do not use historical stability or passing tests as proof of current validity.
+
+7. Separate change risk.
    - `change-dangerous`: appears to protect an active requirement or safety invariant.
    - `change-review-needed`: linked to an inferred requirement or unresolved assumption.
    - `change-likely-safe`: likely implementation structure without product meaning.
    - Treat missing traceability as review-needed, not automatically safe.
 
-7. Use Boundary Questions First when needed.
+8. Use Boundary Questions First when needed.
    - If root goal, rationale, failure prevented, implementation-choice boundary, or automation boundary is central but under-evidenced, do not produce a full hierarchy first.
    - If the project has substantial pre-RDD history and the user asks to "apply RDD" broadly, default to Boundary Questions First unless they explicitly asked only for a draft candidate index.
    - If the user asks to review an existing project "from an RDD perspective", do not start with a normal findings-first code review. Start with Boundary Questions First unless the user explicitly asked only for a read-only candidate index or implementation risk audit.
@@ -121,6 +127,7 @@ Root Goal
 Candidate Requirements
 - R?: [short title]
   Status: confirmed | inferred | unclear
+  Validity scope: Loop-local requirement | Durable requirement
   Need or goal context:
   Requirement:
   Rationale:
@@ -129,6 +136,7 @@ Candidate Requirements
   Derived specs/tests:
   Evidence:
   Revisit when:
+  Revisit signal status: not observed | observed | unclear
 
 Decision Register
 - D?: [short title]
@@ -184,6 +192,7 @@ RDD Observations
 - Do not convert retroactive candidates into public source-of-truth docs without a separate adoption loop.
 - Do not promote temporary experiment policies, provider workarounds, or operator-run risk decisions into durable requirements without a promotion rule.
 - Do not output a candidate requirement without its linked need or goal context and rationale.
+- Do not treat historical stability or passing tests as proof of current validity after an assumption fails or revisit signal occurs.
 - If an item has no recoverable rationale, classify it as a traceability gap.
 - Do not let a current safety stage erase a broader root goal, and do not let a broad root goal erase the current safety boundary.
 - Do not erase uncertainty.

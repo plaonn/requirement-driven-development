@@ -25,6 +25,16 @@
 - Require human review
 - Do not automate yet
 
+## Requirement validity
+
+항목을 loop-local requirement, durable requirement, temporary/scoped policy 중 하나로 분류하세요.
+
+- Validity scope: loop-local requirement, durable requirement, temporary/scoped policy 중 하나
+- Assumptions: durable requirement가 유효하려면 계속 참이어야 하는 condition
+- Revisit when: durable requirement의 revalidation을 trigger하는 observable signal
+- Expiration rule: temporary 또는 scoped policy를 끝내는 event 또는 condition
+- Revisit signal이 발생했다면 requirement를 `retain`, `narrow`, `supersede`, `discard` 중 하나로 revalidate하고 영향받는 downstream trace를 식별할 때까지 새 작업을 파생하지 마세요.
+
 ## Spec
 
 Requirement를 표현하는 규칙, 계약, 경계, 인수 기준을 적으세요.
@@ -41,6 +51,7 @@ Scope 밖에 있어야 하는 adjacent work를 적으세요.
 
 - 이 loop에서는 requirement를 안정적으로 유지하세요.
 - Need 또는 goal은 justification context로 유지하고, requirement에는 무엇이 참이어야 하는지 적으세요.
+- Loop stability를 permanent validity로 취급하지 마세요. Revisit signal이 발생하면 계속 진행하기 전에 requirement-validity rule을 적용하세요.
 - root goal, rationale, failure prevented, automation boundary가 불명확하면 full trace를 만들기 전에 boundary clarification 질문을 먼저 하세요.
 - rationale과 promotion rule이 명시되지 않은 implementation choice, provider workaround, temporary experiment policy를 durable requirement로 취급하지 마세요.
 - Decision이 accepted라면 system-wide, beta-only, operator-run-specific, implementation blocked 중 어떤 scope인지 적으세요.

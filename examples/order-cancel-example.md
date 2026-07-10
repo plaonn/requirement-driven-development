@@ -8,6 +8,12 @@ Users sometimes place an order by mistake or change their decision before fulfil
 
 Users can cancel an order before fulfillment starts.
 
+## Requirement validity
+
+- Validity scope: Durable.
+- Assumptions: Fulfillment start is a reliable operational boundary, and cancellation before that boundary remains permitted.
+- Revisit when: The order lifecycle, fulfillment boundary, legal obligation, or refund policy changes.
+
 ## Spec
 
 - Orders before fulfillment can be canceled.

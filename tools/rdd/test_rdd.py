@@ -23,6 +23,10 @@ Reviewers need to recover why each loop exists.
 ## Requirement
 Extract explicit trace sections.
 
+## Requirement validity
+Validity scope: Loop-local.
+Revisit signal status: Not observed.
+
 ## Rationale
 Reduce token cost.
 
@@ -137,6 +141,10 @@ class RddToolTest(unittest.TestCase):
             "Reviewers need to recover why each loop exists.",
         )
         self.assertIn("requirement", trace["fields"])
+        self.assertEqual(
+            trace["fields"]["revisit_signal_status"][0]["text"],
+            "Not observed.",
+        )
         self.assertEqual(trace["fields"]["requirement"][0]["text"], "Extract explicit trace sections.")
         self.assertNotIn("This heading is inside a fence", json.dumps(trace, ensure_ascii=False))
 
@@ -149,7 +157,61 @@ class RddToolTest(unittest.TestCase):
         gap_fields = {gap["field"] for gap in trace["gaps"]}
         self.assertIn("rationale", gap_fields)
         self.assertIn("failure_prevented", gap_fields)
+        self.assertIn("validity_scope", gap_fields)
         self.assertIn("automation_boundary", gap_fields)
+
+    def test_durable_requirement_requires_validity_conditions(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            path = Path(tmp) / "durable.md"
+            path.write_text(
+                "# Requirement validity\n\nValidity scope: Durable.\n",
+                encoding="utf-8",
+            )
+            trace = rdd.build_trace(path)
+
+        gap_fields = {gap["field"] for gap in trace["gaps"]}
+        self.assertIn("assumptions", gap_fields)
+        self.assertIn("revisit_when", gap_fields)
+
+    def test_temporary_requirement_requires_expiration_rule(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            path = Path(tmp) / "temporary.md"
+            path.write_text(
+                "# Requirement validity\n\nValidity scope: Temporary/scoped.\n",
+                encoding="utf-8",
+            )
+            trace = rdd.build_trace(path)
+
+        gap_fields = {gap["field"] for gap in trace["gaps"]}
+        self.assertIn("expiration_rule", gap_fields)
+
+    def test_validity_conditions_satisfy_conditional_gaps(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            durable = root / "durable.md"
+            durable.write_text(
+                "# Requirement validity\n\n"
+                "Validity scope: Durable requirement.\n"
+                "Assumptions: The operating boundary remains reliable.\n"
+                "Revisit when: The operating boundary changes.\n",
+                encoding="utf-8",
+            )
+            temporary = root / "temporary.md"
+            temporary.write_text(
+                "# Requirement validity\n\n"
+                "Validity scope: Temporary/scoped policy.\n"
+                "Expiration rule: The experiment ends.\n",
+                encoding="utf-8",
+            )
+
+            durable_trace = rdd.build_trace(durable)
+            temporary_trace = rdd.build_trace(temporary)
+
+        durable_gaps = {gap["field"] for gap in durable_trace["gaps"]}
+        temporary_gaps = {gap["field"] for gap in temporary_trace["gaps"]}
+        self.assertNotIn("assumptions", durable_gaps)
+        self.assertNotIn("revisit_when", durable_gaps)
+        self.assertNotIn("expiration_rule", temporary_gaps)
 
     def test_directory_scan_skips_private_by_default(self):
         with tempfile.TemporaryDirectory() as tmp:

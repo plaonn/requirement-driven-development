@@ -77,6 +77,9 @@ Confirmed 또는 accepted decision이 모두 system-wide requirement인 것은 �
 
    Traceability가 없다는 것은 자동으로 안전하다는 뜻이 아니라 review-needed입니다.
 
+7. Validity condition을 복원합니다.
+   각 requirement candidate를 loop-local 또는 durable로 분류합니다. Durable candidate에는 복원 가능한 assumptions와 observable revisit signal이 필요합니다. 항목이 temporary 또는 scoped라면 durable requirement set으로 승격하지 말고 expiration rule과 함께 policy decision register에 유지합니다. Evidence상 signal이 이미 발생했다면 historical stability를 current validity로 취급하지 말고 candidate를 under review로 표시합니다.
+
 ## Policy와 promotion boundary
 
 Temporary policy도 유효한 RDD record입니다. 미래 독자가 permanent requirement로 오해하지 않도록 lifecycle context를 남겨야 합니다.
@@ -162,6 +165,7 @@ Candidate Requirement
 - Title:
   Status: confirmed | inferred | unclear
   Decision class: Durable Requirement
+  Validity scope: Loop-local requirement | Durable requirement
   Need or goal context:
   Requirement:
   Rationale:
@@ -170,6 +174,7 @@ Candidate Requirement
   Derived specs/tests:
   Evidence:
   Revisit when:
+  Revisit signal status: not observed | observed | unclear
 ```
 
 Rationale, failure prevented, assumptions를 복원할 수 없다면 그 항목은 unresolved candidate 또는 trace gap으로 남깁니다.
@@ -213,6 +218,8 @@ Candidate Requirements
   Need or goal context:
   Requirement:
   Status:
+  Validity scope:
+  Revisit signal status:
 
 Decision Register
 - D?: ...
@@ -267,4 +274,5 @@ Stale Proposal Checks
 - 별도 adoption loop 없이 retroactive candidate를 public source-of-truth docs로 전환하지 않습니다.
 - Promotion rule 없이 temporary experiment policy, provider workaround, operator-run risk decision을 durable requirement로 승격하지 않습니다.
 - Implementation convenience가 requirement를 다시 정의하게 두지 않습니다.
+- Assumption이 깨졌거나 revisit signal이 발생한 뒤에는 historical stability, passing test, 반복된 implementation behavior를 requirement가 여전히 유효하다는 proof로 취급하지 않습니다.
 - Uncertainty를 지우지 않습니다.
