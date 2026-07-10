@@ -65,6 +65,7 @@ treated as requirement entries when they contain recognized bullet fields.
 Recognized RDD fields include:
 
 - Root goal
+- Need / goal context
 - Requirement
 - Rationale
 - Failure prevented

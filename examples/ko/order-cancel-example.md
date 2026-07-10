@@ -1,5 +1,9 @@
 # 주문 취소 예시
 
+## Need와 goal context
+
+사용자는 실수로 order를 만들거나 fulfillment commitment 전에 결정을 바꾸기도 합니다. Goal은 fulfillment rollback 없이 사용자 control을 보존하는 것입니다.
+
 ## Requirement
 
 사용자는 fulfillment가 시작되기 전 order를 cancel할 수 있습니다.

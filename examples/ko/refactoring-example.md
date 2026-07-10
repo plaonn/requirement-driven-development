@@ -1,5 +1,9 @@
 # 영수증 포맷팅 리팩터링 예시
 
+## Need와 goal context
+
+Formatting과 pricing이 결합되어 있어 receipt presentation 변경이 위험합니다. Goal은 pricing behavior를 안정적으로 유지하면서 receipt presentation을 독립적으로 바꿀 수 있게 하는 것입니다.
+
 ## Requirement
 
 Pricing 동작을 바꾸지 않고 receipt formatting을 pricing calculation에서 분리합니다.

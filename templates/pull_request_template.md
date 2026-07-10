@@ -1,12 +1,18 @@
+# Need / goal context
+
+What stakeholder problem, desire, or desired outcome justifies this PR?
+
+What requirement source or stakeholder provides that context?
+
 # Requirement
 
-What requirement does this PR satisfy?
+What capability, quality, constraint, or condition must this PR satisfy?
 
 Why does this requirement matter?
 
 What failure, regression, or risk does it prevent?
 
-If this PR belongs to a larger root goal, what narrower stage does it cover?
+If this PR belongs to a larger root goal, what narrower stage does this requirement cover?
 
 # Decision classification
 

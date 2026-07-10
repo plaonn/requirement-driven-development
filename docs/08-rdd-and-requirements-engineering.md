@@ -55,6 +55,8 @@ RDD does not provide a complete method for:
 
 Use suitable requirements engineering, product discovery, domain analysis, safety, security, or governance practices for those responsibilities. RDD can consume their results as candidate requirements for a small development loop.
 
+RDD distinguishes the context that justifies a loop from the requirement that anchors it. See [RDD Methodology — Vocabulary boundary](01-methodology.md#vocabulary-boundary) for the explicit `Need`, `Goal`, `Requirement`, `Spec`, and `Implementation choice` convention.
+
 ## Where they meet
 
 RDD applies several requirements engineering concerns at task, ticket, pull request, or small-iteration scale:
@@ -78,8 +80,11 @@ Before treating a candidate requirement as the loop anchor, confirm enough conte
 Source or stakeholder:
   Where did this need come from?
 
+Need or root goal:
+  What problem, desire, or desired state justifies this loop?
+
 Candidate requirement:
-  What must be true for this loop?
+  What capability, quality, constraint, or condition must be true for this loop?
 
 Rationale and failure prevented:
   Why does it matter, and what goes wrong without it?

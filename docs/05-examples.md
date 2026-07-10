@@ -4,6 +4,10 @@ These examples show how RDD keeps a small development loop traceable.
 
 ## Example 1: Order cancellation
 
+### Need and goal context
+
+Users sometimes place an order by mistake or change their decision before fulfillment commitment. The goal is to preserve user control without requiring fulfillment rollback.
+
 ### Requirement
 
 Users can cancel an order before fulfillment starts.
@@ -38,6 +42,10 @@ If the real need becomes "users can edit orders before fulfillment," that is a n
 If only refund or coupon edge cases are clarified, that is spec refinement inside the same loop.
 
 ## Example 2: Receipt formatting refactoring
+
+### Need and goal context
+
+Receipt presentation changes are risky because formatting and pricing are coupled. The goal is to let receipt presentation evolve independently while pricing behavior remains stable.
 
 ### Requirement
 

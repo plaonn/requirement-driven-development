@@ -8,8 +8,10 @@ Use this checklist for pull requests, tickets, tasks, and small iteration review
 
 ### 1. Requirement
 
+- [ ] Is the stakeholder need or root goal that justifies the loop clear?
 - [ ] Is the driving requirement clear?
-- [ ] Does it explain why the work exists, not only what behavior is desired?
+- [ ] Does the requirement state the capability, quality, constraint, or condition that must be satisfied?
+- [ ] Do the linked need, goal, and rationale explain why the work exists?
 - [ ] Does it name the failure, regression, or risk it is meant to prevent?
 - [ ] Is it specific enough to distinguish success from unrelated change?
 - [ ] Does the PR, task, or ticket still match the stated requirement?

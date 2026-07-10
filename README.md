@@ -14,21 +14,34 @@ TDD makes tests the immediate feedback mechanism. SDD makes specs the explicit c
 
 ## Root goal
 
-RDD helps teams keep small development loops aligned with the requirement that justifies them, so specs, tests, implementation, and review remain traceable and scope changes are made explicit.
+RDD helps teams keep small development loops aligned with the need and goal that justify them and with the requirement that anchors them, so specs, tests, implementation, and review remain traceable and scope changes are made explicit.
 
 ## Relationship to requirements engineering
 
 RDD is not a replacement for requirements engineering. Requirements engineering covers the broader work of eliciting, analyzing, negotiating, specifying, validating, and managing requirements across a system or product lifecycle.
 
-RDD operates at a narrower boundary. It assumes that a candidate requirement has been sufficiently elicited and validated for the current development loop, then helps the team keep that requirement traceable through spec, tests, implementation, and review. It does not replace stakeholder discovery, product discovery, requirement prioritization, conflict resolution, or system-wide requirements management.
+RDD operates at a narrower boundary. It assumes that a candidate requirement has been derived from a relevant need or goal and sufficiently elicited and validated for the current development loop, then helps the team keep that requirement traceable through spec, tests, implementation, and review. It does not replace stakeholder discovery, product discovery, requirement prioritization, conflict resolution, or system-wide requirements management.
 
 See [RDD and Requirements Engineering](docs/08-rdd-and-requirements-engineering.md) for the detailed boundary.
 
+## Vocabulary boundary
+
+RDD uses a pragmatic vocabulary for keeping the layers of a small loop reviewable:
+
+```text
+Need: a stakeholder problem, desire, or expected outcome.
+Goal: a desired state that gives direction to one or more requirements.
+Requirement: a capability, quality, constraint, or condition that must be satisfied.
+Spec: the current precise expression of the requirement as rules, contracts, boundaries, and acceptance criteria.
+```
+
+Need and goal explain why and in which direction the work exists. The requirement states what must be true and anchors the loop. The spec makes the current interpretation precise enough to verify. Requirements engineering uses these terms in several broader ways; this is an explicit RDD convention, not a claim of universal terminology.
+
 ## Core idea
 
-Every development loop should answer five questions:
+Before opening a loop, confirm the need or goal that justifies its candidate requirement. Every development loop should then answer five questions:
 
-1. **Requirement** - What user, product, business, or technical need drives this change?
+1. **Requirement** - What capability, quality, constraint, or condition must be satisfied in this loop?
 2. **Spec** - What rules, boundaries, contracts, and acceptance criteria express that requirement?
 3. **Test** - What executable checks prove the spec remains satisfied?
 4. **Implementation** - What code or document changes satisfy the tests and the original requirement?

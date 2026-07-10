@@ -47,7 +47,7 @@ Confirmed 또는 accepted decision이 모두 system-wide requirement인 것은 �
    Decision이 `accepted`라면 system-wide requirement accepted, beta-only policy accepted, operator-run-specific risk accepted, code-unlock condition accepted but implementation blocked 중 어떤 의미인지 기록합니다.
 
 4. Candidate requirement를 추론합니다.
-   중요한 spec이 어떤 사용자, 제품, 비즈니스, 운영, safety, 기술적 필요를 보호하는지 묻습니다. 유용한 candidate requirement는 시스템이 무엇을 하는지가 아니라 왜 그 동작이 중요한지를 설명합니다.
+   중요한 spec이 어떤 사용자, 제품, 비즈니스, 운영, safety, 기술적 need 또는 goal을 보호하는지 묻습니다. 그것을 justification context로 기록한 뒤, 보호해야 할 것으로 보이는 capability, quality, constraint 또는 condition을 candidate requirement로 작성합니다. Goal만으로 requirement를 대신하지 않습니다.
 
 5. Confidence를 표시합니다.
 
@@ -162,6 +162,7 @@ Candidate Requirement
 - Title:
   Status: confirmed | inferred | unclear
   Decision class: Durable Requirement
+  Need or goal context:
   Requirement:
   Rationale:
   Failure prevented:
@@ -209,6 +210,9 @@ Root Goal
 
 Candidate Requirements
 - R?: ...
+  Need or goal context:
+  Requirement:
+  Status:
 
 Decision Register
 - D?: ...
@@ -222,6 +226,7 @@ Decision Register
 
 Unresolved Requirement Candidates
 - Spec/invariant:
+  Possible need or goal:
   Possible requirement:
   Missing rationale/assumption:
   Question needed:

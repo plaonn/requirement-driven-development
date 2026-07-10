@@ -39,11 +39,52 @@ A requirement can be wrong. A requirement can be incomplete. A requirement can c
 
 RDD does not deny that. It only says that when the requirement changes, the loop boundary has changed too. That change should be explicit.
 
+## Vocabulary boundary
+
+Requirements engineering uses `need`, `goal`, `requirement`, and `specification` in several related ways. For example, a requirement may mean a perceived stakeholder need, a capability or property a system must have, or a documented representation of either. A requirements specification may mean an entire organized collection of requirements.
+
+RDD uses a narrower operational convention so reviewers can distinguish purpose, obligation, interpretation, and solution:
+
+```text
+Need:
+  A problem, desire, or expected outcome perceived by a stakeholder or found in the operating context.
+  Needs may be incomplete, conflicting, or not yet accepted.
+
+Goal:
+  A desired state or outcome that gives direction to one or more requirements.
+  A root goal may organize several staged development loops.
+
+Requirement:
+  A capability, quality, constraint, or other condition that must be satisfied.
+  The accepted requirement for the current loop defines its boundary.
+
+Spec:
+  The current precise expression of the requirement as rules, contracts, boundaries, and acceptance criteria.
+  A spec operationalizes the requirement without turning the current implementation choice into the requirement.
+
+Implementation choice:
+  A design, technology, algorithm, structure, or workflow chosen to satisfy the spec and requirement.
+```
+
+The relationship is:
+
+```text
+Requirements engineering or discovery context:
+  Need -> Goal -> Candidate requirement
+
+RDD development loop:
+  Accepted loop requirement -> Spec -> Test/Check -> Implementation -> Review
+```
+
+The first line is context, not an RDD claim that needs and goals always form a simple linear process. The second line is the development trace RDD controls.
+
+This convention is not a universal redefinition of requirements engineering terminology. When RDD interoperates with an established requirements repository, standard, or domain vocabulary, preserve the external terms and map them explicitly to the RDD layers instead of renaming source artifacts.
+
 ## Roles of each layer
 
 ### Requirement
 
-The requirement explains why the work exists.
+The requirement states the capability, quality, constraint, or condition that the loop must satisfy. The linked need, goal, and rationale explain why the work exists.
 
 Good requirements are not always long, but they should be clear enough to distinguish success from unrelated change.
 
@@ -61,16 +102,19 @@ This refactoring should isolate receipt formatting without changing pricing beha
 
 #### Purpose-bearing requirements
 
-A requirement should preserve purpose, not only desired behavior. When the rationale is missing, teams often mistake an implementation choice for a durable requirement.
+A requirement should preserve its connection to purpose, not only desired behavior. When the need, goal, or rationale is missing, teams often mistake an implementation choice for a durable requirement.
 
 For a requirement that may guide more than one small change, ask:
 
 ```text
 Root goal:
-  What larger user, product, business, or operational outcome is this loop serving?
+  What larger desired state or outcome is this loop serving?
+
+Need:
+  What stakeholder problem, desire, or expected outcome makes the requirement relevant?
 
 Requirement:
-  What must remain true in this loop?
+  What capability, quality, constraint, or condition must remain true in this loop?
 
 Rationale:
   Why does this requirement matter now?
@@ -108,7 +152,7 @@ Use a decision class when a rule, limit, workaround, or review condition needs t
 
 ```text
 Durable Requirement:
-  A product, system, safety, business, or technical need that should keep guiding future loops.
+  A product, system, safety, business, or technical capability, quality, constraint, or condition that should keep guiding future loops.
 
 Temporary Experiment Policy:
   A bounded rule for a beta, live test, trial amount, market, date range, operator run, or limited experiment.
@@ -179,10 +223,10 @@ Decision class:
   Durable Requirement.
 
 Requirement:
-  The user, product, business, or technical need that should remain true.
+  The product, system, safety, business, or technical capability, quality, constraint, or condition that should remain true.
 
 Rationale:
-  Why this need matters.
+  Why this requirement matters given the linked need and goal.
 
 Failure prevented:
   What would go wrong if the derived spec were removed or weakened.
@@ -211,7 +255,7 @@ The split point is not raw file length. Split when the document no longer matche
 
 ### Spec
 
-The spec translates the requirement into rules, contracts, boundaries, and acceptance criteria.
+The spec operationalizes the requirement as rules, contracts, boundaries, and acceptance criteria. In this methodology, `spec` means this loop-level precision layer; it does not mean that a requirements engineering artifact named "requirements specification" must be split or renamed.
 
 Specs may evolve inside the loop as the team learns more about the requirement.
 

@@ -8,8 +8,10 @@ RDD review는 개발 루프가 requirement에서 implementation까지 추적 가
 
 ### 1. Requirement
 
+- [ ] Loop를 정당화하는 stakeholder need 또는 root goal이 명확한가?
 - [ ] Driving requirement가 명확한가?
-- [ ] 원하는 동작뿐 아니라 작업이 존재하는 이유도 설명하는가?
+- [ ] Requirement가 반드시 만족해야 하는 capability, quality, constraint 또는 condition을 말하는가?
+- [ ] 연결된 need, goal, rationale이 작업이 존재하는 이유를 설명하는가?
 - [ ] 막으려는 실패, regression, risk가 드러나는가?
 - [ ] 성공과 관련 없는 변경을 구분할 수 있을 만큼 구체적인가?
 - [ ] PR, task, ticket이 여전히 명시된 requirement와 맞는가?

@@ -1,5 +1,9 @@
 # Receipt Formatting Refactoring Example
 
+## Need and goal context
+
+Receipt presentation changes are risky because formatting and pricing are coupled. The goal is to let receipt presentation evolve independently while pricing behavior remains stable.
+
 ## Requirement
 
 Isolate receipt formatting from pricing calculation without changing pricing behavior.

@@ -47,7 +47,7 @@ Not every confirmed or accepted decision is a system-wide requirement. A review 
    If a decision is marked `accepted`, record whether that means system-wide requirement accepted, beta-only policy accepted, operator-run-specific risk accepted, or code-unlock condition accepted but implementation blocked.
 
 4. Infer candidate requirements.
-   Ask what user, product, business, operational, safety, or technical need each important spec appears to protect. A useful candidate requirement explains why the behavior matters, not only what the system does.
+   Ask what user, product, business, operational, safety, or technical need or goal each important spec appears to protect. Record that as justification context, then formulate the candidate requirement as the capability, quality, constraint, or condition that appears to need protection. Do not use the goal alone as the requirement.
 
 5. Mark confidence.
    Use explicit confidence labels:
@@ -163,6 +163,7 @@ Candidate Requirement
 - Title:
   Status: confirmed | inferred | unclear
   Decision class: Durable Requirement
+  Need or goal context:
   Requirement:
   Rationale:
   Failure prevented:
@@ -210,6 +211,9 @@ Root Goal
 
 Candidate Requirements
 - R?: ...
+  Need or goal context:
+  Requirement:
+  Status:
 
 Decision Register
 - D?: ...
@@ -223,6 +227,7 @@ Decision Register
 
 Unresolved Requirement Candidates
 - Spec/invariant:
+  Possible need or goal:
   Possible requirement:
   Missing rationale/assumption:
   Question needed:

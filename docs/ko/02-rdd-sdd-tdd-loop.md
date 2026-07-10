@@ -8,12 +8,13 @@ SDD: Spec Driven Development, 명세 주도 개발
 TDD: Test Driven Development, 테스트 주도 개발
 ```
 
-셋은 경쟁 관계가 아닙니다. RDD는 requirement를 루프의 최상위에 두고, SDD와 TDD는 더 구체적인 피드백 메커니즘을 제공합니다.
+셋은 경쟁 관계가 아닙니다. RDD는 accepted loop requirement를 development trace의 최상위에 두고, SDD와 TDD는 더 구체적인 피드백 메커니즘을 제공합니다. Requirement를 정당화하는 need 또는 goal은 또 하나의 implementation layer가 아니라 연결된 context로 유지합니다.
 
 ## 계층 모델
 
 ```text
-Requirement
+Need / goal context
+  -> Accepted loop requirement
   -> Spec
     -> Test
       -> Implementation

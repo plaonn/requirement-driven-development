@@ -1,12 +1,18 @@
+# Need / goal context
+
+어떤 stakeholder 문제, 바람, desired outcome이 이 PR을 정당화합니까?
+
+어떤 requirement source 또는 stakeholder가 그 context를 제공합니까?
+
 # Requirement
 
-이 PR은 어떤 requirement를 만족합니까?
+이 PR이 만족해야 하는 capability, quality, constraint 또는 condition은 무엇입니까?
 
 이 requirement가 왜 중요합니까?
 
 어떤 실패, regression, risk를 막습니까?
 
-이 PR이 더 큰 root goal의 일부라면 현재 어떤 좁은 stage를 다룹니까?
+이 PR이 더 큰 root goal의 일부라면 현재 requirement는 어떤 좁은 stage를 다룹니까?
 
 # Decision classification
 

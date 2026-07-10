@@ -8,7 +8,7 @@ Requirement -> Spec -> Test -> Implementation -> Review
 
 ## 하나의 안정적인 목적
 
-PR은 하나의 안정적인 requirement 또는 목적을 가져야 합니다. 그것은 기능, 버그 수정, 리팩터링, 마이그레이션, 문서 변경, 운영 개선일 수 있습니다.
+PR은 하나의 coherent한 need 또는 goal context에 연결된 하나의 안정적인 loop requirement를 가져야 합니다. 그 requirement는 기능, 버그 수정, refactoring, migration, 문서 변경, 운영 개선을 다룰 수 있습니다.
 
 핵심은 PR이 아주 작아야 한다는 뜻이 아닙니다. Reviewer가 어떤 requirement가 루프 경계를 정의하는지 알 수 있어야 한다는 뜻입니다.
 
@@ -17,8 +17,11 @@ PR은 하나의 안정적인 requirement 또는 목적을 가져야 합니다. �
 좋은 PR 설명은 의도에서 code까지의 경로를 드러냅니다.
 
 ```text
+Need / goal context:
+  어떤 stakeholder 문제, 바람, desired outcome이 이 loop를 정당화하는가?
+
 Requirement:
-  이 PR이 만족하는 필요
+  이 PR이 만족해야 하는 capability, quality, constraint 또는 condition
 
 Spec:
   requirement를 표현하는 규칙, 계약, 경계, 인수 기준
@@ -49,8 +52,11 @@ Requirement -> Spec -> Checks -> Implementation -> Self-review -> Record
 PR 없는 loop에서 유용한 trace는 다음과 같습니다.
 
 ```text
+Need / goal context:
+  어떤 stakeholder 문제, 바람, desired outcome이 이 loop를 정당화하는가?
+
 Requirement:
-  이 loop가 만족하는 필요
+  이 loop가 만족해야 하는 capability, quality, constraint 또는 condition
 
 Spec:
   이 loop가 보존하거나 도입한 규칙과 경계
@@ -75,6 +81,8 @@ Trace가 항상 길 필요는 없고, 모든 commit에 들어갈 필요도 없�
 Reviewer가 명시적인 context를 필요로 할 만큼 PR이 크다면 다음 구조를 사용합니다.
 
 ```text
+# Need / goal context
+
 # Requirement
 
 # Spec

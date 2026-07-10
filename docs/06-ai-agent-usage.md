@@ -15,8 +15,11 @@ The agent should be allowed to refine specs and tests only when they still expre
 Give agents instructions in this shape:
 
 ```text
+Need / goal context:
+  The stakeholder problem, desire, or desired outcome that justifies this task.
+
 Requirement:
-  The stable requirement this task must satisfy.
+  The stable capability, quality, constraint, or condition this task must satisfy.
   Include rationale, failure prevented, assumptions, and revisit conditions when the requirement may outlive one loop.
   If the task belongs to a larger root goal, state the current narrower stage.
 
@@ -41,6 +44,7 @@ Automation boundary:
 Agents should stop or report when:
 
 - the root goal, rationale, failure prevented, or automation boundary is unclear enough that deriving a full trace would require guessing,
+- the prompt provides a goal or desired outcome but no requirement that states what must be true,
 - the requirement appears wrong or incomplete,
 - implementation suggests an adjacent feature,
 - tests need to be changed in a way that alters the requirement,

@@ -17,6 +17,9 @@ This heading is inside a fence and should be ignored.
 ## Root goal
 Keep development loops traceable.
 
+## Need
+Reviewers need to recover why each loop exists.
+
 ## Requirement
 Extract explicit trace sections.
 
@@ -129,6 +132,10 @@ class RddToolTest(unittest.TestCase):
             trace = rdd.build_trace(path)
 
         self.assertEqual(trace["schema_version"], "rdd.trace.v1")
+        self.assertEqual(
+            trace["fields"]["need"][0]["text"],
+            "Reviewers need to recover why each loop exists.",
+        )
         self.assertIn("requirement", trace["fields"])
         self.assertEqual(trace["fields"]["requirement"][0]["text"], "Extract explicit trace sections.")
         self.assertNotIn("This heading is inside a fence", json.dumps(trace, ensure_ascii=False))

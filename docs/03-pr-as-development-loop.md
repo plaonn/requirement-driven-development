@@ -8,7 +8,7 @@ Requirement -> Spec -> Test -> Implementation -> Review
 
 ## One stable purpose
 
-A PR should have one stable requirement or purpose. That purpose can be a feature, bug fix, refactoring, migration, documentation change, or operational improvement.
+A PR should have one stable loop requirement linked to one coherent need or goal context. The requirement may concern a feature, bug fix, refactoring, migration, documentation change, or operational improvement.
 
 The important point is not that the PR is tiny. The important point is that reviewers can tell what requirement defines the loop boundary.
 
@@ -17,8 +17,11 @@ The important point is not that the PR is tiny. The important point is that revi
 A good PR description should expose the path from intent to code:
 
 ```text
+Need / goal context:
+  What stakeholder problem, desire, or desired outcome justifies this loop?
+
 Requirement:
-  What need does this PR satisfy?
+  What capability, quality, constraint, or condition must this PR satisfy?
 
 Spec:
   What rules, contracts, boundaries, or acceptance criteria express the requirement?
@@ -49,8 +52,11 @@ In that workflow, the PR description is replaced by another review surface, such
 A useful no-PR loop trace is:
 
 ```text
+Need / goal context:
+  What stakeholder problem, desire, or desired outcome justifies this loop?
+
 Requirement:
-  What need does this loop satisfy?
+  What capability, quality, constraint, or condition must this loop satisfy?
 
 Spec:
   What rules or boundaries did this loop preserve or introduce?
@@ -75,6 +81,8 @@ The trace does not need to be long every time, and it does not have to live in e
 Use this structure when a PR is large enough that reviewers need explicit context:
 
 ```text
+# Need / goal context
+
 # Requirement
 
 # Spec

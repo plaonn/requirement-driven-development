@@ -55,6 +55,8 @@ RDD는 다음을 위한 완전한 방법을 제공하지 않습니다.
 
 이 책임에는 적절한 요구공학, product discovery, domain analysis, safety, security, governance 실천을 사용해야 합니다. RDD는 그 결과를 작은 개발 loop의 candidate requirement로 받을 수 있습니다.
 
+RDD는 loop를 정당화하는 context와 loop를 고정하는 requirement를 구분합니다. 명시적인 `Need`, `Goal`, `Requirement`, `Spec`, `Implementation choice` convention은 [RDD 방법론 — 용어 경계](01-methodology.md#용어-경계)를 참고합니다.
+
 ## 두 영역이 만나는 지점
 
 RDD는 요구공학의 여러 관심사를 task, ticket, pull request, 작은 iteration 규모에 적용합니다.
@@ -78,8 +80,11 @@ Candidate requirement를 loop anchor로 사용하기 전에, 경계를 추측으
 Source or stakeholder:
   이 need는 어디에서 왔는가?
 
+Need or root goal:
+  어떤 문제, 바람, desired state가 이 loop를 정당화하는가?
+
 Candidate requirement:
-  이 loop에서 무엇이 참이어야 하는가?
+  이 loop에서 어떤 capability, quality, constraint 또는 condition이 참이어야 하는가?
 
 Rationale and failure prevented:
   왜 중요하며, 없으면 무엇이 잘못되는가?

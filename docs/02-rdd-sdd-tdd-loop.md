@@ -8,12 +8,13 @@ SDD: Spec Driven Development
 TDD: Test Driven Development
 ```
 
-They should not be treated as competitors. RDD places the requirement at the top of the loop, while SDD and TDD provide increasingly concrete feedback mechanisms.
+They should not be treated as competitors. RDD places the accepted loop requirement at the top of the development trace, while SDD and TDD provide increasingly concrete feedback mechanisms. The need or goal that justifies the requirement remains linked context rather than another implementation layer.
 
 ## Layer model
 
 ```text
-Requirement
+Need / goal context
+  -> Accepted loop requirement
   -> Spec
     -> Test
       -> Implementation

@@ -13,8 +13,11 @@ Agent는 같은 requirement를 계속 표현하는 범위에서만 spec과 test�
 ## 유용한 agent 지시 구조
 
 ```text
+Need / goal context:
+  이 task를 정당화하는 stakeholder 문제, 바람 또는 desired outcome
+
 Requirement:
-  이 task가 만족해야 하는 안정적인 requirement
+  이 task가 만족해야 하는 안정적인 capability, quality, constraint 또는 condition
   requirement가 loop 이후에도 유지될 수 있다면 rationale, failure prevented, assumptions, revisit 조건을 포함
   더 큰 root goal의 일부라면 현재 좁은 stage를 명시
 
@@ -39,6 +42,7 @@ Automation boundary:
 Agent는 다음 상황에서 멈추거나 보고해야 합니다.
 
 - root goal, rationale, failure prevented, automation boundary가 불명확해 full trace를 만들려면 추측이 필요할 때
+- Prompt에 goal 또는 desired outcome은 있지만 무엇이 참이어야 하는지 말하는 requirement가 없을 때
 - Requirement가 틀렸거나 불완전해 보일 때
 - Implementation이 adjacent feature를 제안하게 만들 때
 - Test 변경이 requirement 자체를 바꾸는 방향일 때

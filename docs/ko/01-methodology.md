@@ -52,11 +52,52 @@ Requirement는 틀릴 수 있고, 불완전할 수 있고, 학습 이후 바뀔 
 
 RDD는 그 가능성을 부정하지 않습니다. 다만 requirement가 바뀌면 루프 경계도 바뀐 것이므로, 그 변경을 명시해야 한다고 봅니다.
 
+## 용어 경계
+
+요구공학은 `need`, `goal`, `requirement`, `specification`을 서로 연관된 여러 의미로 사용합니다. 예를 들어 requirement는 stakeholder가 인식한 need, system이 가져야 하는 capability 또는 property, 이 둘을 문서화한 표현을 뜻할 수 있습니다. Requirements specification은 체계적으로 정리된 requirement collection 전체를 뜻할 수도 있습니다.
+
+RDD는 reviewer가 목적, 의무, 해석, solution을 구분할 수 있도록 더 좁은 operational convention을 사용합니다.
+
+```text
+Need:
+  stakeholder가 인식했거나 operating context에서 발견한 문제, 바람, 기대 결과
+  Need는 불완전하거나 충돌하거나 아직 accepted되지 않았을 수 있음
+
+Goal:
+  하나 이상의 requirement에 방향을 주는 바람직한 상태 또는 결과
+  Root goal은 여러 staged development loop를 조직할 수 있음
+
+Requirement:
+  반드시 만족해야 하는 capability, quality, constraint 또는 다른 condition
+  현재 loop에 accepted된 requirement가 그 loop boundary를 정의함
+
+Spec:
+  requirement를 rule, contract, boundary, acceptance criteria로 정밀하게 표현한 현재 해석
+  Spec은 현재 implementation choice를 requirement로 만들지 않으면서 requirement를 operationalize함
+
+Implementation choice:
+  spec과 requirement를 만족하기 위해 선택한 design, technology, algorithm, structure 또는 workflow
+```
+
+관계는 다음과 같습니다.
+
+```text
+Requirements engineering 또는 discovery context:
+  Need -> Goal -> Candidate requirement
+
+RDD development loop:
+  Accepted loop requirement -> Spec -> Test/Check -> Implementation -> Review
+```
+
+첫 줄은 context이며, RDD가 need와 goal이 항상 단순한 선형 process를 이룬다고 주장하는 것은 아닙니다. 두 번째 줄이 RDD가 통제하는 development trace입니다.
+
+이 convention은 요구공학 용어의 보편적 재정의가 아닙니다. RDD를 기존 requirements repository, standard, domain vocabulary와 함께 사용한다면 source artifact의 이름을 바꾸지 말고 외부 용어와 RDD layer의 mapping을 명시합니다.
+
 ## 각 계층의 역할
 
 ### Requirement
 
-Requirement는 작업이 존재하는 이유를 설명합니다.
+Requirement는 loop가 만족해야 하는 capability, quality, constraint 또는 condition을 말합니다. 연결된 need, goal, rationale이 작업이 존재하는 이유를 설명합니다.
 
 좋은 requirement가 항상 길 필요는 없지만, 성공과 관련 없는 변경을 구분할 수 있을 만큼은 명확해야 합니다.
 
@@ -74,16 +115,19 @@ Parser는 malformed input을 actionable error와 함께 거부해야 한다.
 
 #### 목적을 보존하는 requirement
 
-Requirement는 원하는 동작만이 아니라 목적도 보존해야 합니다. 목적이 빠지면 구현 선택이 지속 requirement처럼 굳어지기 쉽습니다.
+Requirement는 원하는 동작만이 아니라 목적과의 연결도 보존해야 합니다. Need, goal, rationale이 빠지면 구현 선택이 지속 requirement처럼 굳어지기 쉽습니다.
 
 한 번의 작은 변경을 넘어 계속 판단 기준이 될 수 있는 requirement라면 다음을 확인합니다.
 
 ```text
 Root goal:
-  이 loop가 기여하는 더 큰 사용자, 제품, 비즈니스, 운영 목적
+  이 loop가 기여하는 더 큰 desired state 또는 outcome
+
+Need:
+  어떤 stakeholder 문제, 바람, 기대 결과 때문에 이 requirement가 필요한가?
 
 Requirement:
-  이 loop 안에서 계속 참이어야 하는 것
+  이 loop 안에서 계속 참이어야 하는 capability, quality, constraint 또는 condition
 
 Rationale:
   이 requirement가 지금 중요한 이유
@@ -121,7 +165,7 @@ Rule, limit, workaround, review condition을 기록해야 하지만 durable requ
 
 ```text
 Durable Requirement:
-  앞으로의 loop도 계속 이끌어야 하는 제품, 시스템, safety, 비즈니스, 기술적 필요
+  앞으로의 loop도 계속 이끌어야 하는 제품, 시스템, safety, 비즈니스, 기술적 capability, quality, constraint 또는 condition
 
 Temporary Experiment Policy:
   beta, live test, 시험 금액, 시장, 기간, operator run, 제한된 experiment에만 적용되는 규칙
@@ -192,10 +236,10 @@ Decision class:
   Durable Requirement.
 
 Requirement:
-  계속 참이어야 하는 사용자, 제품, 비즈니스, 기술적 필요
+  계속 참이어야 하는 제품, 시스템, safety, 비즈니스, 기술적 capability, quality, constraint 또는 condition
 
 Rationale:
-  그 필요가 중요한 이유
+  연결된 need와 goal을 고려할 때 이 requirement가 중요한 이유
 
 Failure prevented:
   derived spec이 제거되거나 약해졌을 때 생길 문제
@@ -224,7 +268,7 @@ Revisit when:
 
 ### Spec
 
-Spec은 requirement를 규칙, 계약, 경계, 인수 기준으로 옮깁니다.
+Spec은 requirement를 rule, contract, boundary, acceptance criteria로 operationalize합니다. 이 방법론에서 `spec`은 loop-level precision layer를 뜻합니다. 요구공학 artifact의 이름이 "requirements specification"이라는 이유로 그것을 분리하거나 이름을 바꿔야 한다는 뜻은 아닙니다.
 
 팀이 requirement를 더 잘 이해하면서 spec은 루프 안에서 진화할 수 있습니다.
 

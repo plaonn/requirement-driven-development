@@ -14,15 +14,28 @@ RDD는 SDD나 TDD를 대체하지 않습니다. RDD는 그 위에 요구사항 �
 
 ## Root goal
 
-RDD는 작은 개발 루프가 그 루프를 정당화하는 requirement와 계속 정렬되도록 돕습니다. 그래서 spec, test, implementation, review가 추적 가능하게 남고, scope 변경은 명시적인 결정으로 드러납니다.
+RDD는 작은 개발 루프가 그 루프를 정당화하는 need와 goal, 그리고 loop를 고정하는 requirement와 계속 정렬되도록 돕습니다. 그래서 spec, test, implementation, review가 추적 가능하게 남고, scope 변경은 명시적인 결정으로 드러납니다.
 
 ## 요구공학과의 관계
 
 RDD는 요구공학(Requirements Engineering)을 대체하지 않습니다. 요구공학은 system 또는 product lifecycle 전체에서 요구사항을 도출하고, 분석하고, 협상하고, 명세하고, 검증하고, 관리하는 더 넓은 분야입니다.
 
-RDD의 경계는 더 좁습니다. 현재 개발 loop에 사용할 candidate requirement가 충분히 도출되고 검증되었다고 전제한 뒤, 그 requirement가 spec, test, implementation, review까지 추적 가능하게 유지되도록 돕습니다. Stakeholder discovery, product discovery, requirement prioritization, conflict resolution, system-wide requirements management는 RDD가 대체하지 않습니다.
+RDD의 경계는 더 좁습니다. 현재 개발 loop에 사용할 candidate requirement가 관련 need 또는 goal에서 파생되고 충분히 도출·검증되었다고 전제한 뒤, 그 requirement가 spec, test, implementation, review까지 추적 가능하게 유지되도록 돕습니다. Stakeholder discovery, product discovery, requirement prioritization, conflict resolution, system-wide requirements management는 RDD가 대체하지 않습니다.
 
 자세한 경계는 [RDD와 요구공학](docs/ko/08-rdd-and-requirements-engineering.md)에서 설명합니다.
+
+## 용어 경계
+
+RDD는 작은 loop의 각 계층을 review할 수 있게 다음과 같은 실용적 용어를 사용합니다.
+
+```text
+Need: stakeholder의 문제, 바람, 기대 결과
+Goal: 하나 이상의 requirement에 방향을 주는 바람직한 상태
+Requirement: 반드시 만족해야 하는 capability, quality, constraint, condition
+Spec: requirement를 rule, contract, boundary, acceptance criteria로 정밀하게 표현한 현재 해석
+```
+
+Need와 goal은 작업이 왜 존재하고 어느 방향을 향하는지 설명합니다. Requirement는 무엇이 참이어야 하는지 말하며 loop를 고정합니다. Spec은 현재 해석을 verification 가능한 수준으로 구체화합니다. 요구공학에서는 이 용어들을 더 넓은 여러 의미로 사용합니다. 여기의 구분은 보편적 용어를 주장하는 것이 아니라 명시적인 RDD convention입니다.
 
 <!-- companion-only:start -->
 ## 용어 원칙
@@ -39,9 +52,9 @@ RDD의 경계는 더 좁습니다. 현재 개발 loop에 사용할 candidate req
 
 ## 핵심 아이디어
 
-각 개발 루프는 다섯 질문에 답해야 합니다.
+Loop를 열기 전에 candidate requirement를 정당화하는 need 또는 goal을 확인합니다. 그다음 각 개발 loop는 다섯 질문에 답해야 합니다.
 
-1. **Requirement** - 이 변경을 이끄는 사용자, 제품, 비즈니스, 기술적 필요는 무엇인가?
+1. **Requirement** - 이 loop에서 반드시 만족해야 하는 capability, quality, constraint, condition은 무엇인가?
 2. **Spec** - 그 요구사항을 표현하는 규칙, 경계, 계약, 인수 기준은 무엇인가?
 3. **Test** - spec이 계속 만족됨을 보호하는 실행 가능한 검사는 무엇인가?
 4. **Implementation** - test와 원래 requirement를 만족하는 코드나 문서 변경은 무엇인가?

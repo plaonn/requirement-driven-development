@@ -1,5 +1,9 @@
 # Order Cancellation Example
 
+## Need and goal context
+
+Users sometimes place an order by mistake or change their decision before fulfillment commitment. The goal is to preserve user control without requiring fulfillment rollback.
+
 ## Requirement
 
 Users can cancel an order before fulfillment starts.

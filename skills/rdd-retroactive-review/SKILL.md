@@ -54,8 +54,9 @@ When the target project was not originally developed with RDD, default to a cove
    - Do not promote a temporary policy into a durable requirement without a promotion rule.
 
 4. Infer candidate requirements.
-   - For each important spec or invariant, ask what user, product, operational, safety, or technical need it appears to protect.
-   - A candidate requirement must explain who or what benefits, what failure or risk is prevented, and why the constraint matters.
+   - For each important spec or invariant, ask what user, product, operational, safety, or technical need or goal it appears to protect, and record that as justification context.
+   - Formulate the candidate requirement separately as the capability, quality, constraint, or condition that appears to need protection. Do not use the goal alone as the requirement.
+   - The candidate requirement states what must be true; its linked need, goal, rationale, and failure prevented explain why it matters.
    - Recover the root goal before classifying lower-level requirements when a larger product or operational goal exists.
    - For automation or state-changing work, identify the automation boundary.
    - Mark confidence explicitly:
@@ -120,6 +121,7 @@ Root Goal
 Candidate Requirements
 - R?: [short title]
   Status: confirmed | inferred | unclear
+  Need or goal context:
   Requirement:
   Rationale:
   Failure prevented:
@@ -140,6 +142,7 @@ Decision Register
 
 Unresolved Requirement Candidates
 - Spec/invariant:
+  Possible need or goal:
   Possible requirement:
   Missing rationale/assumption:
   Question needed:
@@ -180,7 +183,7 @@ RDD Observations
 - Do not call recovered requirements current truth unless confirmed.
 - Do not convert retroactive candidates into public source-of-truth docs without a separate adoption loop.
 - Do not promote temporary experiment policies, provider workarounds, or operator-run risk decisions into durable requirements without a promotion rule.
-- Do not output requirements that only say what the system must do.
+- Do not output a candidate requirement without its linked need or goal context and rationale.
 - If an item has no recoverable rationale, classify it as a traceability gap.
 - Do not let a current safety stage erase a broader root goal, and do not let a broad root goal erase the current safety boundary.
 - Do not erase uncertainty.
