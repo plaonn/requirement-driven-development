@@ -76,6 +76,18 @@ Follow-ups:
 
 Trace가 항상 길 필요는 없고, 모든 commit에 들어갈 필요도 없습니다. 작고 명확한 변경은 가볍게 유지할 수 있습니다. 다만 requirement, boundary, 미래 설계 영향이 나중에 재구성되기 어려운 경우에는 trace를 남기는 편이 좋습니다.
 
+## Loop record 보존
+
+RDD는 loop record에 하나의 retention policy를 강제하지 않습니다. 프로젝트는 다음 pattern 중 하나를 선택할 수 있습니다.
+
+- **Persistent record** - 완료된 loop trace를 계속 보존함
+- **Disposable active loop** - loop 파일이 있으면 active work로 취급하고, 살아남을 truth를 승격한 뒤 review가 끝나면 loop 파일을 삭제함
+- **Selective retention** - audit, safety, 장기 decision 가치가 있는 record만 보존함
+
+세 pattern 모두 같은 completion invariant를 지킵니다. 완료 전에 requirement boundary를 review할 수 있어야 하고, loop 이후에도 살아야 할 정보는 적절한 current-truth surface로 옮겨야 합니다. Durable need와 requirement는 requirement document로, current contract는 docs와 test로, implementation behavior는 code로, 장기 architecture decision은 필요할 때 decision document로 승격합니다. 계속 보존할 가치가 없는 loop-local note는 disposable loop와 함께 사라질 수 있습니다.
+
+Disposable loop 파일은 active working surface이며 필수 archive가 아닙니다. 한 loop는 보통 하나의 pull request, task, ticket, local change set 같은 loop unit을 다뤄야 합니다. 하나의 durable requirement가 여러 loop unit에 걸치면 unit마다 별도 loop record를 만들고 같은 durable requirement를 참조합니다. Structural tooling은 설정된 active-loop directory의 loop 파일을 active work로 취급할 수 있지만 semantic correctness, checkbox 완료 여부, truth promotion 완료 여부를 추론하면 안 됩니다. Filename convention은 RDD invariant가 아니라 project policy로 남습니다.
+
 ## 권장 PR 구조
 
 Reviewer가 명시적인 context를 필요로 할 만큼 PR이 크다면 다음 구조를 사용합니다.

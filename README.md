@@ -103,6 +103,28 @@ Revisit when:
 
 A temporary or scoped constraint should normally remain a policy with an expiration rule rather than be promoted into the durable requirement set. A revisit signal does not automatically invalidate a requirement. It marks a boundary event: revalidate the linked need, goal, rationale, and assumptions, then explicitly `retain`, `narrow`, `supersede`, or `discard` the requirement. Propagate that decision to affected specs, tests, implementation, and active loops.
 
+## Requirement identifiers
+
+RDD does not require one identifier format. Existing numeric hierarchies such as `R0`, `R1`, and `R2` remain valid. Projects that benefit from stable semantic references may instead use one `ROOT-REQ-*` identifier for the root requirement and `REQ-*` identifiers for its descendants. A root goal remains separate justification context rather than becoming a requirement merely because it appears near the hierarchy root.
+
+Semantic identifiers are stable current-truth references. Once adopted, they should not be silently renamed, reused, or renumbered. Migration from numeric identifiers is optional and should preserve an explicit old-to-new mapping rather than rewriting history.
+
+## Adopting RDD structure and tooling
+
+Existing numeric RDD projects can start with hierarchy-only validation and do not need to create an active-loop directory or migrate identifiers. New semantic projects can start from [the requirement hierarchy template](templates/requirements.md). Projects with split requirement details may pass multiple files or directories as one source set.
+
+```sh
+python3 tools/rdd/rdd.py validate REQUIREMENTS.md
+python3 tools/rdd/rdd.py validate REQUIREMENTS.md docs/requirements/
+```
+
+Projects that choose the disposable active-loop pattern can start from [the active-loop template](templates/active_loop.md), add `--loops` during work, and use `ready` as the merge-ready structural check. Persistent or selective-retention projects may omit `ready` or point it only at a dedicated active-work directory.
+
+```sh
+python3 tools/rdd/rdd.py validate REQUIREMENTS.md --loops rdd/loops/
+python3 tools/rdd/rdd.py ready REQUIREMENTS.md --loops rdd/loops/
+```
+
 ## Existing projects
 
 When applying RDD to an existing project, do not treat existing specs, tests, or
@@ -133,6 +155,8 @@ RDD is especially useful at pull request scale.
 A PR should not be treated as just a bundle of code changes. It should be treated as a small requirement-driven loop.
 
 When a project does not use pull requests, the same model can be applied at task or change-set scale. The review surface may be a task note, commit message body, agent final trace, or another lightweight record, as long as the requirement boundary remains visible.
+
+Projects may retain completed loop records, delete disposable active-loop files after surviving truth has been promoted, or retain only selected high-value records. RDD does not require one retention policy. It requires the loop boundary to be reviewable before completion and durable requirements, current contracts, tests, and important architectural decisions to survive in an appropriate current-truth surface.
 
 A good PR should make these relationships visible:
 
@@ -195,8 +219,12 @@ skills/
     SKILL.md
 
 templates/
+  requirements.md
+  active_loop.md
   pull_request_template.md
   codex_prompt_template.md
+  requirements.ko.md
+  active_loop.ko.md
   pull_request_template.ko.md
   codex_prompt_template.ko.md
 

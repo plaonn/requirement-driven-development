@@ -262,6 +262,30 @@ GAP_QUESTIONS = {
 
 SKIP_DIRS = {".git", ".hg", ".svn", ".mypy_cache", ".pytest_cache", "__pycache__", "node_modules"}
 
+NUMERIC_REQUIREMENT_RE = re.compile(r"^R(\d+)$", re.IGNORECASE)
+ROOT_REQUIREMENT_RE = re.compile(r"^ROOT-REQ-[A-Z0-9]+(?:-[A-Z0-9]+)*$")
+CHILD_REQUIREMENT_RE = re.compile(r"^REQ-[A-Z0-9]+(?:-[A-Z0-9]+)*$")
+
+SEMANTIC_REQUIRED_FIELDS = (
+    "parent",
+    "decision_class",
+    "validity_scope",
+    "requirement",
+    "rationale",
+    "failure_prevented",
+    "assumptions",
+    "derived_specs",
+    "revisit_when",
+)
+
+LOOP_REQUIRED_HEADINGS = (
+    "spec",
+    "checks",
+    "implementation",
+    "review",
+    "non_goals",
+)
+
 
 @dataclass
 class Section:
@@ -270,6 +294,22 @@ class Section:
     heading: str
     level: int
     text: str
+
+
+@dataclass
+class RequirementEntry:
+    key: str
+    title: str
+    file: str
+    line: int
+    fields: dict[str, str]
+
+
+@dataclass
+class ValidationIssue:
+    code: str
+    file: str
+    message: str
 
 
 def normalize_heading(value: str) -> str:
@@ -474,6 +514,60 @@ def parse_rdd_hierarchy(path: Path, root: Path) -> list[Section]:
     return sections
 
 
+def semantic_heading_parts(heading: str) -> tuple[str, str] | None:
+    match = re.match(r"^(ROOT-REQ-[A-Z0-9]+(?:-[A-Z0-9]+)*|REQ-[A-Z0-9]+(?:-[A-Z0-9]+)*)\s*:\s*(.+)$", heading)
+    if not match:
+        return None
+    return match.group(1), match.group(2).strip()
+
+
+def parse_semantic_hierarchy(path: Path, root: Path) -> list[Section]:
+    text = path.read_text(encoding="utf-8")
+    lines = text.splitlines()
+    headings = markdown_headings(lines)
+    sections: list[Section] = []
+
+    for heading_index, (start, level, heading, _field) in enumerate(headings):
+        parts = semantic_heading_parts(heading.strip())
+        if not parts:
+            continue
+
+        _key, title = parts
+        end = len(lines)
+        for next_start, next_level, _next_heading, _next_field in headings[heading_index + 1 :]:
+            if next_level <= level:
+                end = next_start
+                break
+
+        bullet_fields = parse_field_lines(lines[start + 1 : end], allow_plain=True)
+        heading_label = heading.strip()
+        requirement_text = bullet_fields.get("requirement") or title
+        sections.append(
+            Section(
+                field="requirement",
+                file=str(path.relative_to(root)),
+                heading=heading_label,
+                level=level,
+                text=requirement_text,
+            )
+        )
+
+        for field, value in bullet_fields.items():
+            if field == "requirement":
+                continue
+            sections.append(
+                Section(
+                    field=field,
+                    file=str(path.relative_to(root)),
+                    heading=heading_label,
+                    level=level,
+                    text=value,
+                )
+            )
+
+    return sections
+
+
 def path_mentions_private(path: Path) -> bool:
     return ".private" in path.parts
 
@@ -508,6 +602,8 @@ def build_trace(source: Path) -> dict:
         for section in parse_inline_fields(path, root):
             fields.setdefault(section.field, []).append(section)
         for section in parse_rdd_hierarchy(path, root):
+            fields.setdefault(section.field, []).append(section)
+        for section in parse_semantic_hierarchy(path, root):
             fields.setdefault(section.field, []).append(section)
     fields = dedupe_fields(fields)
 
@@ -629,6 +725,442 @@ def recommendation_items(source: Path, files: list[Path], fields: dict[str, list
             ),
         }
     ]
+
+
+def normalize_contract_label(value: str) -> str:
+    lowered = value.strip().lower()
+    lowered = re.sub(r"[^a-z0-9가-힣]+", "_", lowered)
+    return lowered.strip("_")
+
+
+CONTRACT_FIELD_ALIASES = {
+    "parent": "parent",
+    "decision_class": "decision_class",
+    "validity_scope": "validity_scope",
+    "requirement_validity": "validity_scope",
+    "requirement": "requirement",
+    "요구사항": "requirement",
+    "rationale": "rationale",
+    "근거": "rationale",
+    "failure_prevented": "failure_prevented",
+    "실패_방지": "failure_prevented",
+    "assumptions": "assumptions",
+    "가정": "assumptions",
+    "derived_specs": "derived_specs",
+    "derived_spec": "derived_specs",
+    "파생_명세": "derived_specs",
+    "revisit_when": "revisit_when",
+    "재검토_조건": "revisit_when",
+    "previous_identifiers": "previous_identifiers",
+    "previous_identifier": "previous_identifiers",
+    "requirement_reference": "requirement_reference",
+    "loop_unit": "loop_unit",
+    "merge_unit": "loop_unit",
+}
+
+
+CONTRACT_HEADING_ALIASES = {
+    "spec": "spec",
+    "specification": "spec",
+    "명세": "spec",
+    "tests": "checks",
+    "test": "checks",
+    "checks": "checks",
+    "tests_checks": "checks",
+    "테스트": "checks",
+    "검사": "checks",
+    "implementation": "implementation",
+    "구현": "implementation",
+    "review": "review",
+    "review_focus": "review",
+    "리뷰": "review",
+    "non_goals": "non_goals",
+    "non_goal": "non_goals",
+    "비목표": "non_goals",
+}
+
+
+def parse_contract_fields(lines: list[str]) -> dict[str, str]:
+    fields: dict[str, str] = {}
+    in_fence = False
+    pattern = re.compile(r"^\s*(?:[-*]\s+)?([^:\n]{1,80}):\s*(.*?)\s*$")
+
+    for line in lines:
+        if is_fence(line):
+            in_fence = not in_fence
+            continue
+        if in_fence:
+            continue
+        match = pattern.match(line)
+        if not match:
+            continue
+        alias = CONTRACT_FIELD_ALIASES.get(normalize_contract_label(match.group(1)))
+        value = match.group(2).strip()
+        if alias and value and alias not in fields:
+            fields[alias] = value
+    return fields
+
+
+def parse_requirement_entries(path: Path, *, display_name: str | None = None) -> list[RequirementEntry]:
+    text = path.read_text(encoding="utf-8")
+    lines = text.splitlines()
+    headings = markdown_headings(lines)
+    entries: list[RequirementEntry] = []
+
+    for heading_index, (start, level, heading, _field) in enumerate(headings):
+        key: str | None = None
+        title: str | None = None
+        semantic = semantic_heading_parts(heading.strip())
+        if semantic:
+            key, title = semantic
+        else:
+            numeric = re.match(r"^(R\d+)\s*:\s*(.+)$", heading.strip(), re.IGNORECASE)
+            if numeric:
+                key = numeric.group(1).upper()
+                title = numeric.group(2).strip()
+            else:
+                candidate = re.match(r"^([^:\s]+)\s*:\s*(.+)$", heading.strip())
+                if candidate and candidate.group(1).upper().startswith(("ROOT-REQ", "REQ-")):
+                    key = candidate.group(1)
+                    title = candidate.group(2).strip()
+        if not key or title is None:
+            continue
+
+        end = len(lines)
+        for next_start, next_level, _next_heading, _next_field in headings[heading_index + 1 :]:
+            if next_level <= level:
+                end = next_start
+                break
+        entries.append(
+            RequirementEntry(
+                key=key,
+                title=title,
+                file=display_name or path.name,
+                line=start + 1,
+                fields=parse_contract_fields(lines[start + 1 : end]),
+            )
+        )
+    return entries
+
+
+def split_identifiers(value: str) -> list[str]:
+    return [item.strip() for item in value.split(",") if item.strip()]
+
+
+def validate_requirement_hierarchy(entries: list[RequirementEntry]) -> tuple[list[ValidationIssue], dict[str, str]]:
+    issues: list[ValidationIssue] = []
+    aliases: dict[str, str] = {}
+    primary: dict[str, RequirementEntry] = {}
+    numeric_entries = [entry for entry in entries if NUMERIC_REQUIREMENT_RE.fullmatch(entry.key)]
+    semantic_entries = [
+        entry
+        for entry in entries
+        if ROOT_REQUIREMENT_RE.fullmatch(entry.key) or CHILD_REQUIREMENT_RE.fullmatch(entry.key)
+    ]
+
+    if not entries:
+        issues.append(ValidationIssue("missing_hierarchy", "", "No numeric or semantic requirement entries were found."))
+        return issues, aliases
+
+    if numeric_entries and semantic_entries:
+        issues.append(
+            ValidationIssue(
+                "mixed_hierarchy",
+                entries[0].file,
+                "One source-of-truth hierarchy must not mix numeric and semantic primary identifiers.",
+            )
+        )
+
+    for entry in entries:
+        valid_primary = (
+            NUMERIC_REQUIREMENT_RE.fullmatch(entry.key)
+            or ROOT_REQUIREMENT_RE.fullmatch(entry.key)
+            or CHILD_REQUIREMENT_RE.fullmatch(entry.key)
+        )
+        if not valid_primary:
+            issues.append(
+                ValidationIssue(
+                    "invalid_requirement_identifier",
+                    entry.file,
+                    f"Invalid requirement identifier {entry.key} at line {entry.line}.",
+                )
+            )
+        if entry.key in primary:
+            issues.append(
+                ValidationIssue(
+                    "duplicate_key",
+                    entry.file,
+                    f"Duplicate requirement identifier {entry.key} at line {entry.line}.",
+                )
+            )
+        else:
+            primary[entry.key] = entry
+
+    if numeric_entries:
+        roots = [entry for entry in numeric_entries if entry.key == "R0"]
+        if len(roots) != 1:
+            issues.append(
+                ValidationIssue(
+                    "numeric_root_count",
+                    numeric_entries[0].file,
+                    f"Numeric hierarchy must contain exactly one R0 entry; found {len(roots)}.",
+                )
+            )
+
+    if semantic_entries:
+        roots = [entry for entry in semantic_entries if ROOT_REQUIREMENT_RE.fullmatch(entry.key)]
+        if len(roots) != 1:
+            issues.append(
+                ValidationIssue(
+                    "semantic_root_count",
+                    semantic_entries[0].file,
+                    f"Semantic hierarchy must contain exactly one ROOT-REQ-* entry; found {len(roots)}.",
+                )
+            )
+
+        for entry in semantic_entries:
+            for field in SEMANTIC_REQUIRED_FIELDS:
+                if not entry.fields.get(field):
+                    issues.append(
+                        ValidationIssue(
+                            "missing_required_field",
+                            entry.file,
+                            f"{entry.key} is missing required field {field.replace('_', ' ').title()}.",
+                        )
+                    )
+
+            parent = entry.fields.get("parent", "")
+            decision_class = entry.fields.get("decision_class", "").rstrip(".").lower()
+            if decision_class and decision_class != "durable requirement":
+                issues.append(
+                    ValidationIssue(
+                        "invalid_root_decision_class"
+                        if ROOT_REQUIREMENT_RE.fullmatch(entry.key)
+                        else "invalid_durable_decision_class",
+                        entry.file,
+                        f"{entry.key} must use Decision class: Durable Requirement.",
+                    )
+                )
+            if ROOT_REQUIREMENT_RE.fullmatch(entry.key):
+                if parent.lower() != "none":
+                    issues.append(
+                        ValidationIssue("invalid_root_parent", entry.file, f"{entry.key} must use Parent: none.")
+                    )
+            elif parent.lower() == "none":
+                issues.append(
+                    ValidationIssue("invalid_child_parent", entry.file, f"{entry.key} must reference a parent requirement.")
+                )
+
+            validity = entry.fields.get("validity_scope", "").rstrip(".").lower()
+            if validity and validity not in {"durable", "durable requirement"}:
+                issues.append(
+                    ValidationIssue(
+                        "invalid_durable_validity",
+                        entry.file,
+                        f"{entry.key} must use Validity scope: Durable.",
+                    )
+                )
+
+    for entry in entries:
+        for alias in split_identifiers(entry.fields.get("previous_identifiers", "")):
+            valid_alias = (
+                NUMERIC_REQUIREMENT_RE.fullmatch(alias)
+                or ROOT_REQUIREMENT_RE.fullmatch(alias)
+                or CHILD_REQUIREMENT_RE.fullmatch(alias)
+            )
+            if not valid_alias:
+                issues.append(
+                    ValidationIssue("invalid_previous_identifier", entry.file, f"Invalid previous identifier {alias} on {entry.key}.")
+                )
+                continue
+            if alias in primary or alias in aliases:
+                issues.append(
+                    ValidationIssue("duplicate_previous_identifier", entry.file, f"Previous identifier {alias} is already in use.")
+                )
+                continue
+            aliases[alias] = entry.key
+
+    if semantic_entries:
+        semantic_primary = {entry.key for entry in semantic_entries}
+        for entry in semantic_entries:
+            parent = entry.fields.get("parent", "")
+            if not parent or parent.lower() == "none":
+                continue
+            if parent not in semantic_primary:
+                issues.append(
+                    ValidationIssue("missing_parent", entry.file, f"{entry.key} references undefined parent {parent}.")
+                )
+
+        graph = {
+            entry.key: entry.fields.get("parent", "")
+            for entry in semantic_entries
+            if entry.fields.get("parent", "").lower() != "none"
+        }
+        visiting: set[str] = set()
+        visited: set[str] = set()
+
+        def visit(key: str, trail: list[str]) -> None:
+            if key in visited:
+                return
+            if key in visiting:
+                cycle_start = trail.index(key) if key in trail else 0
+                cycle = trail[cycle_start:] + [key]
+                issues.append(
+                    ValidationIssue("hierarchy_cycle", primary[key].file, f"Requirement hierarchy cycle: {' -> '.join(cycle)}.")
+                )
+                return
+            visiting.add(key)
+            parent = graph.get(key)
+            if parent in graph:
+                visit(parent, trail + [key])
+            visiting.remove(key)
+            visited.add(key)
+
+        for key in graph:
+            visit(key, [])
+
+    return issues, aliases
+
+
+def collect_active_loop_paths(loop_dir: Path, excluded: list[str]) -> list[Path]:
+    if not loop_dir.is_dir():
+        raise FileNotFoundError(f"No such active-loop directory: {loop_dir}")
+    excluded_paths = {Path(item).as_posix().lstrip("./") for item in excluded}
+    paths: list[Path] = []
+    for path in sorted(candidate for candidate in loop_dir.rglob("*") if candidate.is_file()):
+        if path.suffix.lower() != ".md":
+            continue
+        relative = path.relative_to(loop_dir)
+        if path.name.lower() == "readme.md":
+            continue
+        if any(part.startswith(".") for part in relative.parts):
+            continue
+        if relative.as_posix() in excluded_paths:
+            continue
+        paths.append(path)
+    return paths
+
+
+def validate_active_loops(
+    loop_dir: Path,
+    loop_paths: list[Path],
+    valid_identifiers: set[str],
+    loop_name_pattern: re.Pattern[str] | None,
+) -> list[ValidationIssue]:
+    issues: list[ValidationIssue] = []
+    for path in loop_paths:
+        relative = path.relative_to(loop_dir).as_posix()
+        if loop_name_pattern and not loop_name_pattern.fullmatch(path.name):
+            issues.append(
+                ValidationIssue(
+                    "invalid_loop_filename",
+                    relative,
+                    f"Loop filename does not match configured pattern {loop_name_pattern.pattern}.",
+                )
+            )
+
+        text = path.read_text(encoding="utf-8")
+        lines = text.splitlines()
+        fields = parse_contract_fields(lines)
+        reference = fields.get("requirement_reference")
+        if not reference:
+            issues.append(
+                ValidationIssue("missing_loop_metadata", relative, "Loop is missing Requirement reference metadata.")
+            )
+        elif reference not in valid_identifiers:
+            issues.append(
+                ValidationIssue(
+                    "undefined_requirement_reference",
+                    relative,
+                    f"Loop references undefined requirement {reference}.",
+                )
+            )
+        if not fields.get("loop_unit"):
+            issues.append(ValidationIssue("missing_loop_metadata", relative, "Loop is missing Loop unit metadata."))
+
+        present_headings = {
+            CONTRACT_HEADING_ALIASES.get(normalize_contract_label(heading))
+            for _line, _level, heading, _field in markdown_headings(lines)
+        }
+        for required in LOOP_REQUIRED_HEADINGS:
+            if required not in present_headings:
+                issues.append(
+                    ValidationIssue(
+                        "missing_loop_section",
+                        relative,
+                        f"Loop is missing required {required.replace('_', ' ').title()} section.",
+                    )
+                )
+    return issues
+
+
+def collect_requirement_source_paths(sources: list[Path]) -> list[Path]:
+    paths: dict[Path, Path] = {}
+    for source in sources:
+        if source.is_file():
+            if source.suffix.lower() != ".md":
+                raise ValueError(f"Requirement source must be Markdown: {source}")
+            paths[source.resolve()] = source
+            continue
+        if not source.is_dir():
+            raise FileNotFoundError(f"No such requirement source: {source}")
+        for candidate in sorted(source.rglob("*")):
+            if not candidate.is_file() or candidate.suffix.lower() != ".md":
+                continue
+            relative = candidate.relative_to(source)
+            if candidate.name.lower() == "readme.md":
+                continue
+            if any(part.startswith(".") for part in relative.parts):
+                continue
+            paths[candidate.resolve()] = candidate
+    return [paths[key] for key in sorted(paths, key=lambda item: item.as_posix())]
+
+
+def validate_structure(
+    requirement_sources: list[Path],
+    loop_dir: Path | None,
+    excluded: list[str],
+    loop_name_pattern: str | None = None,
+) -> tuple[list[ValidationIssue], list[Path]]:
+    if loop_dir is None and (excluded or loop_name_pattern):
+        raise ValueError("Loop exclusion and filename options require --loops.")
+    source_paths = collect_requirement_source_paths(requirement_sources)
+    entries = [
+        entry
+        for path in source_paths
+        for entry in parse_requirement_entries(path, display_name=path.as_posix())
+    ]
+    issues, _aliases = validate_requirement_hierarchy(entries)
+    if loop_dir is None:
+        return issues, []
+    loop_paths = collect_active_loop_paths(loop_dir, excluded)
+    valid_identifiers = {entry.key for entry in entries}
+    compiled_pattern = re.compile(loop_name_pattern) if loop_name_pattern else None
+    issues.extend(validate_active_loops(loop_dir, loop_paths, valid_identifiers, compiled_pattern))
+    return issues, loop_paths
+
+
+def render_validation_result(
+    command: str,
+    issues: list[ValidationIssue],
+    active_loops: list[Path],
+    loop_dir: Path | None,
+) -> str:
+    lines = [f"# RDD {command.title()}", ""]
+    if issues:
+        lines.append("Structural contract violations:")
+        for issue in issues:
+            location = f"{issue.file}: " if issue.file else ""
+            lines.append(f"- [{issue.code}] {location}{issue.message}")
+    else:
+        lines.append("No structural contract violations found.")
+    if loop_dir is None:
+        lines.extend(["", "Active loop validation: not requested."])
+    else:
+        lines.extend(["", f"Active loop documents: {len(active_loops)}"])
+    if active_loops and loop_dir is not None:
+        lines.extend(f"- {path.relative_to(loop_dir).as_posix()}" for path in active_loops)
+    return "\n".join(lines).rstrip() + "\n"
 
 
 def render_section_items(items: list[dict], max_items: int, max_chars: int) -> str:
@@ -786,11 +1318,67 @@ def command_prompt(args: argparse.Namespace) -> int:
     return 0
 
 
+def command_validate(args: argparse.Namespace) -> int:
+    issues, active_loops = validate_structure(
+        args.paths,
+        args.loops,
+        args.exclude_loop,
+        args.loop_name_pattern,
+    )
+    print(render_validation_result("validate", issues, active_loops, args.loops), end="")
+    return 1 if issues else 0
+
+
+def command_ready(args: argparse.Namespace) -> int:
+    issues, active_loops = validate_structure(
+        args.paths,
+        args.loops,
+        args.exclude_loop,
+        args.loop_name_pattern,
+    )
+    for path in active_loops:
+        issues.append(
+            ValidationIssue(
+                "active_loop_remaining",
+                path.relative_to(args.loops).as_posix(),
+                "Ready requires the configured active-loop directory to contain no loop documents.",
+            )
+        )
+    print(render_validation_result("ready", issues, active_loops, args.loops), end="")
+    return 1 if issues else 0
+
+
 def add_common_options(parser: argparse.ArgumentParser) -> None:
     parser.add_argument("path", type=Path, help="Markdown file or directory to scan.")
     parser.add_argument("--json", action="store_true", help="Emit JSON instead of Markdown.")
     parser.add_argument("--max-items", type=int, default=5, help="Maximum sections per field in Markdown output.")
     parser.add_argument("--max-chars", type=int, default=700, help="Maximum characters per extracted section preview.")
+
+
+def add_guard_options(parser: argparse.ArgumentParser, *, loops_required: bool) -> None:
+    parser.add_argument(
+        "paths",
+        type=Path,
+        nargs="+",
+        help="One or more source-of-truth requirement Markdown files or directories.",
+    )
+    parser.add_argument(
+        "--loops",
+        type=Path,
+        required=loops_required,
+        help="Configured active-loop directory.",
+    )
+    parser.add_argument(
+        "--exclude-loop",
+        action="append",
+        default=[],
+        metavar="RELATIVE_PATH",
+        help="Support file to exclude relative to the active-loop directory; repeat as needed.",
+    )
+    parser.add_argument(
+        "--loop-name-pattern",
+        help="Optional regular expression that every active-loop filename must match.",
+    )
 
 
 def build_parser() -> argparse.ArgumentParser:
@@ -809,6 +1397,14 @@ def build_parser() -> argparse.ArgumentParser:
     add_common_options(gaps)
     gaps.set_defaults(func=command_gaps)
 
+    validate = subparsers.add_parser("validate", help="Validate requirement hierarchy and active-loop structure.")
+    add_guard_options(validate, loops_required=False)
+    validate.set_defaults(func=command_validate)
+
+    ready = subparsers.add_parser("ready", help="Validate structure and require no active loop documents.")
+    add_guard_options(ready, loops_required=True)
+    ready.set_defaults(func=command_ready)
+
     return parser
 
 
@@ -819,7 +1415,17 @@ def main(argv: list[str] | None = None) -> int:
         return args.func(args)
     except OSError as exc:
         print(f"rdd: {exc}", file=sys.stderr)
-        return 1
+        return 2 if args.command in {"validate", "ready"} else 1
+    except UnicodeError as exc:
+        if args.command not in {"validate", "ready"}:
+            raise
+        print(f"rdd: {exc}", file=sys.stderr)
+        return 2
+    except Exception as exc:
+        if args.command not in {"validate", "ready"}:
+            raise
+        print(f"rdd: {exc}", file=sys.stderr)
+        return 2
 
 
 if __name__ == "__main__":

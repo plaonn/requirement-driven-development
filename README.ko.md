@@ -116,6 +116,28 @@ Revisit when:
 
 Temporary 또는 scoped constraint는 durable requirement set으로 승격하지 않고 expiration rule을 가진 policy로 유지하는 것이 기본입니다. Revisit signal이 발생했다고 requirement가 자동으로 invalid되는 것은 아닙니다. 그것은 boundary event입니다. 연결된 need, goal, rationale, assumptions를 revalidate한 뒤 requirement를 `retain`, `narrow`, `supersede`, `discard` 중 하나로 명시적으로 처리합니다. 그 결정을 영향받는 spec, test, implementation, active loop에 전파합니다.
 
+## Requirement identifier
+
+RDD는 하나의 identifier 형식을 강제하지 않습니다. `R0`, `R1`, `R2` 같은 기존 numeric hierarchy도 계속 유효합니다. 안정적인 semantic reference가 필요한 프로젝트는 root requirement에 `ROOT-REQ-*`, 그 descendant에 `REQ-*` identifier를 사용할 수 있습니다. Root goal은 hierarchy root 가까이에 있더라도 requirement가 되는 것이 아니라 별도의 justification context로 남습니다.
+
+Semantic identifier는 안정적인 current-truth reference입니다. 한번 채택하면 조용히 rename, reuse, renumber하지 않습니다. Numeric identifier에서의 migration은 선택 사항이며, 과거를 다시 쓰지 않고 old-to-new mapping을 명시적으로 보존해야 합니다.
+
+## RDD 구조와 tooling 도입
+
+기존 numeric RDD project는 hierarchy-only validation부터 시작할 수 있으며 active-loop directory를 만들거나 identifier를 migration할 필요가 없습니다. 새 semantic project는 [requirement hierarchy template](templates/requirements.ko.md)에서 시작할 수 있습니다. Requirement detail을 분리한 project는 여러 file 또는 directory를 하나의 source set으로 전달할 수 있습니다.
+
+```sh
+python3 tools/rdd/rdd.py validate REQUIREMENTS.md
+python3 tools/rdd/rdd.py validate REQUIREMENTS.md docs/requirements/
+```
+
+Disposable active-loop pattern을 선택한 project는 [active-loop template](templates/active_loop.ko.md)에서 시작하고, 작업 중에는 `--loops`를 추가하며, `ready`를 merge-ready structural check로 사용할 수 있습니다. Persistent 또는 selective-retention project는 `ready`를 사용하지 않거나 전용 active-work directory만 대상으로 지정할 수 있습니다.
+
+```sh
+python3 tools/rdd/rdd.py validate REQUIREMENTS.md --loops rdd/loops/
+python3 tools/rdd/rdd.py ready REQUIREMENTS.md --loops rdd/loops/
+```
+
 ## 기존 프로젝트
 
 기존 프로젝트에 RDD를 적용할 때는 기존 spec, test, 구현 동작을 confirmed requirement의 증명으로 취급하지 않습니다.
@@ -133,6 +155,8 @@ RDD는 pull request 규모에서 특히 유용합니다.
 PR은 단순한 코드 변경 묶음이 아니라 작은 요구사항 주도 루프로 봐야 합니다.
 
 Pull request를 사용하지 않는 프로젝트에서는 같은 모델을 task 또는 change set 규모에 적용할 수 있습니다. 이때 review surface는 task note, commit message body, agent final trace 같은 가벼운 기록이 될 수 있으며, 핵심은 requirement boundary가 보이게 남는 것입니다.
+
+프로젝트는 완료된 loop record를 계속 보존하거나, 살아남아야 할 truth를 승격한 뒤 disposable active-loop 파일을 삭제하거나, 가치가 높은 record만 선택적으로 보존할 수 있습니다. RDD는 하나의 retention policy를 강제하지 않습니다. 완료 전에 loop boundary를 review할 수 있어야 하며, durable requirement, current contract, test, 중요한 architecture decision은 적절한 current-truth surface에 남아야 합니다.
 
 좋은 PR은 다음 관계를 드러냅니다.
 
@@ -192,8 +216,12 @@ skills/
     SKILL.md
 
 templates/
+  requirements.md
+  active_loop.md
   pull_request_template.md
   codex_prompt_template.md
+  requirements.ko.md
+  active_loop.ko.md
   pull_request_template.ko.md
   codex_prompt_template.ko.md
 

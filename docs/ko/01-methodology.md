@@ -317,6 +317,27 @@ Revalidation 결과 requirement가 연결된 need 또는 goal을 더 이상 만�
 
 분리 기준은 단순 파일 길이가 아닙니다. 사람이나 agent가 task를 수행할 때 필요한 context loading unit과 문서 단위가 어긋날 때 분리합니다. Active contract를 이해하려면 항상 함께 읽어야 하는 requirement set이라면 불필요하게 나누지 않습니다.
 
+#### Requirement identifier와 migration
+
+Requirement identifier는 reference이며 새로운 RDD layer가 아닙니다. RDD는 numeric representation과 semantic representation을 모두 지원합니다.
+
+```text
+Numeric representation:
+  R0, R1, R2, ...
+
+Semantic root requirement:
+  ROOT-REQ-[A-Z0-9]+(?:-[A-Z0-9]+)*
+
+Semantic child requirement:
+  REQ-[A-Z0-9]+(?:-[A-Z0-9]+)*
+```
+
+Numeric hierarchy는 계속 유효합니다. Semantic identifier를 지원한다는 이유만으로 migration할 필요는 없습니다. Semantic mode에서는 정확히 하나의 `ROOT-REQ-*` entry가 `Parent: none`을 사용하고, 모든 `REQ-*` entry는 존재하는 `ROOT-REQ-*` 또는 `REQ-*` parent를 가리킵니다. Root requirement는 `Root goal`에 연결될 수 있지만 goal은 justification context이며 requirement와 같은 의미가 아닙니다.
+
+하나의 requirement hierarchy 안에서는 하나의 primary representation을 사용합니다. 일반 trace extraction은 서로 다른 문서의 numeric hierarchy와 semantic hierarchy를 함께 만날 수 있지만, 하나의 source-of-truth hierarchy에서 두 형식을 무분별하게 섞지 않습니다.
+
+Semantic identifier가 current truth가 된 뒤에는 조용히 rename, reuse, renumber하지 않습니다. 기존 numeric project는 numeric 방식을 유지하거나, 별도의 새 hierarchy부터 semantic identifier를 사용하거나, hierarchy 전체를 하나의 명시적이고 review 가능한 change로 migration할 수 있습니다. 명시적 migration은 `Previous identifiers: R1` 같은 old-to-new mapping을 기록하고 current parent와 active-loop reference를 새 primary identifier로 함께 갱신하며 old identifier를 재사용하지 않습니다. Historical record는 기존 reference를 그대로 보존할 수 있습니다. Read-only tooling은 mapping을 validate하거나 report할 수 있지만 source document를 다시 쓰거나 migration을 자동 수행하면 안 됩니다.
+
 ### Spec
 
 Spec은 requirement를 rule, contract, boundary, acceptance criteria로 operationalize합니다. 이 방법론에서 `spec`은 loop-level precision layer를 뜻합니다. 요구공학 artifact의 이름이 "requirements specification"이라는 이유로 그것을 분리하거나 이름을 바꿔야 한다는 뜻은 아닙니다.

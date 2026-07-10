@@ -76,6 +76,18 @@ Follow-ups:
 
 The trace does not need to be long every time, and it does not have to live in every commit. Small obvious changes can stay lightweight. The trace becomes important when the requirement, boundary, or future design implication would otherwise be hard to reconstruct.
 
+## Loop record retention
+
+RDD does not prescribe one retention policy for loop records. A project may choose any of these patterns:
+
+- **Persistent record** - retain completed loop traces.
+- **Disposable active loop** - treat the presence of a loop file as active work, promote surviving truth, and delete the loop file after review.
+- **Selective retention** - retain only records whose audit, safety, or long-term decision value justifies it.
+
+All three patterns preserve the same completion invariant: the requirement boundary must be reviewable before completion, and information that should outlive the loop must move to an appropriate current-truth surface. Promote durable needs and requirements to requirement documents, current contracts to docs and tests, implementation behavior to code, and long-lived architectural decisions to a decision document when one is justified. Loop-local notes that have no continuing value may disappear with a disposable loop.
+
+A disposable loop file is an active working surface, not a required archive. One loop should normally describe one loop unit, such as one pull request, task, ticket, or local change set. If one durable requirement spans several loop units, use a separate loop record for each unit and let each record reference the same durable requirement. Structural tooling may treat any loop file in the configured active-loop directory as active work, but it must not infer semantic correctness, checkbox completion, or whether truth promotion is complete. Filename conventions remain project policy rather than an RDD invariant.
+
 ## Recommended PR structure
 
 Use this structure when a PR is large enough that reviewers need explicit context:

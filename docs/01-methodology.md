@@ -304,6 +304,27 @@ If one requirement grows enough to need its own rationale, validity conditions, 
 
 The split point is not raw file length. Split when the document no longer matches the way people or agents need to load context for a task. Do not split a requirement set that must always be read together to understand the active contract.
 
+#### Requirement identifiers and migration
+
+Requirement identifiers are references, not a new RDD layer. RDD supports numeric and semantic representations:
+
+```text
+Numeric representation:
+  R0, R1, R2, ...
+
+Semantic root requirement:
+  ROOT-REQ-[A-Z0-9]+(?:-[A-Z0-9]+)*
+
+Semantic child requirement:
+  REQ-[A-Z0-9]+(?:-[A-Z0-9]+)*
+```
+
+Numeric hierarchies remain valid. A project does not need to migrate merely because semantic identifiers are available. In semantic mode, exactly one `ROOT-REQ-*` entry has `Parent: none`; every `REQ-*` entry names an existing `ROOT-REQ-*` or `REQ-*` parent. The root requirement may link to a `Root goal`, but the goal remains justification context and is not interchangeable with the requirement.
+
+Use one primary representation inside a requirement hierarchy. General trace extraction may encounter numeric and semantic hierarchies in different documents, but a single source-of-truth hierarchy should not mix them casually.
+
+Once a semantic identifier becomes current truth, do not silently rename, reuse, or renumber it. Existing numeric projects may remain numeric, adopt semantic identifiers only for a separate new hierarchy, or migrate a hierarchy in one explicit reviewable change. An explicit migration records old-to-new mappings such as `Previous identifiers: R1`, updates current parent and active-loop references to the new primary identifiers, and reserves old identifiers from reuse. Historical records may retain their original references. Read-only tooling may validate or report the mapping; it should not rewrite source documents or perform the migration automatically.
+
 ### Spec
 
 The spec operationalizes the requirement as rules, contracts, boundaries, and acceptance criteria. In this methodology, `spec` means this loop-level precision layer; it does not mean that a requirements engineering artifact named "requirements specification" must be split or renamed.

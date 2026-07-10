@@ -30,6 +30,7 @@ Do not add a separate `docs/SPEC.md` unless the existing README/docs split stops
 - Before completing public documentation changes, run `python3 tools/check_companion_docs.py` and review semantic equivalence manually. The structural check does not replace meaning review.
 - Keep need, goal, requirement, spec, test, implementation, review, loop boundary, and non-goal terminology consistent across docs, examples, templates, skills, and tooling. Preserve the explicit RDD vocabulary mapping in `docs/01-methodology.md`.
 - Preserve the requirement-validity lifecycle across public surfaces: distinguish loop-local requirements, durable requirements, and temporary/scoped policies; require assumptions and observable revisit signals for durable requirements; require expiration rules for temporary/scoped policies; and propagate explicit retain/narrow/supersede/discard decisions when revalidation occurs.
+- Preserve numeric `R0`/`R1` compatibility when documenting or tooling semantic `ROOT-REQ-*`/`REQ-*` identifiers. Keep semantic adoption and loop-record retention optional, and document explicit old-to-new mappings for identifier migrations.
 - Keep changes scoped to the current requirement. If the requirement changes, explicitly re-scope the work instead of quietly expanding adjacent docs.
 - Do not put private task manager IDs, operator notes, or private planning details into tracked public files.
 - Do not accumulate completed work logs in public docs.

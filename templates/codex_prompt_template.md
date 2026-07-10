@@ -12,6 +12,7 @@ State the stable capability, quality, constraint, or condition this task must sa
 
 Include:
 
+- Requirement identifier, when the project uses a numeric or semantic hierarchy. Preserve the project's chosen representation; do not silently rename or migrate identifiers.
 - Root goal, when this task is part of a larger product or operational direction.
 - Decision class, when the loop records a policy, workaround, implementation choice, or promotion candidate instead of a durable requirement.
 - Rationale: why this requirement matters.
@@ -60,6 +61,7 @@ List adjacent work that must stay out of scope.
 - If the requirement appears to change, stop and report before expanding scope.
 - Preserve the non-goals.
 - Do not add adjacent behavior just because it is convenient during implementation.
+- Follow the repository's loop-record retention policy. Do not create an archive or delete an active-loop record unless that policy and the current task authorize it.
 - Summarize the final trace:
 
 ```text

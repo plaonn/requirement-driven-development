@@ -12,6 +12,7 @@
 
 다음을 포함하세요.
 
+- Project가 numeric 또는 semantic hierarchy를 사용한다면 requirement identifier. Project가 선택한 representation을 보존하고 identifier를 조용히 rename하거나 migration하지 마세요.
 - 더 큰 제품/운영 방향의 일부라면 root goal
 - Durable requirement가 아니라 policy, workaround, implementation choice, promotion candidate를 기록하는 loop라면 decision class
 - Rationale: 이 requirement가 중요한 이유
@@ -60,6 +61,7 @@ Scope 밖에 있어야 하는 adjacent work를 적으세요.
 - Requirement가 바뀌는 것처럼 보이면 scope를 확장하기 전에 멈추고 보고하세요.
 - Non-goals를 보존하세요.
 - 구현 중 편리하다는 이유로 adjacent behavior를 추가하지 마세요.
+- Repository의 loop-record retention policy를 따르세요. 해당 policy와 현재 task가 허용하지 않으면 archive를 만들거나 active-loop record를 삭제하지 마세요.
 - 마지막에 final trace를 요약하세요.
 
 ```text
