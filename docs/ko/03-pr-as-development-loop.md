@@ -70,6 +70,28 @@ Follow-ups:
 
 Trace가 항상 길 필요는 없고, 모든 commit에 들어갈 필요도 없습니다. 작고 명확한 변경은 가볍게 유지할 수 있습니다. 다만 requirement, boundary, 미래 설계 영향이 나중에 재구성되기 어려운 경우에는 trace를 남기는 편이 좋습니다.
 
+## 권장 PR 구조
+
+Reviewer가 명시적인 context를 필요로 할 만큼 PR이 크다면 다음 구조를 사용합니다.
+
+```text
+# Requirement
+
+# Spec
+
+# Tests
+
+# Implementation
+
+# Non-goals
+
+# Requirement changes discovered
+
+# Review focus
+```
+
+목표는 형식을 늘리는 것이 아니라 scope와 traceability를 review할 수 있게 만드는 것입니다.
+
 ## Scope creep 감지
 
 Scope creep은 requirement와 연결되지 않은 유용해 보이는 작업으로 나타나는 경우가 많습니다.
@@ -104,3 +126,5 @@ Reviewer는 code quality뿐 아니라 requirement 추적 가능성도 확인해�
 - Test가 의미 있는 rule을 보호하는가?
 - Implementation이 숨은 scope growth 없이 requirement를 만족하는가?
 - 구현 중 requirement가 바뀌었는가?
+
+기술적으로 깔끔한 PR도 처음과 다른 문제를 해결한다면 RDD loop로서는 좋지 않을 수 있습니다.

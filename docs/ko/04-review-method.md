@@ -73,3 +73,5 @@ Diff가 아니라 requirement부터 봅니다.
 Requirement의 root goal, rationale, failure prevented, decision class, 구현 선택과 requirement의 경계, automation boundary가 불명확하면 full trace를 쓰기 전에 boundary clarification을 합니다. Loop boundary를 정하는 데 필요한 최소 질문을 먼저 하고, 그 뒤 review를 이어갑니다.
 
 그다음 구현 세부사항을 판단하기 전에 spec과 test를 읽습니다. 이렇게 하면 review가 루프 경계에 고정되고, implementation이 조용히 목표를 재정의하는 일을 막을 수 있습니다.
+
+마지막으로 implementation 중 발견한 내용이 requirement를 바꿨는지 확인합니다. 바뀌었다면 단순 code review comment가 아니라 boundary decision으로 다룹니다.

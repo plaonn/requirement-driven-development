@@ -25,7 +25,9 @@ Do not add a separate `docs/SPEC.md` unless the existing README/docs split stops
 
 ## Editing Rules
 
-- Keep English docs as the canonical public structure. Update Korean companion docs when a public English change affects reader-facing meaning.
+- Keep English docs as the canonical public structure. Keep each Korean companion semantically equivalent: preserve the same reader-facing concepts, rules, non-goals, warnings, examples, and section structure while using natural Korean rather than literal translation.
+- Update the Korean companion in the same change whenever canonical English reader-facing meaning changes. Mark intentionally Korean-only explanatory sections with `companion-only` comments so structural checks can distinguish deliberate localization from drift.
+- Before completing public documentation changes, run `python3 tools/check_companion_docs.py` and review semantic equivalence manually. The structural check does not replace meaning review.
 - Keep requirement, spec, test, implementation, review, loop boundary, and non-goal terminology consistent across docs and templates.
 - Keep changes scoped to the current requirement. If the requirement changes, explicitly re-scope the work instead of quietly expanding adjacent docs.
 - Do not put private task manager IDs, operator notes, or private planning details into tracked public files.

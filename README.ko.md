@@ -24,6 +24,7 @@ RDD의 경계는 더 좁습니다. 현재 개발 loop에 사용할 candidate req
 
 자세한 경계는 [RDD와 요구공학](docs/ko/08-rdd-and-requirements-engineering.md)에서 설명합니다.
 
+<!-- companion-only:start -->
 ## 용어 원칙
 
 이 한국어 문서는 개발자가 실제로 쓰는 영어 용어를 일부 유지합니다. 핵심 개념은 처음 등장할 때 한국어와 영어를 함께 사용하고, 이후에는 문맥상 자연스러운 표현을 사용합니다.
@@ -34,6 +35,7 @@ RDD의 경계는 더 좁습니다. 현재 개발 loop에 사용할 candidate req
 - implementation: 구현
 - review: 리뷰
 - loop boundary: 루프 경계
+<!-- companion-only:end -->
 
 ## 핵심 아이디어
 
@@ -66,6 +68,34 @@ TDD: 명세가 실행 가능한 테스트로 보호되고 있는가?
 
 RDD는 이런 실패를 일찍 발견하기 위한 단순한 기준을 제공합니다.
 
+## RDD 루프
+
+```text
+1. 현재 loop의 requirement를 고정한다.
+2. Requirement에서 spec을 파생한다.
+3. Spec에서 test를 파생한다.
+4. Loop가 요구하는 것만 구현한다.
+5. Requirement에서 implementation까지 전체 trace를 review한다.
+6. Requirement가 바뀌면 loop를 명시적으로 re-scope한다.
+```
+
+핵심 구분은 다음과 같습니다.
+
+```text
+Loop 안에서 spec/test를 다듬는 것은 정상이다.
+Requirement 변경은 loop boundary가 바뀐 것이다.
+```
+
+## 기존 프로젝트
+
+기존 프로젝트에 RDD를 적용할 때는 기존 spec, test, 구현 동작을 confirmed requirement의 증명으로 취급하지 않습니다.
+
+먼저 [소급 RDD 리뷰](docs/ko/07-retroactive-rdd-review.md)에서 시작합니다. 첫 pass는 read-only로 두고, candidate requirement를 복원하고, trace gap을 찾고, 무엇을 source-of-truth 문서로 승격하기 전에 확인해야 하는지 정합니다.
+
+`SPEC.md`, roadmap, test suite, 안정적인 구현은 유용한 evidence가 될 수 있지만 그 자체로 충분하지 않습니다. Root goal, rationale, failure prevented, loop boundary가 빠져 있거나 불명확하면 복원된 항목은 candidate로 유지하고, 구현이나 문서 adoption 전에 boundary를 먼저 확인합니다.
+
+확인된 decision 중 일부는 durable requirement가 아니라 scoped policy로 남아야 합니다. Temporary experiment policy, provider workaround, operator-run-specific risk decision에는 acceptance scope, promotion rule, expiration rule을 붙여 임시 조건이 실수로 영구 requirement처럼 굳어지지 않게 합니다.
+
 ## PR 규모의 RDD
 
 RDD는 pull request 규모에서 특히 유용합니다.
@@ -93,24 +123,17 @@ Non-goals:
   이 PR에서 의도적으로 제외한 변경
 ```
 
-## 핵심 규칙
+## Requirement가 바뀔 때
 
-```text
-Spec/test refinement는 루프 안에서 일어날 수 있다.
-Requirement가 바뀌면 루프 경계가 바뀐 것이다.
-```
+구현이나 review 중 원래 requirement가 잘못됐거나 불완전하다는 사실을 발견할 수 있습니다.
 
-구현이나 리뷰 중 원래 requirement가 잘못됐거나 불완전하다는 사실을 발견할 수 있습니다. 그 자체는 자연스러운 일입니다. 다만 requirement가 바뀌었다면 test 수정이나 spec refinement로 조용히 흡수하지 말고, PR을 re-scope하거나 분리하거나 follow-up으로 넘겨야 합니다.
+이것은 단순한 test update가 아니라 loop boundary event입니다.
 
-## 기존 프로젝트에 적용할 때
+다음 중 하나를 선택할 수 있습니다.
 
-기존 프로젝트에 RDD를 적용할 때는 기존 spec, test, 구현 동작을 confirmed requirement의 증명으로 취급하지 않습니다.
-
-먼저 [소급 RDD 리뷰](docs/ko/07-retroactive-rdd-review.md)에서 시작합니다. 첫 pass는 read-only로 두고, candidate requirement를 복원하고, trace gap을 찾고, 무엇을 source-of-truth 문서로 승격하기 전에 확인해야 하는지 정합니다.
-
-`SPEC.md`, roadmap, test suite, 안정적인 구현은 유용한 evidence가 될 수 있지만 그 자체로 충분하지 않습니다. Root goal, rationale, failure prevented, loop boundary가 빠져 있거나 불명확하면 복원된 항목은 candidate로 유지하고, 구현이나 문서 adoption 전에 boundary를 먼저 확인합니다.
-
-확인된 decision 중 일부는 durable requirement가 아니라 scoped policy로 남아야 합니다. Temporary experiment policy, provider workaround, operator-run-specific risk decision에는 acceptance scope, promotion rule, expiration rule을 붙여 임시 조건이 실수로 영구 requirement처럼 굳어지지 않게 합니다.
+- PR을 re-scope하고 requirement를 명시적으로 갱신합니다.
+- 현재 PR은 최소 범위로 유지하고 follow-up을 만듭니다.
+- 관련 없는 발견은 별도 loop로 분리합니다.
 
 ## 문서 구조
 
@@ -152,7 +175,11 @@ examples/
     refactoring-example.md
 ```
 
-영어 문서가 공개 기본 구조이며, 한국어 문서는 한국어 독자를 위한 companion 문서입니다.
+## Companion 문서 정책
+
+영어 문서가 canonical public structure입니다. 한국어 companion은 문장별 직역이 아니라 자연스러운 한국어를 사용하되, 같은 reader-facing 개념, 규칙, non-goal, 경고, 예시, section structure를 보존합니다.
+
+영어 문서의 reader-facing 의미가 바뀌면 같은 변경에서 한국어 companion도 갱신합니다. 의도적인 한국어 전용 설명은 `companion-only` comment로 표시합니다. 구조 drift는 `python3 tools/check_companion_docs.py`로 검사하고, 의미 동등성은 review에서 별도로 확인합니다. CI는 push와 pull request마다 구조 검사를 실행합니다.
 
 `skills/` 디렉터리는 공개 방법론을 agent workflow로 적용하기 위한 optional 지침입니다. RDD 자체는 agent-specific 방법론이 아닙니다.
 

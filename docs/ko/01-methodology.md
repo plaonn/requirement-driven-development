@@ -8,6 +8,7 @@ RDD의 기본 주장은 단순합니다.
 개발 루프는 requirement, spec, test, implementation, review가 서로 추적 가능할 때 건강하다.
 ```
 
+<!-- companion-only:start -->
 ## 용어 원칙
 
 이 문서는 한국어 독자를 위한 companion 문서이지만, software development에서 널리 쓰이는 영어 용어는 일부 유지합니다.
@@ -18,6 +19,7 @@ RDD의 기본 주장은 단순합니다.
 - implementation: 구현
 - review: 리뷰
 - loop boundary: 루프 경계
+<!-- companion-only:end -->
 
 ## 개발 루프
 
@@ -57,6 +59,18 @@ RDD는 그 가능성을 부정하지 않습니다. 다만 requirement가 바뀌�
 Requirement는 작업이 존재하는 이유를 설명합니다.
 
 좋은 requirement가 항상 길 필요는 없지만, 성공과 관련 없는 변경을 구분할 수 있을 만큼은 명확해야 합니다.
+
+예시:
+
+```text
+사용자는 fulfillment가 시작되기 전에 주문을 취소할 수 있다.
+
+Report export는 UI에 표시된 것과 같은 filter를 보존해야 한다.
+
+Parser는 malformed input을 actionable error와 함께 거부해야 한다.
+
+이 refactoring은 pricing behavior를 바꾸지 않고 receipt formatting을 분리해야 한다.
+```
 
 #### 목적을 보존하는 requirement
 

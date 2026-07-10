@@ -178,7 +178,11 @@ examples/
     refactoring-example.md
 ```
 
-Korean companion documents are provided for readers who prefer Korean. The English documents remain the canonical public structure.
+## Companion documentation policy
+
+English documents are the canonical public structure. Korean companions use natural Korean rather than sentence-by-sentence literal translation, while preserving the same reader-facing concepts, rules, non-goals, warnings, examples, and section structure.
+
+When reader-facing meaning changes in an English document, update its Korean companion in the same change. Mark intentional Korean-only explanations with `companion-only` comments. Run `python3 tools/check_companion_docs.py` to detect structural drift, then review semantic equivalence separately. CI runs the structural check on pushes and pull requests.
 
 The `skills/` directory contains optional agent workflow instructions that apply the public methodology. RDD itself is not agent-specific.
 

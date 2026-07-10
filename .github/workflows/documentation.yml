@@ -1,0 +1,26 @@
+name: Documentation
+
+on:
+  push:
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v6
+
+      - name: Set up Python
+        uses: actions/setup-python@v6
+        with:
+          python-version: "3.12"
+
+      - name: Check companion documentation structure
+        run: python3 tools/check_companion_docs.py
+
+      - name: Test RDD tooling
+        run: python3 tools/rdd/test_rdd.py
