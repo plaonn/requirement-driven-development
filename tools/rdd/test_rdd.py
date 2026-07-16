@@ -302,6 +302,22 @@ class RddToolTest(unittest.TestCase):
         self.assertEqual(trace["fields"]["assumptions"][0]["text"], "Read-only analysis comes first.")
         self.assertNotIn("spec", trace["fields"])
 
+    def test_numeric_hierarchy_accepts_period_separator(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            path = Path(tmp) / "requirements.md"
+            path.write_text(
+                HIERARCHY_SAMPLE.replace("R0:", "R0.").replace("R1:", "R1."),
+                encoding="utf-8",
+            )
+            trace = rdd.build_trace(path)
+            issues, _aliases = rdd.validate_requirement_hierarchy(
+                rdd.parse_requirement_entries(path)
+            )
+
+        self.assertEqual(trace["fields"]["root_goal"][0]["heading"], "R0. Reduce attention")
+        self.assertEqual(len(trace["fields"]["requirement"]), 2)
+        self.assertEqual(issues, [])
+
     def test_semantic_hierarchy_extracts_root_and_child_requirements(self):
         with tempfile.TemporaryDirectory() as tmp:
             path = Path(tmp) / "requirements.md"

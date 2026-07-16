@@ -2,6 +2,7 @@
 
 Requirement reference: REQ-FIRST-CAPABILITY
 Loop unit: 하나의 pull request, task, ticket 또는 local change set
+Adoption trigger: 없음, 또는 gate를 연 risk-sensitive condition
 
 ## Requirement
 
@@ -22,6 +23,13 @@ Requirement와 spec을 만족하는 최소 implementation을 기록합니다.
 ## Review
 
 Requirement에서 implementation까지 trace를 확인하고 boundary decision이 있으면 기록합니다.
+
+Risk-sensitive adoption loop라면 다음도 기록합니다.
+
+- Requirement coverage:
+- Derived behavior spec:
+- Decision record needed: yes | no
+- Validation evidence:
 
 ## Non-goals
 

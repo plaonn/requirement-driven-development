@@ -26,6 +26,16 @@ For automation or state-changing work, also state:
 - Require human review.
 - Do not automate yet.
 
+For a substantial public capability, OAuth scope, state-changing adapter,
+irreversible external effect, financial or live execution path, or
+cross-repository ownership, authority, or trust boundary, apply the
+risk-sensitive adoption gate:
+
+- Load the relevant requirement source before implementation.
+- Name the specific requirement that covers the capability and failure boundary.
+- Do not rely only on permission from a broad root goal.
+- Decide whether a long-lived decision record is needed.
+
 ## Requirement validity
 
 Classify the item as a loop-local requirement, durable requirement, or temporary/scoped policy.
@@ -62,6 +72,7 @@ List adjacent work that must stay out of scope.
 - Preserve the non-goals.
 - Do not add adjacent behavior just because it is convenient during implementation.
 - Follow the repository's loop-record retention policy. Do not create an archive or delete an active-loop record unless that policy and the current task authorize it.
+- For a risk-sensitive adoption loop, do not report completion until requirement coverage, derived behavior spec, tests/checks, implementation, decision-record disposition, and validation evidence are visible.
 - Summarize the final trace:
 
 ```text

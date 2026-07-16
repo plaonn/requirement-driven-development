@@ -148,6 +148,21 @@ operator-run-specific risk decisions should carry acceptance scope, promotion
 rules, and expiration rules so they do not harden into permanent requirements by
 accident.
 
+### Risk-sensitive forward adoption
+
+After the first retroactive pass, existing projects do not need heavyweight RDD
+ceremony for every change. Use an explicit start and finish gate when a change
+adds a substantial public capability, OAuth scope, state-changing adapter,
+irreversible external effect, financial or live execution path, or
+cross-repository ownership, authority, or trust boundary.
+
+At the start, load the relevant requirement source and confirm that a specific
+loop-local or durable requirement covers the new capability and its failure
+boundary. Permission from a broad root goal is not sufficient coverage by
+itself. At the finish, verify the trace through spec, tests, implementation, and
+any long-lived architectural decision. See the
+[existing-project adoption gate](docs/07-retroactive-rdd-review.md#risk-sensitive-forward-adoption-gate).
+
 ## PR-scale RDD
 
 RDD is especially useful at pull request scale.

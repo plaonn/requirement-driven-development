@@ -474,7 +474,7 @@ def parse_rdd_hierarchy(path: Path, root: Path) -> list[Section]:
     sections: list[Section] = []
 
     for heading_index, (start, level, heading, _field) in enumerate(headings):
-        match = re.match(r"^R(\d+)\s*:\s*(.+)$", heading.strip(), re.IGNORECASE)
+        match = re.match(r"^R(\d+)\s*[:.]\s*(.+)$", heading.strip(), re.IGNORECASE)
         if not match:
             continue
 
@@ -814,7 +814,7 @@ def parse_requirement_entries(path: Path, *, display_name: str | None = None) ->
         if semantic:
             key, title = semantic
         else:
-            numeric = re.match(r"^(R\d+)\s*:\s*(.+)$", heading.strip(), re.IGNORECASE)
+            numeric = re.match(r"^(R\d+)\s*[:.]\s*(.+)$", heading.strip(), re.IGNORECASE)
             if numeric:
                 key = numeric.group(1).upper()
                 title = numeric.group(2).strip()

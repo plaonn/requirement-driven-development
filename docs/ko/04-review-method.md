@@ -77,6 +77,16 @@ RDD review는 개발 루프가 requirement에서 implementation까지 추적 가
 - [ ] Reviewer가 빠진 일을 실수로 오해하지 않도록 되어 있는가?
 - [ ] Follow-up item이 현재 loop와 분리되어 있는가?
 
+### 10. 위험 기반 adoption evidence
+
+Loop가 [기존 프로젝트 forward adoption gate](07-retroactive-rdd-review.md#위험-기반-forward-adoption-gate)를 trigger한 경우 이 section을 사용합니다.
+
+- [ ] 구현 전에 관련 requirement source를 읽었는가?
+- [ ] Broad root goal에만 의존하지 않고 구체적인 requirement가 capability와 authority 또는 failure boundary를 cover하는가?
+- [ ] Canonical ownership, trust boundary, delegated authority, rejected alternative decision이 장기 가치가 있을 때 보존되는가?
+- [ ] Requirement coverage, derived behavior spec, tests/checks, implementation, validation evidence가 모두 보이는가?
+- [ ] 이 risk level에 대해 프로젝트가 선택한 local 또는 CI check를 실행했는가?
+
 ## 실제 review 흐름
 
 Diff가 아니라 requirement와 validity condition부터 봅니다.
@@ -86,3 +96,5 @@ Requirement의 root goal, rationale, failure prevented, decision class, 구현 �
 그다음 구현 세부사항을 판단하기 전에 spec과 test를 읽습니다. 이렇게 하면 review가 루프 경계에 고정되고, implementation이 조용히 목표를 재정의하는 일을 막을 수 있습니다.
 
 마지막으로 assumption이 깨졌는지, revisit signal이 발생했는지, implementation 중 발견한 내용이 requirement를 바꿨는지 확인합니다. 해당한다면 requirement를 revalidate하고 그 결과를 단순 code review comment가 아니라 boundary decision으로 다룹니다.
+
+Risk-sensitive adoption loop에서는 test 통과와 behavior spec 갱신이 필요하지만 그것만으로 finish gate가 완성되지는 않습니다. 완료 전에 durable requirement coverage와 필요한 decision record를 확인합니다.

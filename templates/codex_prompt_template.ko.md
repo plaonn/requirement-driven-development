@@ -26,6 +26,13 @@
 - Require human review
 - Do not automate yet
 
+Substantial public capability, OAuth scope, state-changing adapter, irreversible external effect, 금융 또는 live execution path, cross-repository ownership, authority, trust boundary를 다룬다면 risk-sensitive adoption gate를 적용하세요.
+
+- 구현 전에 관련 requirement source를 읽으세요.
+- Capability와 failure boundary를 cover하는 구체적인 requirement를 명시하세요.
+- Broad root goal이 허용한다는 사실에만 의존하지 마세요.
+- 장기 decision record가 필요한지 판단하세요.
+
 ## Requirement validity
 
 항목을 loop-local requirement, durable requirement, temporary/scoped policy 중 하나로 분류하세요.
@@ -62,6 +69,7 @@ Scope 밖에 있어야 하는 adjacent work를 적으세요.
 - Non-goals를 보존하세요.
 - 구현 중 편리하다는 이유로 adjacent behavior를 추가하지 마세요.
 - Repository의 loop-record retention policy를 따르세요. 해당 policy와 현재 task가 허용하지 않으면 archive를 만들거나 active-loop record를 삭제하지 마세요.
+- Risk-sensitive adoption loop라면 requirement coverage, derived behavior spec, tests/checks, implementation, decision-record disposition, validation evidence가 보이기 전에는 완료로 보고하지 마세요.
 - 마지막에 final trace를 요약하세요.
 
 ```text

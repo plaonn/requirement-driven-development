@@ -148,6 +148,12 @@ python3 tools/rdd/rdd.py ready REQUIREMENTS.md --loops rdd/loops/
 
 확인된 decision 중 일부는 durable requirement가 아니라 scoped policy로 남아야 합니다. Temporary experiment policy, provider workaround, operator-run-specific risk decision에는 acceptance scope, promotion rule, expiration rule을 붙여 임시 조건이 실수로 영구 requirement처럼 굳어지지 않게 합니다.
 
+### 위험 기반 forward adoption
+
+첫 retroactive pass 이후 기존 프로젝트의 모든 변경에 무거운 RDD 절차를 적용할 필요는 없습니다. Substantial public capability, OAuth scope, state-changing adapter, irreversible external effect, 금융 또는 live execution path, cross-repository ownership, authority, trust boundary를 추가하는 변경에는 명시적인 start gate와 finish gate를 사용합니다.
+
+시작할 때 관련 requirement source를 읽고, 새 capability와 failure boundary가 구체적인 loop-local 또는 durable requirement로 cover되는지 확인합니다. Broad root goal이 확장을 허용한다는 사실만으로 충분한 coverage가 되지는 않습니다. 완료할 때 spec, test, implementation, 장기 architecture decision까지 trace를 검증합니다. 자세한 내용은 [기존 프로젝트 adoption gate](docs/ko/07-retroactive-rdd-review.md#위험-기반-forward-adoption-gate)를 참고합니다.
+
 ## PR 규모의 RDD
 
 RDD는 pull request 규모에서 특히 유용합니다.

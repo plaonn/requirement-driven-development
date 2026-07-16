@@ -89,3 +89,49 @@ Reviewers should compare behavior before and after the refactor, especially tota
 If receipt wording changes intentionally, that is a behavior or spec change and should be explicit.
 
 If a pricing bug is discovered, open a follow-up instead of hiding it inside the refactoring loop unless the current loop is explicitly re-scoped.
+
+## Example 3: Implementation-first authority drift
+
+### Initial situation
+
+An existing integration service already has a broad root requirement to support
+new external capabilities. A change adds an OAuth scope and a state-changing
+adapter that writes through another repository. The implementation, tests,
+deployment, and behavior spec are completed first.
+
+### Why the trace is incomplete
+
+The passing tests show that the adapter behaves as specified. They do not
+establish:
+
+- which repository canonically owns the state transition,
+- why this service may exercise the delegated authority,
+- which failure or unauthorized effect the boundary prevents,
+- whether the ownership and trust-boundary choice should survive as a decision
+  record.
+
+The broad root requirement permits extension, but it does not by itself cover
+the narrower authority boundary.
+
+### Corrected start gate
+
+- Trigger: new OAuth scope, state-changing cross-repository adapter, and delegated authority.
+- Requirement coverage: adopt or confirm a narrower durable requirement that names the allowed state transition, canonical owner, rationale, and failure prevented.
+- Derived behavior spec: define authorization, idempotency, failure behavior, and the boundary between local preparation and external mutation.
+- Decision record needed: yes, because canonical ownership and cross-repository authority are long-lived and rejected alternatives matter.
+- Non-goals: redesigning unrelated integrations or requiring decision records for every adapter detail.
+
+### Corrected finish gate
+
+- Requirement reference points to the narrower authority requirement.
+- Tests cover authorized success, denied authority, duplicate requests, and external failure.
+- Implementation and behavior spec match that requirement.
+- The decision record preserves canonical ownership, delegated authority, and rejected alternatives.
+- Structural and project-selected validation checks pass.
+
+### Review focus
+
+Reviewers should not describe the later requirement and decision record as
+proof that implementation-first sequencing was complete RDD. The correction
+repairs the durable trace; the adoption gate exists to make that trace available
+before the next high-impact implementation begins.

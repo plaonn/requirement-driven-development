@@ -2,6 +2,7 @@
 
 Requirement reference: REQ-FIRST-CAPABILITY
 Loop unit: one pull request, task, ticket, or local change set
+Adoption trigger: none, or the risk-sensitive condition that opened the gate
 
 ## Requirement
 
@@ -22,6 +23,13 @@ Record the minimal implementation that satisfies the requirement and spec.
 ## Review
 
 Check the trace from requirement through implementation and record any boundary decision.
+
+For a risk-sensitive adoption loop, also record:
+
+- Requirement coverage:
+- Derived behavior spec:
+- Decision record needed: yes | no
+- Validation evidence:
 
 ## Non-goals
 

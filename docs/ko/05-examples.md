@@ -89,3 +89,40 @@ Reviewer는 totals, discounts, rounding, 영수증 텍스트 출력의 전후 �
 Receipt wording을 의도적으로 바꾸면 동작 또는 spec 변경이므로 명시해야 합니다.
 
 Pricing bug를 발견했다면 현재 loop를 명시적으로 re-scope하지 않는 한 refactoring loop에 숨기지 말고 follow-up을 엽니다.
+
+## 예시 3: Implementation-first authority drift
+
+### 초기 상황
+
+기존 integration service에 새 external capability를 지원한다는 broad root requirement가 있습니다. 변경은 OAuth scope와 다른 repository를 통해 write하는 state-changing adapter를 추가합니다. Implementation, test, deployment, behavior spec이 먼저 완료됩니다.
+
+### Trace가 불완전한 이유
+
+Test 통과는 adapter가 spec대로 동작함을 보여 줍니다. 그러나 다음을 확정하지는 않습니다.
+
+- 어느 repository가 state transition의 canonical owner인지
+- 이 service가 delegated authority를 행사할 수 있는 이유
+- Boundary가 어떤 failure 또는 unauthorized effect를 막는지
+- Ownership과 trust-boundary 선택을 decision record로 남겨야 하는지
+
+Broad root requirement는 확장을 허용하지만, 그것만으로 더 좁은 authority boundary를 cover하지는 않습니다.
+
+### 수정된 start gate
+
+- Trigger: 새 OAuth scope, state-changing cross-repository adapter, delegated authority
+- Requirement coverage: 허용된 state transition, canonical owner, rationale, failure prevented를 명시하는 더 좁은 durable requirement를 adopt 또는 confirm
+- Derived behavior spec: authorization, idempotency, failure behavior, local preparation과 external mutation 사이의 boundary 정의
+- Decision record needed: canonical ownership과 cross-repository authority가 장기적으로 유지되고 rejected alternative가 중요하므로 yes
+- Non-goals: 관련 없는 integration 재설계, 모든 adapter detail에 decision record 요구
+
+### 수정된 finish gate
+
+- Requirement reference가 더 좁은 authority requirement를 가리킴
+- Test가 authorized success, denied authority, duplicate request, external failure를 cover함
+- Implementation과 behavior spec이 해당 requirement와 일치함
+- Decision record가 canonical ownership, delegated authority, rejected alternative를 보존함
+- Structural check와 project가 선택한 validation check가 통과함
+
+### 리뷰 초점
+
+Reviewer는 나중에 추가한 requirement와 decision record를 implementation-first sequence가 완전한 RDD였다는 증거로 설명하면 안 됩니다. Correction은 durable trace를 복구합니다. Adoption gate는 다음 high-impact implementation을 시작하기 전에 그 trace를 사용할 수 있게 하기 위해 존재합니다.

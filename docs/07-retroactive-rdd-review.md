@@ -81,6 +81,83 @@ Not every confirmed or accepted decision is a system-wide requirement. A review 
 7. Recover validity conditions.
    Classify each requirement candidate as loop-local or durable. Durable candidates need recoverable assumptions and observable revisit signals. If the item is temporary or scoped, keep it in the policy decision register with an expiration rule instead of promoting it into the durable requirement set. If evidence shows that a signal already occurred, mark the candidate under review instead of treating historical stability as current validity.
 
+## Risk-sensitive forward adoption gate
+
+Retroactive review recovers the existing trace. Forward adoption determines
+when new implementation work must load and extend that trace before coding.
+Existing projects should keep this gate lightweight and apply it based on change
+risk rather than change size alone.
+
+Make the gate discoverable from the project's normal work entrypoint, such as a
+contributor guide, task template, or agent instruction. The entrypoint should
+route triggered work to the relevant requirement source; RDD does not require a
+specific file name or repository layout.
+
+Use the gate when a change introduces or materially changes one or more of:
+
+- a public or externally consumed capability,
+- an OAuth scope, permission, credential, or delegated authority,
+- a state-changing adapter, automation path, or irreversible external effect,
+- financial, safety-sensitive, or live execution,
+- cross-repository canonical ownership,
+- a trust boundary or authority boundary,
+- a durable contract shared by multiple implementation surfaces.
+
+Small documentation fixes, local refactors with protected behavior, and
+low-risk implementation details normally do not need this additional gate.
+
+### Start gate
+
+Before implementation:
+
+1. Load the project entrypoint, relevant requirement source, current behavior
+   spec, and tests or checks.
+2. Name the specific loop-local or durable requirement that covers the new
+   capability, including its rationale and failure prevented.
+3. Do not treat a broad root requirement that permits extension as sufficient
+   coverage for a narrower capability's ownership, authority, or failure
+   boundary.
+4. Classify new constraints as durable requirements, temporary policies,
+   provider workarounds, or implementation choices.
+5. Decide whether the change creates a long-lived architectural decision.
+   Canonical ownership, cross-repository responsibility, trust boundaries,
+   delegated authority, and intentionally rejected alternatives are common
+   decision-record triggers. A decision record is not required for every design
+   choice.
+6. State the derived spec, checks, non-goals, and automation boundary before
+   implementation starts. If requirement coverage is missing, clarify or adopt
+   it in a separate forward RDD loop rather than inferring it from the planned
+   implementation.
+
+### Finish gate
+
+Before completion:
+
+1. Confirm that the requirement reference still identifies the requirement
+   actually implemented.
+2. Verify `Requirement -> Spec -> Tests/Checks -> Implementation`; passing tests
+   and an updated behavior spec do not replace durable requirement coverage.
+3. Record any retain, narrow, supersede, discard, or loop re-scope decision.
+4. Promote surviving truth to the appropriate requirement, behavior-spec,
+   test, implementation, or decision-record surface.
+5. Run the project's selected structural or semantic checks. `rdd.py validate`,
+   `rdd.py gaps`, and `rdd.py ready` are optional building blocks; projects may
+   bind them to local completion checks or CI for risk-scoped changes without
+   making CI mandatory for every RDD loop.
+
+Use this compact evidence shape:
+
+```text
+Risk-sensitive adoption gate
+- Trigger:
+- Requirement coverage:
+- Derived behavior spec:
+- Decision record needed: yes | no
+- Tests/checks:
+- Validation evidence:
+- Remaining non-goals:
+```
+
 ## Policy and promotion boundary
 
 Temporary policies are valid RDD records. They should be recorded with enough lifecycle context that future readers do not mistake them for permanent requirements.

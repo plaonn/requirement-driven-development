@@ -77,6 +77,17 @@ Use this section when the loop automates user, operational, financial, safety-se
 - [ ] Are reviewers protected from assuming omitted work is accidental?
 - [ ] Are follow-up items separated from the current loop?
 
+### 10. Risk-sensitive adoption evidence
+
+Use this section when the loop triggered the
+[existing-project forward adoption gate](07-retroactive-rdd-review.md#risk-sensitive-forward-adoption-gate).
+
+- [ ] Was the relevant requirement source loaded before implementation?
+- [ ] Does a specific requirement cover the capability and its authority or failure boundary, rather than relying only on a broad root goal?
+- [ ] Is any canonical ownership, trust-boundary, delegated-authority, or rejected-alternative decision preserved when it has long-lived value?
+- [ ] Are requirement coverage, derived behavior spec, tests/checks, implementation, and validation evidence all visible?
+- [ ] Were the project's selected local or CI checks run for this risk level?
+
 ## Practical review flow
 
 Start with the requirement and its validity conditions, not the diff.
@@ -86,3 +97,7 @@ If the requirement's root goal, rationale, failure prevented, decision class, im
 Then read the spec and tests before judging implementation details. This keeps review anchored to the loop boundary and prevents the implementation from silently redefining the goal.
 
 End by checking whether any assumption failed, revisit signal occurred, or discovery during implementation changed the requirement. If so, revalidate the requirement and treat the outcome as a boundary decision, not just a code review comment.
+
+For a risk-sensitive adoption loop, passing tests and an updated behavior spec
+are necessary evidence but not a complete finish gate. Confirm durable
+requirement coverage and any justified decision record before completion.

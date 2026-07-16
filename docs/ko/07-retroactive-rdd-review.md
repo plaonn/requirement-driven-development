@@ -80,6 +80,58 @@ Confirmed 또는 accepted decision이 모두 system-wide requirement인 것은 �
 7. Validity condition을 복원합니다.
    각 requirement candidate를 loop-local 또는 durable로 분류합니다. Durable candidate에는 복원 가능한 assumptions와 observable revisit signal이 필요합니다. 항목이 temporary 또는 scoped라면 durable requirement set으로 승격하지 말고 expiration rule과 함께 policy decision register에 유지합니다. Evidence상 signal이 이미 발생했다면 historical stability를 current validity로 취급하지 말고 candidate를 under review로 표시합니다.
 
+## 위험 기반 forward adoption gate
+
+Retroactive review는 기존 trace를 복원합니다. Forward adoption은 새 구현 작업이 coding 전에 언제 그 trace를 읽고 확장해야 하는지 정합니다. 기존 프로젝트에서는 이 gate를 가볍게 유지하고 단순한 변경량보다 change risk에 따라 적용합니다.
+
+Contributor guide, task template, agent instruction 같은 프로젝트의 일반 work entrypoint에서 이 gate를 발견할 수 있게 합니다. Entrypoint는 trigger된 작업을 관련 requirement source로 route해야 합니다. RDD는 특정 file name이나 repository layout을 강제하지 않습니다.
+
+다음 중 하나 이상을 새로 만들거나 실질적으로 바꾸는 변경에는 gate를 사용합니다.
+
+- public 또는 external consumer가 사용하는 capability
+- OAuth scope, permission, credential, delegated authority
+- state-changing adapter, automation path, irreversible external effect
+- 금융, safety-sensitive, live execution
+- cross-repository canonical ownership
+- trust boundary 또는 authority boundary
+- 여러 implementation surface가 공유하는 durable contract
+
+작은 documentation fix, 동작이 test로 보호되는 local refactor, low-risk implementation detail에는 일반적으로 이 추가 gate가 필요하지 않습니다.
+
+### Start gate
+
+구현 전에 다음을 수행합니다.
+
+1. Project entrypoint, 관련 requirement source, current behavior spec, test 또는 check를 읽습니다.
+2. 새 capability를 cover하는 구체적인 loop-local 또는 durable requirement를 rationale, failure prevented와 함께 명시합니다.
+3. 확장을 허용하는 broad root requirement만으로 더 좁은 capability의 ownership, authority, failure boundary가 충분히 cover된다고 취급하지 않습니다.
+4. 새 constraint를 durable requirement, temporary policy, provider workaround, implementation choice 중 하나로 분류합니다.
+5. 변경이 장기 architecture decision을 만드는지 판단합니다. Canonical ownership, cross-repository responsibility, trust boundary, delegated authority, 의도적으로 배제한 대안은 흔한 decision-record trigger입니다. 모든 design choice에 decision record가 필요한 것은 아닙니다.
+6. 구현 전에 derived spec, checks, non-goals, automation boundary를 적습니다. Requirement coverage가 없다면 계획된 implementation에서 추론하지 말고 별도 forward RDD loop에서 clarify하거나 adopt합니다.
+
+### Finish gate
+
+완료 전에 다음을 수행합니다.
+
+1. Requirement reference가 실제 구현한 requirement를 계속 가리키는지 확인합니다.
+2. `Requirement -> Spec -> Tests/Checks -> Implementation`을 검증합니다. Test 통과와 behavior spec 갱신은 durable requirement coverage를 대신하지 않습니다.
+3. Retain, narrow, supersede, discard 또는 loop re-scope decision이 있으면 기록합니다.
+4. 살아남아야 할 truth를 적절한 requirement, behavior-spec, test, implementation, decision-record surface로 승격합니다.
+5. 프로젝트가 선택한 structural 또는 semantic check를 실행합니다. `rdd.py validate`, `rdd.py gaps`, `rdd.py ready`는 선택 가능한 building block입니다. 모든 RDD loop에 CI를 강제하지 않으면서 risk-scoped change의 local completion check 또는 CI에 연결할 수 있습니다.
+
+다음 compact evidence 형태를 사용할 수 있습니다.
+
+```text
+Risk-sensitive adoption gate
+- Trigger:
+- Requirement coverage:
+- Derived behavior spec:
+- Decision record needed: yes | no
+- Tests/checks:
+- Validation evidence:
+- Remaining non-goals:
+```
+
 ## Policy와 promotion boundary
 
 Temporary policy도 유효한 RDD record입니다. 미래 독자가 permanent requirement로 오해하지 않도록 lifecycle context를 남겨야 합니다.

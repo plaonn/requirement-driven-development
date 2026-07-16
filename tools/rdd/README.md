@@ -50,7 +50,9 @@ The parser also recognizes inline field labels in bullet or plain-line form:
 방지 실패: ...
 ```
 
-The parser also recognizes compact RDD hierarchy blocks:
+The parser also recognizes compact RDD hierarchy blocks. Numeric headings may
+use either `R0: Title` or `R0. Title`; use one style consistently within a
+document.
 
 ```md
 ### R0: Root goal title
