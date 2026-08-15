@@ -6,9 +6,26 @@ RDD applies to ordinary software work first: pull requests, tickets, tasks, and 
 
 ## Agent loop boundary
 
-When using an agent, give it a stable requirement, explicit spec, tests, and non-goals.
+When using an agent, give it a stable requirement, explicit spec, acceptance boundary, and non-goals. The agent must be able to identify what observable evidence would establish the requirement, not just what files or tests to touch.
 
 The agent should be allowed to refine specs and tests only when they still express the same requirement. If the requirement appears to change, the agent should stop and report before expanding scope.
+
+## Lightweight agent traces
+
+A small agent loop does not need a separate `REQUIREMENTS.md`, active-loop file, or heavyweight artifact. The minimum semantic trace can remain compact in the task, PR, commit message, or agent final review:
+
+```text
+Outcome / Goal:
+  The desired state.
+
+Requirement:
+  The stable condition that must be true.
+
+Done when / Acceptance:
+  The observable evidence that can judge the requirement.
+```
+
+These are example operational labels, not a mandatory RDD schema. A larger or higher-risk loop may use a full requirement document, validity lifecycle, decision record, or retained loop artifact. A smaller loop may use one short requirement sentence and one evidence line, as long as the semantic distinction remains visible.
 
 ## Useful agent instructions
 
@@ -34,6 +51,9 @@ Spec:
 Tests:
   Required tests or checks.
 
+Acceptance evidence / Done when:
+  The observable result that distinguishes satisfied, unsatisfied, and unknown.
+
 Non-goals:
   Adjacent work that must stay out of scope.
 
@@ -54,17 +74,22 @@ Agents should stop or report when:
 - the requirement appears wrong or incomplete,
 - implementation suggests an adjacent feature,
 - tests need to be changed in a way that alters the requirement,
+- no direct acceptance evidence exists for the requirement; report it as `unknown` rather than claiming completion,
 - a discovered bug belongs to a different requirement,
 - non-goals appear necessary to complete the task,
 - the requested change requires a broader architecture or API decision.
 
 When this happens, the agent should use boundary clarification: ask the smallest set of questions needed to settle the loop boundary before continuing.
 
+Implementation or test refinement is not automatically a boundary change. Internal architecture, internal APIs or data structures, test strategy or location, acceptance refinement for the same requirement, and bounded refactoring may stay inside the loop. A material change to capability, actor or scope, trigger, obligation, accepted failure mode, user-facing behavior, authority, security/privacy boundary, or public contract requires re-scoping.
+
 After a revisit signal, the agent should not silently keep using the requirement. It should report the evidence, request or recover a `retain`, `narrow`, `supersede`, or `discard` decision, and identify affected specs, tests, implementation, docs, and active loops.
 
 ## Scope discipline
 
 An agent should not expand scope just because implementation suggests adjacent work.
+
+Passing tests, a commit, or a task marked complete are not requirement satisfaction unless they provide direct evidence for the required condition. If evidence cannot distinguish satisfaction from non-satisfaction, report `unknown` rather than closing the loop.
 
 Examples:
 
@@ -77,9 +102,11 @@ Examples:
 At the end of the task, the agent should summarize:
 
 ```text
-Requirement -> Spec -> Tests/Checks -> Implementation
+Requirement -> Spec / acceptance -> Tests/Checks -> Implementation / evidence
+
+Implementation / evidence -> Spec / acceptance -> Requirement -> Goal / Outcome
 ```
 
-That final trace helps reviewers decide whether the work stayed inside the loop.
+That final trace helps reviewers decide whether the work stayed inside the loop and whether local implementation progress was traced back to the original requirement. The reverse direction is review guidance, not an agent-specific runtime protocol or mandatory tool call.
 
 In a workflow without pull requests, this final trace can also serve as the review surface for the task or change set. It should be compact enough to read often, but explicit enough to show whether the agent changed the requirement, refined the spec, or found follow-up work that belongs to another loop.

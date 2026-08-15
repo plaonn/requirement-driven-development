@@ -1,5 +1,7 @@
 # Need / goal context
 
+Use as much of this template as the loop needs. Small loops may keep the same information in a compact PR description or another existing review surface; a separate heavyweight artifact is not required.
+
 What stakeholder problem, desire, or desired outcome justifies this PR?
 
 What requirement source or stakeholder provides that context?
@@ -46,9 +48,9 @@ If this is temporary or scoped, what are the policy horizon, promotion rule, exp
 
 What rules, boundaries, API contracts, or acceptance criteria express the requirement?
 
-# Tests
+# Tests / acceptance evidence
 
-What tests or checks protect the spec?
+What tests or checks protect the spec, and what observable evidence directly establishes whether the requirement is satisfied, unsatisfied, or unknown?
 
 # Implementation
 
@@ -73,3 +75,5 @@ Did implementation or review reveal that the original requirement needs to chang
 # Review focus
 
 What should reviewers pay special attention to?
+
+Can the implementation and evidence be traced backward through spec and acceptance to the original requirement and goal? Do not treat a commit, task completion, or unrelated passing test as requirement evidence.

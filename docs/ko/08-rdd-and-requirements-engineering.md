@@ -22,13 +22,13 @@ RDD는 더 좁은 문제를 다룹니다.
 
 ```text
 현재 개발 loop의 candidate requirement가 주어졌을 때,
-그 requirement에서 review까지 loop를 추적 가능하게 유지한다.
+그 requirement에서 direct acceptance evidence와 review까지 loop를 추적 가능하게 유지한다.
 ```
 
 RDD는 candidate requirement가 현재 loop boundary로 사용될 만큼 충분히 도출되고 검증되었다고 전제합니다. 그 뒤 다음 관계를 연결합니다.
 
 ```text
-Requirement -> Spec -> Test/Check -> Implementation -> Review
+Requirement -> Spec / acceptance -> Implementation -> Test / acceptance evidence -> Review
 ```
 
 RDD의 주된 관심사는 다음과 같습니다.
@@ -63,12 +63,12 @@ RDD는 요구공학의 여러 관심사를 task, ticket, pull request, 작은 it
 
 | 요구공학 관심사 | RDD 적용 |
 | --- | --- |
-| Traceability | Loop requirement를 spec, test, implementation, review에 연결합니다. |
+| Traceability | Loop requirement를 spec, implementation, 직접적인 acceptance evidence, review에 연결합니다. |
 | Change management | Requirement 변경을 명시적인 loop-boundary event로 취급합니다. |
 | Scope control | Requirement에서 벗어난 작업을 split, re-scope, defer합니다. |
 | Specification | Loop 안에서 rule, contract, boundary, acceptance criteria를 다듬습니다. |
-| Verification | Test와 check로 implementation이 현재 spec을 만족하는지 확인합니다. |
-| Validation | 완료된 변경이 loop를 정당화한 need를 여전히 해결하는지 review합니다. |
+| Verification | Test와 다른 check로 implementation이 현재 spec과 requirement를 만족하는지 보여 주는 evidence를 만듭니다. |
+| Validation | Implementation과 evidence에서 requirement로 역추적하고, 변경이 loop를 정당화한 need를 여전히 해결하는지 review합니다. |
 
 RDD trace는 의도적으로 가볍습니다. Lifecycle 전체의 traceability가 필요한 project에서는 requirement source, stakeholder, dependent requirement, architecture, release, 관련 work product의 연결도 별도로 유지해야 합니다.
 

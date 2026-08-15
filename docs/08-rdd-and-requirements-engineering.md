@@ -22,13 +22,13 @@ RDD addresses a narrower problem:
 
 ```text
 Given a candidate requirement for the current development loop,
-keep the loop traceable from that requirement through review.
+keep the loop traceable from that requirement through direct acceptance evidence and review.
 ```
 
 RDD assumes that the candidate requirement has been sufficiently elicited and validated to serve as the current loop boundary. It then connects:
 
 ```text
-Requirement -> Spec -> Test/Check -> Implementation -> Review
+Requirement -> Spec / acceptance -> Implementation -> Test / acceptance evidence -> Review
 ```
 
 RDD is primarily concerned with:
@@ -63,12 +63,12 @@ RDD applies several requirements engineering concerns at task, ticket, pull requ
 
 | Requirements engineering concern | RDD application |
 | --- | --- |
-| Traceability | Connect the loop requirement to spec, tests, implementation, and review. |
+| Traceability | Connect the loop requirement to spec, implementation, direct acceptance evidence, and review. |
 | Change management | Treat a requirement change as an explicit loop-boundary event. |
 | Scope control | Split, re-scope, or defer work that no longer belongs to the requirement. |
 | Specification | Refine rules, contracts, boundaries, and acceptance criteria inside the loop. |
-| Verification | Use tests and checks to assess whether the implementation satisfies the current spec. |
-| Validation | Review whether the completed change still addresses the need that justified the loop. |
+| Verification | Use tests and other checks to produce evidence about whether the implementation satisfies the current spec and requirement. |
+| Validation | Review backward from implementation and evidence to the requirement and whether the change still addresses the need that justified the loop. |
 
 The RDD trace is intentionally lightweight. Projects that need lifecycle-wide traceability should also maintain links to requirement sources, stakeholders, dependent requirements, architecture, releases, and other relevant work products.
 

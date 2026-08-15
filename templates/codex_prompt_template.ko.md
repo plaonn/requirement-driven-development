@@ -8,7 +8,7 @@
 
 ## Requirement
 
-이 task가 만족해야 하는 안정적인 capability, quality, constraint 또는 condition을 적으세요. Goal 또는 desired outcome만으로 loop requirement를 대신하지 마세요.
+이 task가 만족해야 하는 안정적이고 규범적이며 판별 가능하고 solution-independent한 capability, quality, constraint 또는 condition을 적으세요. Goal 또는 desired outcome만으로 loop requirement를 대신하지 마세요. Internal architecture, API, data structure, spec detail, test strategy가 바뀌어도 requirement는 유지되어야 하며, `unknown` evidence는 satisfaction이 아닙니다.
 
 다음을 포함하세요.
 
@@ -51,6 +51,10 @@ Requirement를 표현하는 규칙, 계약, 경계, 인수 기준을 적으세�
 
 Spec을 보호해야 하는 tests 또는 checks를 적으세요.
 
+## Acceptance evidence / Done when
+
+Requirement가 satisfied, unsatisfied, unknown 중 무엇인지 구분할 수 있는 observable evidence를 적으세요. `Done when`은 유용한 downstream label이지 RDD가 강제하는 field는 아닙니다.
+
 ## Non-goals
 
 Scope 밖에 있어야 하는 adjacent work를 적으세요.
@@ -59,12 +63,14 @@ Scope 밖에 있어야 하는 adjacent work를 적으세요.
 
 - 이 loop에서는 requirement를 안정적으로 유지하세요.
 - Need 또는 goal은 justification context로 유지하고, requirement에는 무엇이 참이어야 하는지 적으세요.
+- Implementation progress, requirement를 cover하지 않는 test 통과, commit, task 완료를 직접적인 requirement evidence로 취급하지 마세요.
 - Loop stability를 permanent validity로 취급하지 마세요. Revisit signal이 발생하면 계속 진행하기 전에 requirement-validity rule을 적용하세요.
 - root goal, rationale, failure prevented, automation boundary가 불명확하면 full trace를 만들기 전에 boundary clarification 질문을 먼저 하세요.
 - rationale과 promotion rule이 명시되지 않은 implementation choice, provider workaround, temporary experiment policy를 durable requirement로 취급하지 마세요.
 - Decision이 accepted라면 system-wide, beta-only, operator-run-specific, implementation blocked 중 어떤 scope인지 적으세요.
 - 장기 goal과 현재 safety stage가 충돌해 보이면 staged requirement로 표현하세요.
 - 같은 requirement를 계속 표현하는 경우에만 spec과 test를 refine하세요.
+- Internal architecture, internal API 또는 data structure, test strategy 또는 location, 같은 requirement를 위한 acceptance refinement, bounded refactoring은 정상 refinement입니다. Capability, actor/scope, trigger, obligation, accepted failure mode, user-facing behavior, authority, security/privacy boundary, public contract가 materially 바뀌면 re-scope해야 합니다.
 - Requirement가 바뀌는 것처럼 보이면 scope를 확장하기 전에 멈추고 보고하세요.
 - Non-goals를 보존하세요.
 - 구현 중 편리하다는 이유로 adjacent behavior를 추가하지 마세요.
@@ -73,5 +79,7 @@ Scope 밖에 있어야 하는 adjacent work를 적으세요.
 - 마지막에 final trace를 요약하세요.
 
 ```text
-Requirement -> Spec -> Tests/Checks -> Implementation
+Requirement -> Spec / acceptance -> Tests/Checks -> Implementation / evidence
+
+Implementation / evidence -> Spec / acceptance -> Requirement -> Goal / Outcome
 ```

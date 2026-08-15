@@ -2,25 +2,27 @@
 
 한국어: [README.ko.md](README.ko.md)
 
-**Requirement Driven Development (RDD)** is a lightweight development methodology for keeping each development loop anchored to a stable requirement and traceable from intent to implementation.
+**Requirement Driven Development (RDD)** is a lightweight development methodology for keeping each development loop anchored to a stable requirement and traceable from intent through implementation to observable evidence.
 
 It treats a pull request, task, ticket, or small agile iteration as a closed loop:
 
 ```text
-Requirement -> Spec -> Test -> Implementation -> Review
+Need / Goal -> Requirement -> Spec -> Implementation -> Test / Acceptance Evidence -> Review
 ```
+
+This is a semantic trace, not a required execution order. Tests may be designed before implementation, and evidence may include tests, manual checks, document review, or other observations that directly bear on the requirement.
 
 TDD makes tests the immediate feedback mechanism. SDD makes specs the explicit contract. RDD puts the requirement above both: specs and tests may evolve as understanding improves, but the requirement that defines the loop should remain stable. If the requirement changes, the loop should be explicitly re-scoped.
 
 ## Root goal
 
-RDD helps teams keep small development loops aligned with the need and goal that justify them and with the requirement that anchors them, so specs, tests, implementation, and review remain traceable and scope changes are made explicit.
+RDD helps teams keep small development loops aligned with the need and goal that justify them and with the requirement that anchors them, so specs, implementation, acceptance evidence, and review remain traceable and scope changes are made explicit.
 
 ## Relationship to requirements engineering
 
 RDD is not a replacement for requirements engineering. Requirements engineering covers the broader work of eliciting, analyzing, negotiating, specifying, validating, and managing requirements across a system or product lifecycle.
 
-RDD operates at a narrower boundary. It assumes that a candidate requirement has been derived from a relevant need or goal and sufficiently elicited and validated for the current development loop, then helps the team keep that requirement traceable through spec, tests, implementation, and review. It does not replace stakeholder discovery, product discovery, requirement prioritization, conflict resolution, or system-wide requirements management.
+RDD operates at a narrower boundary. It assumes that a candidate requirement has been derived from a relevant need or goal and sufficiently elicited and validated for the current development loop, then helps the team keep that requirement traceable through spec, implementation, acceptance evidence, and review. It does not replace stakeholder discovery, product discovery, requirement prioritization, conflict resolution, or system-wide requirements management.
 
 See [RDD and Requirements Engineering](docs/08-rdd-and-requirements-engineering.md) for the detailed boundary.
 
@@ -31,11 +33,13 @@ RDD uses a pragmatic vocabulary for keeping the layers of a small loop reviewabl
 ```text
 Need: a stakeholder problem, desire, or expected outcome.
 Goal: a desired state that gives direction to one or more requirements.
-Requirement: a capability, quality, constraint, or condition that must be satisfied.
+Requirement: a stable, normative, discriminating, solution-independent capability, quality, constraint, or condition that must be satisfied.
 Spec: the current precise expression of the requirement as rules, contracts, boundaries, and acceptance criteria.
 ```
 
 Need and goal explain why and in which direction the work exists. The requirement states what must be true and anchors the loop. The spec makes the current interpretation precise enough to verify. Requirements engineering uses these terms in several broader ways; this is an explicit RDD convention, not a claim of universal terminology.
+
+In RDD, a useful requirement remains stable while internal architecture, internal APIs, data structures, spec wording, and test strategy change. It is normative: the loop is not complete unless the condition is true. It is discriminating: available evidence can meaningfully classify it as `satisfied`, `unsatisfied`, or `unknown`; `unknown` is not `satisfied`. It is solution-independent: filenames, internal APIs, commands, and test locations are normally spec or implementation details unless they are themselves part of the external contract. If one sentence hides several independently testable obligations, split it into a small number of atomic requirements.
 
 ## Core idea
 
@@ -43,11 +47,30 @@ Before opening a loop, confirm the need or goal that justifies its candidate req
 
 1. **Requirement** - What capability, quality, constraint, or condition must be satisfied in this loop?
 2. **Spec** - What rules, boundaries, contracts, and acceptance criteria express that requirement?
-3. **Test** - What executable checks prove the spec remains satisfied?
-4. **Implementation** - What code or document changes satisfy the tests and the original requirement?
-5. **Review** - Does the final change remain traceable back to the requirement without hidden scope creep?
+3. **Implementation** - What code or document changes realize the current spec and requirement?
+4. **Test / acceptance evidence** - What observable evidence can distinguish satisfied, unsatisfied, and unknown?
+5. **Review** - Can the implementation and evidence be traced back through spec and acceptance to the original requirement and goal without hidden scope creep?
 
 RDD is not a replacement for TDD or SDD. It treats them as nested feedback loops.
+
+## Minimum semantic trace
+
+Artifact and documentation ceremony may scale with the size and abstraction level of the work, but the minimum semantic trace does not disappear:
+
+```text
+Outcome / Goal:
+  The desired state that gives the loop direction.
+
+Requirement:
+  The stable normative condition that must remain true.
+
+Done when / Acceptance:
+  The observable evidence that can determine whether the requirement is satisfied.
+```
+
+`Outcome`, `Requirement`, and `Done when` are useful downstream field names, not an RDD-mandated schema. A small PR, task, or agent loop does not need a separate `REQUIREMENTS.md`, active-loop file, or heavyweight artifact when a compact requirement-and-evidence trace in its PR, task note, commit message, or final review is enough. Larger or higher-risk work may need the full trace, durable requirement validity fields, decision records, or other documentation that the project uses.
+
+Implementation progress, passing tests, a commit, or a task marked complete are delivery signals. They do not replace the original requirement or count as direct acceptance evidence when they do not bear on whether that requirement is satisfied.
 
 ```text
 RDD: Is the development loop still solving the right requirement?
@@ -75,7 +98,7 @@ RDD gives teams a simple way to detect these failures early.
 2. Derive the spec from the requirement.
 3. Derive tests from the spec.
 4. Implement only what the loop requires.
-5. Review the full trace from requirement to implementation.
+5. Review the trace from requirement through implementation to direct evidence, then reverse-check evidence and implementation back to the requirement and goal.
 6. If the requirement changes, re-scope the loop explicitly.
 ```
 
@@ -159,8 +182,8 @@ cross-repository ownership, authority, or trust boundary.
 At the start, load the relevant requirement source and confirm that a specific
 loop-local or durable requirement covers the new capability and its failure
 boundary. Permission from a broad root goal is not sufficient coverage by
-itself. At the finish, verify the trace through spec, tests, implementation, and
-any long-lived architectural decision. See the
+itself. At the finish, verify the trace through spec, implementation, direct
+acceptance evidence, and any long-lived architectural decision. See the
 [existing-project adoption gate](docs/07-retroactive-rdd-review.md#risk-sensitive-forward-adoption-gate).
 
 ## PR-scale RDD
@@ -171,7 +194,7 @@ A PR should not be treated as just a bundle of code changes. It should be treate
 
 When a project does not use pull requests, the same model can be applied at task or change-set scale. The review surface may be a task note, commit message body, agent final trace, or another lightweight record, as long as the requirement boundary remains visible.
 
-Projects may retain completed loop records, delete disposable active-loop files after surviving truth has been promoted, or retain only selected high-value records. RDD does not require one retention policy. It requires the loop boundary to be reviewable before completion and durable requirements, current contracts, tests, and important architectural decisions to survive in an appropriate current-truth surface.
+Projects may retain completed loop records, delete disposable active-loop files after surviving truth has been promoted, or retain only selected high-value records. RDD does not require one retention policy. It requires the loop boundary and direct requirement-to-evidence trace to be reviewable before completion, while durable requirements, current contracts, tests, and important architectural decisions survive in an appropriate current-truth surface.
 
 A good PR should make these relationships visible:
 
@@ -182,8 +205,8 @@ Requirement:
 Spec:
   The concrete rules and behavior this PR must satisfy.
 
-Tests:
-  The checks that protect those rules.
+Tests / acceptance evidence:
+  The checks and observations that directly establish whether the requirement is satisfied.
 
 Implementation:
   The minimal change that satisfies the tests and requirement.
@@ -191,6 +214,12 @@ Implementation:
 Non-goals:
   The changes intentionally kept outside this PR.
 ```
+
+## Same-requirement refinement and boundary changes
+
+The following are normal refinement inside the same requirement when they preserve the same external contract: changing internal architecture, internal APIs or data structures, test strategy or location, acceptance criteria to verify the requirement more precisely, and bounded refactoring. They may change the spec, tests, or implementation without requiring a new loop boundary.
+
+The loop must be re-scoped when the change materially changes the capability itself, applicable actor or scope, trigger condition, obligation level, accepted failure mode, user-facing behavior, authority, security or privacy boundary, or other public contract. Those changes alter what must be true, not merely how the same requirement is realized or evidenced.
 
 ## When the requirement changes
 

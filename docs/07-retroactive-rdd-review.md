@@ -135,8 +135,10 @@ Before completion:
 
 1. Confirm that the requirement reference still identifies the requirement
    actually implemented.
-2. Verify `Requirement -> Spec -> Tests/Checks -> Implementation`; passing tests
-   and an updated behavior spec do not replace durable requirement coverage.
+2. Verify `Requirement -> Spec / acceptance -> Tests/Checks -> Implementation ->
+   direct acceptance evidence`; passing tests and an updated behavior spec do not
+   replace durable requirement coverage or direct evidence. If the requirement
+   cannot be judged from available evidence, keep it `unknown`, not satisfied.
 3. Record any retain, narrow, supersede, discard, or loop re-scope decision.
 4. Promote surviving truth to the appropriate requirement, behavior-spec,
    test, implementation, or decision-record surface.
@@ -154,7 +156,8 @@ Risk-sensitive adoption gate
 - Derived behavior spec:
 - Decision record needed: yes | no
 - Tests/checks:
-- Validation evidence:
+- Direct acceptance evidence:
+- Validation/review evidence:
 - Remaining non-goals:
 ```
 

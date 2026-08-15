@@ -3,8 +3,10 @@
 In RDD, a pull request is not just a bundle of code changes. It is a small development loop with a traceable purpose:
 
 ```text
-Requirement -> Spec -> Test -> Implementation -> Review
+Need / Goal -> Requirement -> Spec -> Implementation -> Test / Acceptance Evidence -> Review
 ```
+
+This is the semantic trace for review, not a required execution order. Tests may be designed before implementation, and evidence may come from any observable check that directly bears on the requirement.
 
 ## One stable purpose
 
@@ -44,10 +46,12 @@ Requirement changes discovered:
 RDD does not require a pull request. A solo project, local-only repository, or agent-driven workflow can use the same loop at task, change-set, or small iteration scale:
 
 ```text
-Requirement -> Spec -> Checks -> Implementation -> Self-review -> Record
+Requirement -> Spec / acceptance -> Implementation -> Checks / evidence -> Review -> Record
 ```
 
 In that workflow, the PR description is replaced by another review surface, such as a task note, agent final trace, commit message body, or local change log. A loop may produce one commit, several commits, or a final squashed commit. The important point is that the boundary decision remains visible before the change is treated as complete.
+
+A small leaf loop does not need a separate `REQUIREMENTS.md`, active-loop file, or heavyweight artifact. A compact record in the existing PR, task, commit, or agent review surface is enough when it makes the requirement and direct acceptance evidence visible. Larger or more abstract work may justify durable requirement documents, decision records, or a fuller loop artifact.
 
 A useful no-PR loop trace is:
 
@@ -56,13 +60,13 @@ Need / goal context:
   What stakeholder problem, desire, or desired outcome justifies this loop?
 
 Requirement:
-  What capability, quality, constraint, or condition must this loop satisfy?
+  What stable, normative condition must this loop satisfy?
 
-Spec:
-  What rules or boundaries did this loop preserve or introduce?
+Spec / acceptance:
+  What rules, boundaries, and observable acceptance conditions express the requirement?
 
-Checks:
-  What tests, builds, manual checks, or document reviews were performed?
+Checks / evidence:
+  What tests, builds, manual checks, or document reviews directly establish whether it is satisfied?
 
 Implementation:
   What changed?
@@ -74,7 +78,7 @@ Follow-ups:
   What discoveries belong to later loops?
 ```
 
-The trace does not need to be long every time, and it does not have to live in every commit. Small obvious changes can stay lightweight. The trace becomes important when the requirement, boundary, or future design implication would otherwise be hard to reconstruct.
+The trace does not need to be long every time, and it does not have to live in every commit. Small obvious changes can stay lightweight. The trace becomes important when the requirement, boundary, or future design implication would otherwise be hard to reconstruct. If direct evidence is missing, record the requirement as `unknown`; do not infer satisfaction from implementation progress, passing tests that do not cover it, commit creation, or task completion.
 
 ## Loop record retention
 
@@ -84,7 +88,7 @@ RDD does not prescribe one retention policy for loop records. A project may choo
 - **Disposable active loop** - treat the presence of a loop file as active work, promote surviving truth, and delete the loop file after review.
 - **Selective retention** - retain only records whose audit, safety, or long-term decision value justifies it.
 
-All three patterns preserve the same completion invariant: the requirement boundary must be reviewable before completion, and information that should outlive the loop must move to an appropriate current-truth surface. Promote durable needs and requirements to requirement documents, current contracts to docs and tests, implementation behavior to code, and long-lived architectural decisions to a decision document when one is justified. Loop-local notes that have no continuing value may disappear with a disposable loop.
+All three patterns preserve the same completion invariant: the requirement boundary and direct requirement-to-evidence trace must be reviewable before completion, and information that should outlive the loop must move to an appropriate current-truth surface. Promote durable needs and requirements to requirement documents, current contracts to docs and tests, implementation behavior to code, and long-lived architectural decisions to a decision document when one is justified. Loop-local notes that have no continuing value may disappear with a disposable loop.
 
 A disposable loop file is an active working surface, not a required archive. One loop should normally describe one loop unit, such as one pull request, task, ticket, or local change set. If one durable requirement spans several loop units, use a separate loop record for each unit and let each record reference the same durable requirement. Structural tooling may treat any loop file in the configured active-loop directory as active work, but it must not infer semantic correctness, checkbox completion, or whether truth promotion is complete. Filename conventions remain project policy rather than an RDD invariant.
 
@@ -99,7 +103,7 @@ Use this structure when a PR is large enough that reviewers need explicit contex
 
 # Spec
 
-# Tests
+# Tests / acceptance evidence
 
 # Implementation
 
@@ -122,6 +126,7 @@ Reviewers should watch for:
 - refactoring that changes behavior without saying so,
 - bug fixes discovered during implementation but folded into the same PR,
 - tests that protect behavior outside the stated requirement,
+- delivery signals being mistaken for direct requirement evidence,
 - expanded API behavior not mentioned in the spec,
 - documentation claims broader than the implemented change.
 
@@ -145,6 +150,11 @@ Reviewers should check code quality, but they should also check requirement trac
 - Does the spec express that requirement?
 - Do the tests protect meaningful rules?
 - Does the implementation satisfy the requirement without hidden scope growth?
+- Does the evidence directly support the requirement, and is `unknown` kept separate from `satisfied`?
 - Did the requirement change during implementation?
 
-A technically clean PR can still be a poor RDD loop if it solves a different problem than the one it started with.
+A technically clean PR can still be a poor RDD loop if it solves a different problem than the one it started with. Review the result backward as well as forward:
+
+```text
+Implementation / evidence -> Spec / acceptance -> Requirement -> Goal / Outcome
+```

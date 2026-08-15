@@ -8,7 +8,7 @@ State the stakeholder problem, desire, or desired outcome that justifies this ta
 
 ## Requirement
 
-State the stable capability, quality, constraint, or condition this task must satisfy. Do not use a goal or desired outcome alone as the loop requirement.
+State the stable, normative, discriminating, solution-independent capability, quality, constraint, or condition this task must satisfy. Do not use a goal or desired outcome alone as the loop requirement. The requirement should remain stable while internal architecture, APIs, data structures, spec details, or test strategy change; `unknown` evidence is not satisfaction.
 
 Include:
 
@@ -54,6 +54,10 @@ List the rules, contracts, boundaries, and acceptance criteria that express the 
 
 List the tests or checks that should protect the spec.
 
+## Acceptance evidence / Done when
+
+State the observable evidence that can distinguish whether the requirement is satisfied, unsatisfied, or unknown. `Done when` is a useful downstream label, not a mandatory RDD field.
+
 ## Non-goals
 
 List adjacent work that must stay out of scope.
@@ -62,12 +66,14 @@ List adjacent work that must stay out of scope.
 
 - Keep the requirement stable for this loop.
 - Keep the need or goal as justification context; use the requirement to state what must be true.
+- Do not treat implementation progress, passing tests that do not cover the requirement, a commit, or task completion as direct requirement evidence.
 - Do not treat loop stability as permanent validity. Apply the requirement-validity rules before continuing when a revisit signal occurs.
 - If the root goal, rationale, failure prevented, or automation boundary is unclear, ask boundary clarification questions before producing a full trace.
 - Do not treat implementation choices, provider workarounds, or temporary experiment policies as durable requirements unless their rationale and promotion rule are explicit.
 - If a decision is marked accepted, state whether it is system-wide, beta-only, operator-run-specific, or blocked from implementation.
 - If a long-term goal and the current safety stage appear to conflict, express them as staged requirements.
 - Refine specs and tests only when they still express the same requirement.
+- Internal architecture, internal APIs or data structures, test strategy or location, acceptance refinement for the same requirement, and bounded refactoring are normal refinements. A material change to capability, actor/scope, trigger, obligation, accepted failure mode, user-facing behavior, authority, security/privacy boundary, or public contract requires re-scoping.
 - If the requirement appears to change, stop and report before expanding scope.
 - Preserve the non-goals.
 - Do not add adjacent behavior just because it is convenient during implementation.
@@ -76,5 +82,7 @@ List adjacent work that must stay out of scope.
 - Summarize the final trace:
 
 ```text
-Requirement -> Spec -> Tests/Checks -> Implementation
+Requirement -> Spec / acceptance -> Tests/Checks -> Implementation / evidence
+
+Implementation / evidence -> Spec / acceptance -> Requirement -> Goal / Outcome
 ```

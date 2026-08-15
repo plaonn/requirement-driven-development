@@ -114,7 +114,7 @@ Contributor guide, task template, agent instruction 같은 프로젝트의 일�
 완료 전에 다음을 수행합니다.
 
 1. Requirement reference가 실제 구현한 requirement를 계속 가리키는지 확인합니다.
-2. `Requirement -> Spec -> Tests/Checks -> Implementation`을 검증합니다. Test 통과와 behavior spec 갱신은 durable requirement coverage를 대신하지 않습니다.
+2. `Requirement -> Spec / acceptance -> Tests/Checks -> Implementation -> direct acceptance evidence`를 검증합니다. Test 통과와 behavior spec 갱신은 durable requirement coverage나 직접적인 evidence를 대신하지 않습니다. Available evidence로 requirement를 판단할 수 없으면 satisfied가 아니라 `unknown`으로 유지합니다.
 3. Retain, narrow, supersede, discard 또는 loop re-scope decision이 있으면 기록합니다.
 4. 살아남아야 할 truth를 적절한 requirement, behavior-spec, test, implementation, decision-record surface로 승격합니다.
 5. 프로젝트가 선택한 structural 또는 semantic check를 실행합니다. `rdd.py validate`, `rdd.py gaps`, `rdd.py ready`는 선택 가능한 building block입니다. 모든 RDD loop에 CI를 강제하지 않으면서 risk-scoped change의 local completion check 또는 CI에 연결할 수 있습니다.
@@ -128,7 +128,8 @@ Risk-sensitive adoption gate
 - Derived behavior spec:
 - Decision record needed: yes | no
 - Tests/checks:
-- Validation evidence:
+- Direct acceptance evidence:
+- Validation/review evidence:
 - Remaining non-goals:
 ```
 

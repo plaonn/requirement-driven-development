@@ -1,5 +1,7 @@
 # Need / goal context
 
+Loop에 필요한 만큼만 이 template을 사용하세요. 작은 loop는 같은 정보를 간결한 PR 설명이나 다른 기존 review surface에 남길 수 있으며, 별도 heavyweight artifact가 필수는 아닙니다.
+
 어떤 stakeholder 문제, 바람, desired outcome이 이 PR을 정당화합니까?
 
 어떤 requirement source 또는 stakeholder가 그 context를 제공합니까?
@@ -46,9 +48,9 @@ Temporary 또는 scoped decision이라면 policy horizon, promotion rule, expira
 
 그 requirement를 표현하는 규칙, 경계, API 계약, 인수 기준은 무엇입니까?
 
-# Tests
+# Tests / acceptance evidence
 
-Spec을 보호하는 tests 또는 checks는 무엇입니까?
+Spec을 보호하는 tests 또는 checks는 무엇이며, requirement가 satisfied, unsatisfied, unknown 중 무엇인지 직접 보여 주는 observable evidence는 무엇입니까?
 
 # Implementation
 
@@ -73,3 +75,5 @@ Root goal, rationale, failure prevented, decision class, 구현 선택과 requir
 # 리뷰 초점
 
 Reviewer가 특히 봐야 할 것은 무엇입니까?
+
+Implementation과 evidence를 spec/acceptance를 거쳐 원래 requirement와 goal까지 역추적할 수 있습니까? Commit, task 완료, 관련 없는 test 통과를 requirement evidence로 취급하지 마세요.

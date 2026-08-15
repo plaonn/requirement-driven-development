@@ -15,12 +15,12 @@ They should not be treated as competitors. RDD places the accepted loop requirem
 ```text
 Need / goal context
   -> Accepted loop requirement
-  -> Spec
-    -> Test
-      -> Implementation
+  -> Spec / acceptance definition
+  -> Implementation
+  -> Test / acceptance evidence
 ```
 
-Each layer answers a different question.
+This is a semantic map rather than a mandatory execution order. Tests may be designed before implementation, and acceptance evidence may come from tests, manual checks, document review, or other observations that directly bear on the requirement. Each layer answers a different question.
 
 ## RDD: requirement as the loop anchor
 
@@ -70,6 +70,8 @@ Can the current spec be proven continuously by executable checks?
 
 Tests are not the requirement. They are executable checkpoints derived from the spec.
 
+Passing tests is not the same as having requirement evidence. Evidence must bear directly on the requirement and distinguish `satisfied`, `unsatisfied`, and `unknown`; unknown is not satisfied.
+
 Tests may change when:
 
 - the spec becomes more precise,
@@ -85,9 +87,14 @@ Usually stable:
   Requirement intent
 
 Expected to evolve:
+  Internal architecture
+  Internal APIs and data structures
   Spec details
   Test examples
+  Test strategy or location
+  Acceptance criteria refined to verify the same requirement
   Implementation structure
+  Bounded refactoring
 
 Must be made explicit:
   Requirement change
@@ -113,8 +120,18 @@ The implementation starts shaping the purpose of the loop.
 
 This often creates hidden scope creep: useful-looking changes enter the loop without being connected to the loop requirement.
 
+### Delivery-complete but requirement-unproven
+
+Implementation can be merged, tests can pass, and a task can be marked complete while direct requirement evidence is still missing. In that case the requirement remains `unknown`, not satisfied. Review should return to the requirement rather than treating delivery hygiene as acceptance.
+
 ## RDD's practical stance
 
 RDD does not say specs and tests are less important.
 
 It says they should remain traceable to the requirement that defines the loop.
+
+The review direction is therefore:
+
+```text
+Implementation / evidence -> Spec / acceptance -> Requirement -> Goal / Outcome
+```

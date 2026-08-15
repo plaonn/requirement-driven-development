@@ -1,6 +1,6 @@
 # RDD Review Method
 
-RDD review checks whether a development loop remains traceable from requirement to implementation.
+RDD review checks whether a development loop remains traceable from requirement through implementation to direct acceptance evidence.
 
 Use this checklist for pull requests, tickets, tasks, and small iteration reviews.
 
@@ -11,6 +11,11 @@ Use this checklist for pull requests, tickets, tasks, and small iteration review
 - [ ] Is the stakeholder need or root goal that justifies the loop clear?
 - [ ] Is the driving requirement clear?
 - [ ] Does the requirement state the capability, quality, constraint, or condition that must be satisfied?
+- [ ] Is it stable across internal architecture, API, data-structure, spec, and test-strategy changes?
+- [ ] Is it normative: must it be true to call this loop complete?
+- [ ] Is it discriminating enough for evidence to classify it as satisfied, unsatisfied, or unknown?
+- [ ] Is it solution-independent rather than a filename, internal API, command, or test location?
+- [ ] If it contains multiple obligations, should it be split into a small number of atomic requirements?
 - [ ] Do the linked need, goal, and rationale explain why the work exists?
 - [ ] Does it name the failure, regression, or risk it is meant to prevent?
 - [ ] Is it specific enough to distinguish success from unrelated change?
@@ -32,12 +37,16 @@ Use this checklist for pull requests, tickets, tasks, and small iteration review
 - [ ] Are important rules, boundaries, API contracts, and acceptance criteria visible?
 - [ ] Are edge cases handled as spec refinement rather than hidden assumptions?
 
-### 4. Tests
+### 4. Tests and acceptance evidence
 
 - [ ] Do tests protect meaningful rules?
 - [ ] Are tests derived from the spec rather than incidental implementation details?
 - [ ] Are important negative cases or boundaries covered?
 - [ ] If tests changed, do they still protect the same requirement?
+- [ ] Is there direct observable acceptance evidence for the requirement, not only for an implementation detail?
+- [ ] Can the evidence distinguish `satisfied`, `unsatisfied`, and `unknown`?
+- [ ] Is `unknown` kept separate from `satisfied`?
+- [ ] Are passing tests, commit creation, and task completion kept separate from requirement satisfaction unless they directly observe the required condition?
 
 ### 5. Implementation
 
@@ -45,6 +54,7 @@ Use this checklist for pull requests, tickets, tasks, and small iteration review
 - [ ] Does it satisfy the original requirement, not only the tests?
 - [ ] Is the change as narrow as the loop requires?
 - [ ] Are implementation details consistent with the stated spec?
+- [ ] Does implementation progress remain distinct from acceptance evidence?
 
 ### 6. Scope
 
@@ -52,6 +62,8 @@ Use this checklist for pull requests, tickets, tasks, and small iteration review
 - [ ] Did refactoring introduce behavior changes?
 - [ ] Did implementation convenience expand the public contract?
 - [ ] Did an implementation choice get promoted into a requirement without rationale?
+- [ ] Were same-requirement refinements (internal architecture, APIs, data structures, test strategy/location, acceptance refinement, bounded refactor) kept distinct from material requirement changes?
+- [ ] If the capability, actor/scope, trigger, obligation, failure mode, user-facing behavior, authority, security/privacy boundary, or public contract changed, was the loop re-scoped?
 - [ ] Did a temporary experiment policy or provider workaround get promoted into a durable requirement without a promotion rule?
 - [ ] If a decision is accepted, is the acceptance scope explicit?
 - [ ] Are adjacent fixes separated or explicitly included?
@@ -94,7 +106,15 @@ Start with the requirement and its validity conditions, not the diff.
 
 If the requirement's root goal, rationale, failure prevented, decision class, implementation-choice boundary, or automation boundary is unclear, do boundary clarification before writing a full trace. Ask the smallest set of questions needed to settle the loop boundary, then continue the review.
 
-Then read the spec and tests before judging implementation details. This keeps review anchored to the loop boundary and prevents the implementation from silently redefining the goal.
+Then read the spec and tests before judging implementation details. Inspect direct acceptance evidence separately. This keeps review anchored to the loop boundary and prevents the implementation or delivery hygiene from silently redefining the goal or standing in for acceptance.
+
+End by reviewing backward as well as forward:
+
+```text
+Implementation / evidence -> Spec / acceptance -> Requirement -> Goal / Outcome
+```
+
+If direct evidence is missing, the requirement remains `unknown`; do not close the loop by treating a passing test, commit, or task completion as proof.
 
 End by checking whether any assumption failed, revisit signal occurred, or discovery during implementation changed the requirement. If so, revalidate the requirement and treat the outcome as a boundary decision, not just a code review comment.
 

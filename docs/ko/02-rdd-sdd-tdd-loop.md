@@ -15,12 +15,12 @@ TDD: Test Driven Development, 테스트 주도 개발
 ```text
 Need / goal context
   -> Accepted loop requirement
-  -> Spec
-    -> Test
-      -> Implementation
+  -> Spec / acceptance definition
+  -> Implementation
+  -> Test / acceptance evidence
 ```
 
-각 계층은 서로 다른 질문에 답합니다.
+이것은 반드시 따라야 하는 실행 순서가 아니라 semantic map입니다. Test는 implementation 전에 설계할 수 있고, acceptance evidence는 test, manual check, 문서 review 또는 requirement와 직접 관련된 다른 관찰에서 나올 수 있습니다. 각 계층은 서로 다른 질문에 답합니다.
 
 ## RDD: 루프 기준점으로서의 requirement
 
@@ -70,6 +70,8 @@ TDD는 묻습니다.
 
 Test는 requirement가 아닙니다. Spec에서 파생된 실행 가능한 checkpoint입니다.
 
+Test 통과가 requirement evidence를 갖췄다는 뜻은 아닙니다. Evidence는 requirement와 직접 관련되고 `satisfied`, `unsatisfied`, `unknown`을 구분할 수 있어야 합니다. Unknown은 satisfied가 아닙니다.
+
 Test는 다음과 같은 경우 바뀔 수 있습니다.
 
 - spec이 더 정확해질 때
@@ -85,9 +87,14 @@ Test는 다음과 같은 경우 바뀔 수 있습니다.
   requirement 의도
 
 진화할 수 있는 것:
+  Internal architecture
+  Internal API와 data structure
   spec 세부사항
   test 예시
+  Test strategy 또는 location
+  같은 requirement를 검증하도록 다듬은 acceptance criteria
   implementation 구조
+  Bounded refactoring
 
 명시해야 하는 것:
   requirement 변경
@@ -113,8 +120,18 @@ Implementation이 loop의 목적을 형성하기 시작합니다.
 
 이 경우 유용해 보이는 변경이 requirement와 연결되지 않은 채 loop에 들어오며 숨은 scope creep이 생깁니다.
 
+### Delivery는 완료됐지만 requirement가 입증되지 않은 경우
+
+Implementation이 merge되고 test가 통과하고 task가 완료 처리되어도 직접적인 requirement evidence가 없을 수 있습니다. 이때 requirement 상태는 satisfied가 아니라 `unknown`입니다. Review는 delivery hygiene를 acceptance로 간주하지 말고 requirement로 돌아가야 합니다.
+
 ## RDD의 실용적 입장
 
 RDD는 spec과 test가 덜 중요하다고 말하지 않습니다.
 
 Spec과 test가 loop를 정의하는 requirement까지 계속 추적 가능해야 한다고 말합니다.
+
+따라서 review 방향은 다음과 같습니다.
+
+```text
+Implementation / evidence -> Spec / acceptance -> Requirement -> Goal / Outcome
+```

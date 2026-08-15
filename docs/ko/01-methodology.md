@@ -5,8 +5,10 @@
 RDD의 기본 주장은 단순합니다.
 
 ```text
-개발 루프는 requirement, spec, test, implementation, review가 서로 추적 가능할 때 건강하다.
+개발 루프는 requirement, spec, implementation, acceptance evidence, review가 서로 추적 가능할 때 건강하다.
 ```
+
+Artifact와 문서화 ceremony는 작업 규모와 추상화 수준에 따라 달라질 수 있습니다. 하지만 stable requirement에서 observable evidence로 이어지는 최소 semantic trace는 유지됩니다.
 
 <!-- companion-only:start -->
 ## 용어 원칙
@@ -47,6 +49,28 @@ RDD에서 모든 루프에는 안정적인 requirement가 필요합니다.
   관련 없는 fix 혼합
   opportunistic behavior change 추가
 ```
+
+같은 external contract를 보존한다면 다음은 보통 같은 requirement 안의 refinement입니다.
+
+```text
+  Internal architecture
+  Internal API 또는 data structure
+  Test strategy 또는 test location
+  같은 requirement를 더 정확히 표현하는 acceptance refinement
+  Bounded refactoring
+```
+
+반대로 다음은 무엇이 참이어야 하는지를 materially 바꾸는 loop-boundary 변경입니다.
+
+```text
+  Capability 자체, 적용 actor 또는 scope
+  Trigger condition 또는 obligation level
+  Accepted failure mode 또는 user-facing behavior
+  Authority, security 또는 privacy boundary
+  다른 public 또는 cross-system contract
+```
+
+첫 번째 그룹은 새 approval boundary 없이 spec, test, implementation을 바꿀 수 있습니다. 두 번째 그룹은 기존 RDD 원칙에 따라 명시적으로 re-scope해야 합니다.
 
 Requirement는 틀릴 수 있고, 불완전할 수 있고, 학습 이후 바뀔 수 있습니다.
 
@@ -92,6 +116,31 @@ RDD development loop:
 첫 줄은 context이며, RDD가 need와 goal이 항상 단순한 선형 process를 이룬다고 주장하는 것은 아닙니다. 두 번째 줄이 RDD가 통제하는 development trace입니다.
 
 이 convention은 요구공학 용어의 보편적 재정의가 아닙니다. RDD를 기존 requirements repository, standard, domain vocabulary와 함께 사용한다면 source artifact의 이름을 바꾸지 말고 외부 용어와 RDD layer의 mapping을 명시합니다.
+
+## 최소 requirement 품질
+
+RDD에서 requirement가 유용한 loop anchor가 되려면 다음 성질이 필요합니다.
+
+```text
+Stable:
+  Internal architecture, API, data structure, spec refinement, test strategy가
+  바뀌어도 같은 stakeholder contract로 남음
+
+Normative:
+  Loop를 완료했다고 하기 위해 반드시 참이어야 하는 condition임
+
+Discriminating:
+  Available evidence로 satisfied, unsatisfied, unknown을 의미 있게 구분할 수 있음
+  Unknown은 satisfied가 아님
+
+Solution-independent:
+  Filename, internal API, command, implementation strategy, test location을
+  external contract의 일부가 아닌 한 지시하지 않음
+```
+
+판별할 수 없는 slogan을 requirement로 쓰거나 solution detail을 requirement처럼 포장하지 않습니다. 하나의 broad 문장에 독립적으로 검증해야 할 의무가 여러 개 숨어 있다면 소수의 atomic requirement로 나눕니다. Requirement는 짧아도 되지만, 어떤 evidence가 인정되고 무엇이 실패이며 무엇이 아직 unknown인지 reviewer가 말할 수 있어야 합니다.
+
+Goal 또는 Outcome은 loop가 존재하는 이유와 desired direction을 설명하지만, 그 자체로 discriminating Requirement가 아닙니다. Requirement는 반드시 참이어야 하는 condition을 말합니다.
 
 ## 각 계층의 역할
 
@@ -344,31 +393,36 @@ Spec은 requirement를 rule, contract, boundary, acceptance criteria로 operatio
 
 팀이 requirement를 더 잘 이해하면서 spec은 루프 안에서 진화할 수 있습니다.
 
-### Test
+Acceptance criteria는 어떤 evidence가 인정되는지를 설명하며, evidence 자체는 아닙니다.
 
-Test는 spec의 일부를 실행 가능하게 만듭니다.
+### Test와 acceptance evidence
 
-Test는 requirement 자체가 아닙니다. 현재 spec 해석을 보호하는 장치입니다.
+Test는 spec의 일부를 실행 가능하게 만들지만, 가능한 evidence가 test뿐인 것은 아닙니다. Acceptance evidence에는 manual check, 문서 비교, review 관찰 또는 requirement와 직접 관련된 다른 observable result도 포함될 수 있습니다.
+
+Test와 다른 evidence는 requirement 자체가 아닙니다. 현재 spec 해석을 보호하고 관찰하는 장치입니다. Evidence는 `satisfied`, `unsatisfied`, `unknown`을 구분할 수 있을 만큼 강해야 합니다. Evidence가 없거나 간접적이면 requirement는 satisfied가 아니라 unknown으로 남습니다.
 
 ### Implementation
 
-Implementation은 test와 원래 requirement를 만족합니다.
+Implementation은 현재 spec과 원래 requirement를 실현하기 위해 선택한 code 또는 document 변경입니다.
 
-Test 통과는 필요조건이지만 충분조건은 아닙니다. Implementation이 requirement 의도를 어기거나 루프 경계를 확장하면 RDD 관점에서는 문제가 있습니다.
+Test 통과는 필요조건이지만 충분조건은 아닙니다. Implementation이 requirement 의도를 어기거나 루프 경계를 확장하면 RDD 관점에서는 문제가 있습니다. Implementation progress, test suite 통과, commit, task 완료는 required condition을 실제로 관찰하지 않는 한 delivery hygiene일 뿐 직접적인 requirement evidence가 아닙니다.
 
 ### Review
 
-Review는 전체 trace를 확인합니다.
+Review는 양방향으로 전체 trace를 확인합니다.
 
 ```text
-Requirement -> Spec -> Test -> Implementation
+Need / Goal -> Requirement -> Spec / Acceptance -> Implementation / Evidence
+
+Implementation / Evidence -> Spec / Acceptance -> Requirement -> Goal / Outcome
 ```
 
-좋은 review는 code가 동작하는지만 보지 않고, 그 작업이 여전히 현재 루프에 속하는지도 확인합니다.
+좋은 review는 code가 동작하는지만 보지 않습니다. Evidence가 requirement를 직접 뒷받침하는지, unknown이 해결되지 않은 채 남아 있는지, 작업이 여전히 현재 loop에 속하는지를 확인합니다. 이 역 trace는 agent-specific runtime protocol이나 mandatory tool sequence가 아니라 개념적 review guidance입니다.
 
 ## 핵심 규칙
 
 ```text
 Spec/test refinement는 루프 안에서 일어날 수 있다.
 Requirement가 바뀌면 루프 경계 변경으로 명시해야 한다.
+Artifact ceremony는 줄일 수 있지만 최소 Requirement-to-evidence trace는 유지한다.
 ```

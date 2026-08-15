@@ -6,6 +6,12 @@ The tooling is retrieval and compression support. It is not the source of truth.
 Canonical RDD truth remains in the project documents, pull request descriptions,
 task notes, tests, and implementation.
 
+The helper does not decide whether a requirement is semantically satisfied. It
+can retrieve test/check and review fields, but direct acceptance evidence remains
+project-specific and must be judged against the requirement. Missing or
+inconclusive evidence remains `unknown`; the tool does not turn passing tests,
+commits, or task completion into requirement satisfaction.
+
 ## Commands
 
 ```sh
@@ -75,11 +81,11 @@ The same extractor recognizes an optional semantic hierarchy:
 - Parent: none
 - Decision class: Durable Requirement
 - Validity scope: Durable
-- Requirement: Development loops remain traceable through review.
+- Requirement: Development loops remain traceable through direct acceptance evidence and review.
 - Rationale: Reviewers need stable intent while implementation changes.
 - Failure prevented: Passing checks can otherwise hide requirement drift.
 - Assumptions: Small reviewable development loops remain useful.
-- Derived specs: Reviews check the trace from requirement through implementation.
+- Derived specs: Reviews check the trace from requirement through implementation and evidence.
 - Revisit when: The project adopts another traceability boundary.
 
 ## REQ-READ-ONLY-ANALYSIS: Keep analysis read-only

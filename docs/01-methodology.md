@@ -5,8 +5,10 @@ Requirement Driven Development (RDD) is a lightweight methodology for keeping sm
 RDD is based on a simple claim:
 
 ```text
-A development loop is healthy when its requirement, spec, tests, implementation, and review remain traceable to each other.
+A development loop is healthy when its requirement, spec, implementation, acceptance evidence, and review remain traceable to each other.
 ```
+
+Artifact and documentation ceremony may scale with the size and abstraction level of the work. The minimum semantic trace from a stable requirement to observable evidence remains invariant.
 
 ## Development loop
 
@@ -34,6 +36,28 @@ Outside the loop:
   Mixing unrelated fixes
   Adding opportunistic behavior changes
 ```
+
+The following are normally refinement inside the same requirement when they preserve the same external contract:
+
+```text
+  Internal architecture
+  Internal APIs or data structures
+  Test strategy or test location
+  Acceptance refinement that makes the same requirement more precise
+  Bounded refactoring
+```
+
+The following are loop-boundary changes when they materially change what must be true:
+
+```text
+  The capability itself, applicable actor, or scope
+  Trigger condition or obligation level
+  Accepted failure mode or user-facing behavior
+  Authority, security, or privacy boundary
+  Another public or cross-system contract
+```
+
+The first group may change the spec, tests, or implementation without a new approval boundary. The second group requires explicit re-scoping under the existing RDD rules.
 
 A requirement can be wrong. A requirement can be incomplete. A requirement can change after learning.
 
@@ -79,6 +103,32 @@ RDD development loop:
 The first line is context, not an RDD claim that needs and goals always form a simple linear process. The second line is the development trace RDD controls.
 
 This convention is not a universal redefinition of requirements engineering terminology. When RDD interoperates with an established requirements repository, standard, or domain vocabulary, preserve the external terms and map them explicitly to the RDD layers instead of renaming source artifacts.
+
+## Minimum requirement quality
+
+For RDD, a requirement is a useful loop anchor when it has these properties:
+
+```text
+Stable:
+  It remains the same stakeholder contract while internal architecture, APIs,
+  data structures, spec refinement, or test strategy changes.
+
+Normative:
+  It is a condition that must be true to call the loop complete.
+
+Discriminating:
+  Available evidence can meaningfully classify it as satisfied, unsatisfied,
+  or unknown. Unknown is not satisfied.
+
+Solution-independent:
+  It does not prescribe a filename, internal API, command, implementation
+  strategy, or test location unless that detail is itself part of the external
+  contract.
+```
+
+Avoid a slogan that cannot be judged and avoid a solution detail disguised as a requirement. If one broad sentence hides several independently verifiable obligations, split it into a small number of atomic requirements. A requirement may be concise; it must still let a reviewer say what evidence would count, what would fail, and what remains unknown.
+
+A Goal or Outcome explains why the loop exists and the desired direction; it is not a discriminating Requirement by itself. The Requirement states the condition that must be true.
 
 ## Roles of each layer
 
@@ -331,33 +381,38 @@ The spec operationalizes the requirement as rules, contracts, boundaries, and ac
 
 Specs may evolve inside the loop as the team learns more about the requirement.
 
-### Test
+Acceptance criteria describe what evidence would count. They are not the evidence itself.
 
-Tests make parts of the spec executable.
+### Test and acceptance evidence
 
-Tests are not the requirement itself. They are a protection mechanism for the current interpretation of the spec.
+Tests make parts of the spec executable, but tests are not the only possible evidence. Acceptance evidence may also be a manual check, document comparison, review observation, or other observable result that directly bears on the requirement.
+
+Tests and other evidence are not the requirement itself. They are protection and observation mechanisms for the current interpretation of the spec. Evidence must be strong enough to distinguish `satisfied`, `unsatisfied`, and `unknown`; missing or indirect evidence leaves the requirement `unknown`, not satisfied.
 
 ### Implementation
 
-Implementation satisfies the tests and the original requirement.
+Implementation is the code or document change chosen to realize the current spec and original requirement.
 
-Passing tests is necessary but not sufficient if the implementation violates the requirement's intent or expands beyond the loop boundary.
+Passing tests is necessary but not sufficient if the implementation violates the requirement's intent or expands beyond the loop boundary. Implementation progress, a passing test suite, a commit, or a task marked complete is delivery hygiene, not direct requirement evidence unless it actually observes the required condition.
 
 ### Review
 
-Review checks the full trace:
+Review checks the full trace in both directions:
 
 ```text
-Requirement -> Spec -> Test -> Implementation
+Need / Goal -> Requirement -> Spec / Acceptance -> Implementation / Evidence
+
+Implementation / Evidence -> Spec / Acceptance -> Requirement -> Goal / Outcome
 ```
 
-A good review asks not only whether the code works, but whether the work still belongs to the current loop.
+A good review asks not only whether the code works, but whether the evidence directly supports the requirement, whether unknown remains unresolved, and whether the work still belongs to the current loop. The reverse trace is conceptual guidance, not an agent-specific runtime protocol or mandatory tool sequence.
 
 ## Core rule
 
 ```text
 Spec and test refinement may happen inside the loop.
 Requirement change must be made explicit as a loop boundary change.
+Artifact ceremony may scale; the minimum Requirement-to-evidence trace remains.
 ```
 
 This is the practical center of RDD.
