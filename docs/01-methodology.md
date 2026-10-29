@@ -63,6 +63,21 @@ A requirement can be wrong. A requirement can be incomplete. A requirement can c
 
 RDD does not deny that. It only says that when the requirement changes, the loop boundary has changed too. That change should be explicit.
 
+## Autonomy inside the boundary
+
+The loop boundary is also a delegation contract. Work inside the boundary proceeds without asking for approval. Work that crosses the boundary, or passes a stated automation boundary, stops for a decision by whoever owns the requirement.
+
+This is what makes it safe to leave a loop unattended, whether the worker is a person or an agent. The owner does not review every refinement, only boundary events. The contract fails in both directions: silently expanding past the boundary breaks it, and asking for approval on refinements inside the boundary breaks it too. A stop should name the boundary event that caused it, not general uncertainty about implementation.
+
+## Keeping the anchor across context loss
+
+Long loops, interruptions, handoffs, and context compaction all make the original intent fade. The requirement is the anchor that lives outside anyone's memory.
+
+- **Short enough to reread whole.** The anchor holds the root goal, the current requirement, `Done when`, non-goals, and the automation boundary. If the requirements document is larger than can be read in full at each checkpoint, keep a short anchor at its top (root goal and a map of requirements) and load detailed sections only for the requirements the loop touches.
+- **Reread at checkpoints.** Reread the anchor when resuming after an interruption, receiving a handoff, recovering from context compaction, changing phase, and before declaring done.
+- **Compare, then classify.** On each reread, compare the current work to the anchor. Divergence is either refinement inside the boundary (continue) or a boundary event (stop and re-scope).
+- **Do not use conversation memory as the source.** If the anchor exists only in a conversation, write it down at the start of any loop expected to outlive that context.
+
 ## Vocabulary boundary
 
 Requirements engineering uses `need`, `goal`, `requirement`, and `specification` in several related ways. For example, a requirement may mean a perceived stakeholder need, a capability or property a system must have, or a documented representation of either. A requirements specification may mean an entire organized collection of requirements.

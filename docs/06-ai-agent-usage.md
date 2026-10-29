@@ -1,14 +1,18 @@
 # RDD with AI Coding Agents
 
-AI coding agents are one application area for RDD, not the main purpose of the methodology.
-
-RDD applies to ordinary software work first: pull requests, tickets, tasks, and small iterations. Agents benefit from the same structure because they are especially likely to follow implementation momentum into adjacent work unless the loop boundary is explicit.
+AI coding agents are the strongest motivating case for RDD. They lose context to compaction and handoff, and they follow implementation momentum into adjacent work unless the loop boundary is explicit. The rules below apply the general rules in [RDD Methodology](01-methodology.md#autonomy-inside-the-boundary) and [Keeping the anchor across context loss](01-methodology.md#keeping-the-anchor-across-context-loss); they are meant to stay meaningful for human developers too.
 
 ## Agent loop boundary
 
 When using an agent, give it a stable requirement, explicit spec, acceptance boundary, and non-goals. The agent must be able to identify what observable evidence would establish the requirement, not just what files or tests to touch.
 
 The agent should be allowed to refine specs and tests only when they still express the same requirement. If the requirement appears to change, the agent should stop and report before expanding scope.
+
+## Autonomy and reloading the anchor
+
+Inside the loop boundary the agent proceeds without asking: refining specs and tests, internal design, bounded refactoring, and acceptance refinement for the same requirement. It stops only for a boundary event or a stated stop condition below.
+
+Keep the anchor where it survives context loss, such as the task note, PR description, or a short file in the repository, not only in the conversation. Instruct the agent to reread it after context compaction, after receiving a handoff, at phase changes, and before reporting done. If the agent cannot find the anchor, that is a stop condition, not a reason to reconstruct it from memory.
 
 ## Lightweight agent traces
 
@@ -68,6 +72,7 @@ Automation boundary:
 
 Agents should stop or report when:
 
+- the anchor cannot be found or reread after context loss,
 - the root goal, rationale, failure prevented, or automation boundary is unclear enough that deriving a full trace would require guessing,
 - the prompt provides a goal or desired outcome but no requirement that states what must be true,
 - an assumption has failed or a revisit signal occurred and the requirement has not been revalidated,

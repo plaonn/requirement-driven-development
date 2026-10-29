@@ -1,281 +1,37 @@
-# RDD: 요구사항 주도 개발
+# RDD: Requirement Driven Development
 
-영어: [README.md](README.md)
+English: [README.md](README.md)
 
-요구사항 주도 개발(Requirement Driven Development, RDD)은 각 개발 루프를 안정적인 요구사항에 고정하고, 의도에서 구현을 거쳐 observable evidence까지 추적 가능하게 유지하기 위한 가벼운 개발 방법론입니다.
+이 문서는 짧은 한국어 개요입니다. 정본은 영어 문서이며, 상세 내용은 번역하지 않고 영어 문서로 연결합니다.
 
-RDD는 pull request, task, ticket, 작은 agile iteration을 하나의 닫힌 루프로 봅니다.
+**Requirement Driven Development (RDD)** 는 작은 개발 루프(PR, task, ticket, 작은 iteration)를 안정적인 requirement에 고정하고, 의도에서 구현과 관찰 가능한 증거까지 추적할 수 있게 유지하는 가벼운 방법론입니다.
 
 ```text
 Need / Goal -> Requirement -> Spec -> Implementation -> Test / Acceptance Evidence -> Review
 ```
 
-이것은 반드시 따라야 하는 실행 순서가 아니라 semantic trace입니다. Test는 implementation 전에 설계할 수 있고, evidence에는 test, manual check, 문서 review 또는 requirement와 직접 관련된 다른 관찰이 포함될 수 있습니다.
-
-RDD는 SDD나 TDD를 대체하지 않습니다. RDD는 그 위에 요구사항 경계를 둡니다. spec과 test는 이해가 깊어지며 다듬어질 수 있지만, 루프를 정의하는 요구사항은 안정적으로 유지되어야 합니다. 요구사항이 바뀌면 루프 경계가 바뀐 것이므로 명시적으로 re-scope해야 합니다.
-
-## Root goal
-
-RDD는 작은 개발 루프가 그 루프를 정당화하는 need와 goal, 그리고 loop를 고정하는 requirement와 계속 정렬되도록 돕습니다. 그래서 spec, implementation, acceptance evidence, review가 추적 가능하게 남고, scope 변경은 명시적인 결정으로 드러납니다.
-
-## 요구공학과의 관계
-
-RDD는 요구공학(Requirements Engineering)을 대체하지 않습니다. 요구공학은 system 또는 product lifecycle 전체에서 요구사항을 도출하고, 분석하고, 협상하고, 명세하고, 검증하고, 관리하는 더 넓은 분야입니다.
-
-RDD의 경계는 더 좁습니다. 현재 개발 loop에 사용할 candidate requirement가 관련 need 또는 goal에서 파생되고 충분히 도출·검증되었다고 전제한 뒤, 그 requirement가 spec, implementation, acceptance evidence, review까지 추적 가능하게 유지되도록 돕습니다. Stakeholder discovery, product discovery, requirement prioritization, conflict resolution, system-wide requirements management는 RDD가 대체하지 않습니다.
-
-자세한 경계는 [RDD와 요구공학](docs/ko/08-rdd-and-requirements-engineering.md)에서 설명합니다.
-
-## 용어 경계
-
-RDD는 작은 loop의 각 계층을 review할 수 있게 다음과 같은 실용적 용어를 사용합니다.
-
-```text
-Need: stakeholder의 문제, 바람, 기대 결과
-Goal: 하나 이상의 requirement에 방향을 주는 바람직한 상태
-Requirement: 안정적이고 규범적이며 판별 가능하고 solution-independent한 capability, quality, constraint 또는 반드시 만족해야 하는 condition
-Spec: requirement를 rule, contract, boundary, acceptance criteria로 정밀하게 표현한 현재 해석
-```
-
-Need와 goal은 작업이 왜 존재하고 어느 방향을 향하는지 설명합니다. Requirement는 무엇이 참이어야 하는지 말하며 loop를 고정합니다. Spec은 현재 해석을 verification 가능한 수준으로 구체화합니다. 요구공학에서는 이 용어들을 더 넓은 여러 의미로 사용합니다. 여기의 구분은 보편적 용어를 주장하는 것이 아니라 명시적인 RDD convention입니다.
-
-RDD에서 유용한 requirement는 같은 external contract를 유지하는 동안 internal architecture, internal API, data structure, spec wording, test strategy가 바뀌어도 유지됩니다. Requirement는 규범적이어야 합니다. 즉, 그 condition이 참이 아니면 loop를 완료했다고 할 수 없습니다. 또한 판별 가능해야 합니다. Available evidence로 `satisfied`, `unsatisfied`, `unknown`을 의미 있게 구분할 수 있어야 하며, `unknown`은 `satisfied`가 아닙니다. Solution-independent해야 하므로 filename, internal API, command, test location은 그 자체가 external contract가 아닌 한 보통 spec 또는 implementation detail입니다. 한 문장에 독립적으로 확인해야 할 의무가 여러 개 숨어 있다면 소수의 atomic requirement로 나눕니다.
-
-<!-- companion-only:start -->
-## 용어 원칙
-
-이 한국어 문서는 개발자가 실제로 쓰는 영어 용어를 일부 유지합니다. 핵심 개념은 처음 등장할 때 한국어와 영어를 함께 사용하고, 이후에는 문맥상 자연스러운 표현을 사용합니다.
-
-- requirement: 요구사항
-- spec: 명세 또는 규칙
-- test: 테스트 또는 실행 가능한 검사
-- implementation: 구현
-- review: 리뷰
-- loop boundary: 루프 경계
-<!-- companion-only:end -->
-
-## 핵심 아이디어
-
-Loop를 열기 전에 candidate requirement를 정당화하는 need 또는 goal을 확인합니다. 그다음 각 개발 loop는 다섯 질문에 답해야 합니다.
-
-1. **Requirement** - 이 loop에서 반드시 만족해야 하는 capability, quality, constraint, condition은 무엇인가?
-2. **Spec** - 그 요구사항을 표현하는 규칙, 경계, 계약, 인수 기준은 무엇인가?
-3. **Implementation** - 현재 spec과 requirement를 실현하는 코드나 문서 변경은 무엇인가?
-4. **Test / acceptance evidence** - satisfied, unsatisfied, unknown을 구분할 수 있는 observable evidence는 무엇인가?
-5. **Review** - Implementation과 evidence를 spec/acceptance를 거쳐 원래 requirement와 goal까지 숨은 scope creep 없이 역추적할 수 있는가?
-
-계층 구분은 다음과 같습니다.
-
-```text
-RDD: 우리는 여전히 올바른 요구사항을 해결하고 있는가?
-SDD: 요구사항이 일관된 명세로 표현되어 있는가?
-TDD: 명세가 실행 가능한 테스트로 보호되고 있는가?
-```
-
-## 최소 semantic trace
-
-Artifact와 문서화 ceremony는 작업 규모와 추상화 수준에 따라 줄일 수 있지만, 최소 semantic trace 자체는 사라지지 않습니다.
-
-```text
-Outcome / Goal:
-  Loop에 방향을 주는 desired state
-
-Requirement:
-  계속 참이어야 하는 stable normative condition
-
-Done when / Acceptance:
-  Requirement가 satisfied인지 판별할 수 있는 observable evidence
-```
-
-`Outcome`, `Requirement`, `Done when`은 downstream workflow에서 사용할 수 있는 field 이름일 뿐 RDD가 강제하는 schema가 아닙니다. 작은 PR, task, agent loop라면 간결한 requirement-and-evidence trace를 PR, task note, commit message, final review 중 적절한 표면에 남기는 것으로 충분할 수 있으며, 별도 `REQUIREMENTS.md`, active-loop file, heavyweight artifact를 매번 만들 필요는 없습니다. 더 크거나 위험한 work에는 full trace, durable requirement validity field, decision record 또는 project가 사용하는 다른 문서가 필요할 수 있습니다.
-
-Implementation progress, test 통과, commit, task 완료 표시는 delivery signal입니다. Requirement가 satisfied인지 직접 보여 주지 않는 한 원래 requirement를 대체하거나 acceptance evidence가 될 수 없습니다.
-
-## 왜 필요한가
-
-작은 개발 단위는 자주 비슷한 방식으로 흔들립니다.
-
-- PR이 한 목적에서 시작해 다른 목적으로 끝납니다.
-- Test는 통과하지만 원래 requirement를 만족하지 못합니다.
-- Refactoring PR이 조용히 동작을 바꿉니다.
-- Bug fix PR이 리뷰되지 않은 규칙 변경이 됩니다.
-- 인수 기준이 없거나, 모호하거나, requirement보다 좁습니다.
-- Review가 구현 세부사항에 집중하다가 requirement 추적 가능성을 놓칩니다.
-
-RDD는 이런 실패를 일찍 발견하기 위한 단순한 기준을 제공합니다.
-
-## RDD 루프
-
-```text
-1. 현재 loop의 requirement를 고정한다.
-2. Requirement에서 spec을 파생한다.
-3. Spec에서 test를 파생한다.
-4. Loop가 요구하는 것만 구현한다.
-5. Requirement에서 implementation을 거쳐 직접적인 evidence까지 trace하고, evidence와 implementation을 requirement와 goal까지 역검증한다.
-6. Requirement가 바뀌면 loop를 명시적으로 re-scope한다.
-```
-
-핵심 구분은 다음과 같습니다.
-
-```text
-Loop 안에서 spec/test를 다듬는 것은 정상이다.
-Requirement 변경은 loop boundary가 바뀐 것이다.
-```
-
-## Requirement validity lifecycle
-
-RDD는 기존 requirement가 더 이상 유효하지 않을 수 있는 순간을 인식할 수 있게 해야 합니다. Test가 통과한다는 이유로 requirement가 여전히 필요하다고 가정하지 않고, requirement가 stale해지기 전에 validity condition을 기록합니다.
-
-```text
-Validity scope:
-  Loop-local requirement | Durable requirement | Temporary/scoped policy
-
-Assumptions:
-  Requirement가 유효하려면 계속 참이어야 하는 condition
-
-Revisit when:
-  Revalidation을 trigger하는 observable signal
-```
-
-Temporary 또는 scoped constraint는 durable requirement set으로 승격하지 않고 expiration rule을 가진 policy로 유지하는 것이 기본입니다. Revisit signal이 발생했다고 requirement가 자동으로 invalid되는 것은 아닙니다. 그것은 boundary event입니다. 연결된 need, goal, rationale, assumptions를 revalidate한 뒤 requirement를 `retain`, `narrow`, `supersede`, `discard` 중 하나로 명시적으로 처리합니다. 그 결정을 영향받는 spec, test, implementation, active loop에 전파합니다.
-
-## Requirement identifier
-
-RDD는 하나의 identifier 형식을 강제하지 않습니다. `R0`, `R1`, `R2` 같은 기존 numeric hierarchy도 계속 유효합니다. 안정적인 semantic reference가 필요한 프로젝트는 root requirement에 `ROOT-REQ-*`, 그 descendant에 `REQ-*` identifier를 사용할 수 있습니다. Root goal은 hierarchy root 가까이에 있더라도 requirement가 되는 것이 아니라 별도의 justification context로 남습니다.
-
-Semantic identifier는 안정적인 current-truth reference입니다. 한번 채택하면 조용히 rename, reuse, renumber하지 않습니다. Numeric identifier에서의 migration은 선택 사항이며, 과거를 다시 쓰지 않고 old-to-new mapping을 명시적으로 보존해야 합니다.
-
-## RDD 구조와 tooling 도입
-
-기존 numeric RDD project는 hierarchy-only validation부터 시작할 수 있으며 active-loop directory를 만들거나 identifier를 migration할 필요가 없습니다. 새 semantic project는 [requirement hierarchy template](templates/requirements.ko.md)에서 시작할 수 있습니다. Requirement detail을 분리한 project는 여러 file 또는 directory를 하나의 source set으로 전달할 수 있습니다.
-
-```sh
-python3 tools/rdd/rdd.py validate REQUIREMENTS.md
-python3 tools/rdd/rdd.py validate REQUIREMENTS.md docs/requirements/
-```
-
-Disposable active-loop pattern을 선택한 project는 [active-loop template](templates/active_loop.ko.md)에서 시작하고, 작업 중에는 `--loops`를 추가하며, `ready`를 merge-ready structural check로 사용할 수 있습니다. Persistent 또는 selective-retention project는 `ready`를 사용하지 않거나 전용 active-work directory만 대상으로 지정할 수 있습니다.
-
-```sh
-python3 tools/rdd/rdd.py validate REQUIREMENTS.md --loops rdd/loops/
-python3 tools/rdd/rdd.py ready REQUIREMENTS.md --loops rdd/loops/
-```
-
-## 기존 프로젝트
-
-기존 프로젝트에 RDD를 적용할 때는 기존 spec, test, 구현 동작을 confirmed requirement의 증명으로 취급하지 않습니다.
-
-먼저 [소급 RDD 리뷰](docs/ko/07-retroactive-rdd-review.md)에서 시작합니다. 첫 pass는 read-only로 두고, candidate requirement를 복원하고, trace gap을 찾고, 무엇을 source-of-truth 문서로 승격하기 전에 확인해야 하는지 정합니다.
-
-`SPEC.md`, roadmap, test suite, 안정적인 구현은 유용한 evidence가 될 수 있지만 그 자체로 충분하지 않습니다. Root goal, rationale, failure prevented, loop boundary가 빠져 있거나 불명확하면 복원된 항목은 candidate로 유지하고, 구현이나 문서 adoption 전에 boundary를 먼저 확인합니다.
-
-확인된 decision 중 일부는 durable requirement가 아니라 scoped policy로 남아야 합니다. Temporary experiment policy, provider workaround, operator-run-specific risk decision에는 acceptance scope, promotion rule, expiration rule을 붙여 임시 조건이 실수로 영구 requirement처럼 굳어지지 않게 합니다.
-
-### 위험 기반 forward adoption
-
-첫 retroactive pass 이후 기존 프로젝트의 모든 변경에 무거운 RDD 절차를 적용할 필요는 없습니다. Substantial public capability, OAuth scope, state-changing adapter, irreversible external effect, 금융 또는 live execution path, cross-repository ownership, authority, trust boundary를 추가하는 변경에는 명시적인 start gate와 finish gate를 사용합니다.
-
-시작할 때 관련 requirement source를 읽고, 새 capability와 failure boundary가 구체적인 loop-local 또는 durable requirement로 cover되는지 확인합니다. Broad root goal이 확장을 허용한다는 사실만으로 충분한 coverage가 되지는 않습니다. 완료할 때 spec, implementation, direct acceptance evidence, 장기 architecture decision까지 trace를 검증합니다. 자세한 내용은 [기존 프로젝트 adoption gate](docs/ko/07-retroactive-rdd-review.md#위험-기반-forward-adoption-gate)를 참고합니다.
-
-## PR 규모의 RDD
-
-RDD는 pull request 규모에서 특히 유용합니다.
-
-PR은 단순한 코드 변경 묶음이 아니라 작은 요구사항 주도 루프로 봐야 합니다.
-
-Pull request를 사용하지 않는 프로젝트에서는 같은 모델을 task 또는 change set 규모에 적용할 수 있습니다. 이때 review surface는 task note, commit message body, agent final trace 같은 가벼운 기록이 될 수 있으며, 핵심은 requirement boundary가 보이게 남는 것입니다.
-
-프로젝트는 완료된 loop record를 계속 보존하거나, 살아남아야 할 truth를 승격한 뒤 disposable active-loop 파일을 삭제하거나, 가치가 높은 record만 선택적으로 보존할 수 있습니다. RDD는 하나의 retention policy를 강제하지 않습니다. 완료 전에 loop boundary와 직접적인 requirement-to-evidence trace를 review할 수 있어야 하며, durable requirement, current contract, test, 중요한 architecture decision은 적절한 current-truth surface에 남아야 합니다.
-
-좋은 PR은 다음 관계를 드러냅니다.
-
-```text
-Requirement:
-  PR이 존재하는 이유
-
-Spec:
-  PR이 만족해야 하는 구체적 규칙과 동작
-
-Tests / acceptance evidence:
-  Requirement가 satisfied인지 직접 보여 주는 검사와 관찰
-
-Implementation:
-  test와 requirement를 만족하는 최소 변경
-
-Non-goals:
-  이 PR에서 의도적으로 제외한 변경
-```
-
-## 같은 requirement의 refinement와 경계 변경
-
-같은 external contract를 보존한다면 다음은 같은 requirement 안의 정상적인 refinement입니다. Internal architecture, internal API 또는 data structure 변경, test strategy 또는 location 변경, requirement를 더 정확히 검증하기 위한 acceptance criteria refinement, bounded refactoring이 여기에 포함됩니다. 이런 변경은 새 loop boundary 없이 spec, test, implementation을 바꿀 수 있습니다.
-
-반대로 capability 자체, 적용 actor 또는 scope, trigger condition, obligation level, accepted failure mode, user-facing behavior, authority, security 또는 privacy boundary, 기타 public contract를 materially 바꾸면 loop를 re-scope해야 합니다. 이것은 같은 requirement를 실현하거나 evidence로 입증하는 방법이 아니라 무엇이 참이어야 하는지를 바꾸는 일이기 때문입니다.
-
-## Requirement가 바뀔 때
-
-구현이나 review 중 원래 requirement가 잘못됐거나 불완전하다는 사실을 발견할 수 있습니다.
-
-이것은 단순한 test update가 아니라 loop boundary event입니다.
-
-다음 중 하나를 선택할 수 있습니다.
-
-- PR을 re-scope하고 requirement를 명시적으로 갱신합니다.
-- 현재 PR은 최소 범위로 유지하고 follow-up을 만듭니다.
-- 관련 없는 발견은 별도 loop로 분리합니다.
-
-## 문서 구조
-
-```text
-docs/
-  01-methodology.md
-  02-rdd-sdd-tdd-loop.md
-  03-pr-as-development-loop.md
-  04-review-method.md
-  05-examples.md
-  06-ai-agent-usage.md
-  07-retroactive-rdd-review.md
-  08-rdd-and-requirements-engineering.md
-  ko/
-    01-methodology.md
-    02-rdd-sdd-tdd-loop.md
-    03-pr-as-development-loop.md
-    04-review-method.md
-    05-examples.md
-    06-ai-agent-usage.md
-    07-retroactive-rdd-review.md
-    08-rdd-and-requirements-engineering.md
-
-skills/
-  rdd-retroactive-review/
-    SKILL.md
-
-templates/
-  requirements.md
-  active_loop.md
-  pull_request_template.md
-  codex_prompt_template.md
-  requirements.ko.md
-  active_loop.ko.md
-  pull_request_template.ko.md
-  codex_prompt_template.ko.md
-
-examples/
-  order-cancel-example.md
-  refactoring-example.md
-  ko/
-    order-cancel-example.md
-    refactoring-example.md
-```
-
-## Companion 문서 정책
-
-영어 문서가 canonical public structure입니다. 한국어 companion은 문장별 직역이 아니라 자연스러운 한국어를 사용하되, 같은 reader-facing 개념, 규칙, non-goal, 경고, 예시, section structure를 보존합니다.
-
-영어 문서의 reader-facing 의미가 바뀌면 같은 변경에서 한국어 companion도 갱신합니다. 의도적인 한국어 전용 설명은 `companion-only` comment로 표시합니다. 구조 drift는 `python3 tools/check_companion_docs.py`로 검사하고, 의미 동등성은 review에서 별도로 확인합니다. CI는 push와 pull request마다 구조 검사를 실행합니다.
-
-`skills/` 디렉터리는 공개 방법론을 agent workflow로 적용하기 위한 optional 지침입니다. RDD 자체는 agent-specific 방법론이 아닙니다.
+## 목적
+
+RDD의 목적은 두 가지입니다. 첫째, context가 흐려져도 처음 잡은 방향을 유지하도록 requirement를 누구의 기억에도 의존하지 않는 앵커로 둡니다. 둘째, requirement 안에 머무는 변경에는 자율성을 보장해 경계 사건에만 결정이 필요하게 합니다. AI agent에 위임하는 경우가 가장 강한 사례지만 사람 개발자도 같은 문제를 겪습니다. 개인 방법론을 그대로 공개한 것이며, 같은 목적을 가졌다면 쓰면 됩니다.
+
+## 핵심
+
+- Requirement가 루프를 정의합니다. Spec과 test는 이해가 깊어지면 바뀔 수 있지만, requirement가 바뀌면 루프를 명시적으로 다시 범위화(re-scope)합니다.
+- 증거는 `satisfied`, `unsatisfied`, `unknown`을 구분할 수 있어야 하며 `unknown`은 `satisfied`가 아닙니다.
+- 구현 진행, 테스트 통과, commit, task 완료는 전달 신호이지 requirement 충족의 직접 증거가 아닙니다.
+- 최소 trace는 `Outcome / Goal`, `Requirement`, `Done when` 세 가지입니다.
+- 강도는 크기가 아니라 결과의 중대성으로 조절합니다.
+- 최소 trace, `unknown` 규칙, 경계 변경 규칙이 핵심이고 계층, 식별자, validity lifecycle, 도구는 선택 확장입니다.
+
+## 문서 안내
+
+- 개요와 구조: [README.md](README.md)
+- 방법론: [docs/01-methodology.md](docs/01-methodology.md)
+- 적용 범위와 한계: [docs/09-applicability-and-limits.md](docs/09-applicability-and-limits.md)
+- AI agent 사용: [docs/06-ai-agent-usage.md](docs/06-ai-agent-usage.md)
+- 기존 프로젝트 소급 적용: [docs/07-retroactive-rdd-review.md](docs/07-retroactive-rdd-review.md)
+- 요구공학과의 관계: [docs/08-rdd-and-requirements-engineering.md](docs/08-rdd-and-requirements-engineering.md)
 
 ## 라이선스
 
-이 저장소는 **Creative Commons Attribution 4.0 International License (CC BY 4.0)**로 배포됩니다.
+CC BY 4.0

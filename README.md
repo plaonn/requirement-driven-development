@@ -14,6 +14,10 @@ This is a semantic trace, not a required execution order. Tests may be designed 
 
 TDD makes tests the immediate feedback mechanism. SDD makes specs the explicit contract. RDD puts the requirement above both: specs and tests may evolve as understanding improves, but the requirement that defines the loop should remain stable. If the requirement changes, the loop should be explicitly re-scoped.
 
+## Purpose
+
+RDD exists for two things. First, to keep a loop's original direction when context fades, by holding the requirement as an anchor outside anyone's memory. Second, to guarantee autonomy for changes that stay inside the requirement, so only boundary events need a decision. Delegating work to AI agents is the strongest case for both, but the same context loss and delegation problems affect human developers. This is a personal methodology published as-is; use it if you share the purpose.
+
 ## Root goal
 
 RDD helps teams keep small development loops aligned with the need and goal that justify them and with the requirement that anchors them, so specs, implementation, acceptance evidence, and review remain traceable and scope changes are made explicit.
@@ -77,6 +81,10 @@ RDD: Is the development loop still solving the right requirement?
 SDD: Is the requirement expressed as a coherent spec?
 TDD: Is the spec protected by executable tests?
 ```
+
+## Scaling and limits
+
+RDD scales by consequence, not size: from no trace for obvious local changes, through the minimum trace for ordinary work, to a start and finish gate for risky changes, to durable records for long-lived requirements. The minimum trace, the `unknown` rule, and the boundary-change rule are the core; hierarchy, identifiers, the validity lifecycle, and tooling are optional extensions. It overlaps with acceptance criteria, ATDD/BDD, and Definition of Done, and its outcomes have not been measured. See [When to Use RDD, and Its Limits](docs/09-applicability-and-limits.md).
 
 ## Why this exists
 
@@ -248,15 +256,7 @@ docs/
   06-ai-agent-usage.md
   07-retroactive-rdd-review.md
   08-rdd-and-requirements-engineering.md
-  ko/
-    01-methodology.md
-    02-rdd-sdd-tdd-loop.md
-    03-pr-as-development-loop.md
-    04-review-method.md
-    05-examples.md
-    06-ai-agent-usage.md
-    07-retroactive-rdd-review.md
-    08-rdd-and-requirements-engineering.md
+  09-applicability-and-limits.md
 
 skills/
   rdd-retroactive-review/
@@ -267,24 +267,15 @@ templates/
   active_loop.md
   pull_request_template.md
   codex_prompt_template.md
-  requirements.ko.md
-  active_loop.ko.md
-  pull_request_template.ko.md
-  codex_prompt_template.ko.md
 
 examples/
   order-cancel-example.md
   refactoring-example.md
-  ko/
-    order-cancel-example.md
-    refactoring-example.md
 ```
 
-## Companion documentation policy
+## Language policy
 
-English documents are the canonical public structure. Korean companions use natural Korean rather than sentence-by-sentence literal translation, while preserving the same reader-facing concepts, rules, non-goals, warnings, examples, and section structure.
-
-When reader-facing meaning changes in an English document, update its Korean companion in the same change. Mark intentional Korean-only explanations with `companion-only` comments. Run `python3 tools/check_companion_docs.py` to detect structural drift, then review semantic equivalence separately. CI runs the structural check on pushes and pull requests.
+English is the only canonical language for the methodology, docs, examples, and templates. `README.ko.md` is a short Korean overview that links back to the English documents; it is not a full translation and is not required to track every change. Tooling accepts Korean field labels for projects that write their records in Korean.
 
 The `skills/` directory contains optional agent workflow instructions that apply the public methodology. RDD itself is not agent-specific.
 

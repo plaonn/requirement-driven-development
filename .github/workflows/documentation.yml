@@ -19,8 +19,5 @@ jobs:
         with:
           python-version: "3.12"
 
-      - name: Check companion documentation structure
-        run: python3 tools/check_companion_docs.py
-
       - name: Test RDD tooling
         run: python3 tools/rdd/test_rdd.py
