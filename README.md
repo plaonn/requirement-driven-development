@@ -227,6 +227,8 @@ Non-goals:
 
 The following are normal refinement inside the same requirement when they preserve the same external contract: changing internal architecture, internal APIs or data structures, test strategy or location, acceptance criteria to verify the requirement more precisely, and bounded refactoring. They may change the spec, tests, or implementation without requiring a new loop boundary.
 
+A delegated refactor may cover the entire project. Its scope and the contracts it must preserve determine which designs the worker may replace. See [Autonomy inside the boundary](docs/01-methodology.md#autonomy-inside-the-boundary).
+
 The loop must be re-scoped when the change materially changes the capability itself, applicable actor or scope, trigger condition, obligation level, accepted failure mode, user-facing behavior, authority, security or privacy boundary, or other public contract. Those changes alter what must be true, not merely how the same requirement is realized or evidenced.
 
 ## When the requirement changes

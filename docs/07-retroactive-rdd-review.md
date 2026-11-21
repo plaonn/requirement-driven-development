@@ -54,7 +54,7 @@ Not every confirmed or accepted decision is a system-wide requirement. A review 
 
    ```text
    confirmed:
-     Directly stated by current docs, tests, or user confirmation.
+     An authoritative project contract or an explicit decision by the requirement owner establishes this obligation.
 
    inferred:
      Strongly implied by current behavior, tests, or repeated constraints, but not directly stated.
@@ -62,6 +62,8 @@ Not every confirmed or accepted decision is a system-wide requirement. A review 
    unclear:
      Plausible but under-evidenced.
    ```
+
+   Cite the source for the obligation. A test alone shows the behavior it checks. Attribute a decision to the user only when its source supports that attribution. If a project contract is clear but its author is unknown, retain the contract with that uncertainty.
 
 6. Separate change risk.
 

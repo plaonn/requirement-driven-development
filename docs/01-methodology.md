@@ -69,6 +69,10 @@ The loop boundary is also a delegation contract. Work inside the boundary procee
 
 This is what makes it safe to leave a loop unattended, whether the worker is a person or an agent. The owner does not review every refinement, only boundary events. The contract fails in both directions: silently expanding past the boundary breaks it, and asking for approval on refinements inside the boundary breaks it too. A stop should name the boundary event that caused it, not general uncertainty about implementation.
 
+When a handoff decision depends on who chose a constraint, cite the user's instruction or the decision record that establishes it. An existing project contract still binds the work even if its original decision maker is unknown. For a choice the worker made under delegation, say what a successor may change while preserving the contract.
+
+For a refactor, recover both the contract to preserve and the extent of the work delegated. A project-wide restructuring can stay within one requirement when the assignment covers that scope. The worker may replace internal designs and verification methods throughout that scope and must show that the agreed outcomes still hold. A narrower assignment still limits where the worker may intervene.
+
 ## Keeping the anchor across context loss
 
 Long loops, interruptions, handoffs, and context compaction all make the original intent fade. The requirement is the anchor that lives outside anyone's memory.

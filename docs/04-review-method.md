@@ -58,6 +58,8 @@ Use this checklist for pull requests, tickets, tasks, and small iteration review
 
 ### 6. Scope
 
+- [ ] Could a successor identify the source of each disputed constraint, revise delegated choices, and verify the preserved contract within the assigned scope?
+
 - [ ] Did unrelated behavior enter the loop?
 - [ ] Did refactoring introduce behavior changes?
 - [ ] Did implementation convenience expand the public contract?

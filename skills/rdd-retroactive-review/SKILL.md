@@ -60,9 +60,10 @@ When the target project was not originally developed with RDD, default to a cove
    - Recover the root goal before classifying lower-level requirements when a larger product or operational goal exists.
    - For automation or state-changing work, identify the automation boundary.
    - Mark confidence explicitly:
-     - `confirmed`: directly stated by current docs, tests, or user confirmation.
+     - `confirmed`: an authoritative project contract or an explicit decision by the requirement owner establishes this obligation.
      - `inferred`: strongly implied but not directly stated.
      - `unclear`: plausible but under-evidenced.
+   - Cite the source for the obligation. Attribute a decision to the user only when the source supports that attribution. Preserve an established contract even when its original decision maker is unknown.
    - Do not treat repeated implementation behavior as `confirmed` merely because it exists in code and tests.
    - If purpose cannot be recovered, report a trace gap rather than a complete requirement.
 

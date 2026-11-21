@@ -6,7 +6,7 @@ Adoption trigger: none, or the risk-sensitive condition that opened the gate
 
 ## Requirement
 
-State the stable requirement boundary for this loop.
+State the stable requirement and the scope of work delegated. When a successor could mistake a worker choice for a constraint, name the source of the constraint and the choice the successor may revise.
 
 ## Spec
 

@@ -79,6 +79,7 @@ List adjacent work that must stay out of scope.
 - Do not add adjacent behavior just because it is convenient during implementation.
 - Follow the repository's loop-record retention policy. Do not create an archive or delete an active-loop record unless that policy and the current task authorize it.
 - For a risk-sensitive adoption loop, do not report completion until requirement coverage, derived behavior spec, tests/checks, implementation, decision-record disposition, and validation evidence are visible.
+- At handoff, identify any worker choice a successor might read as binding. Cite the source for what must be preserved and say what may be replaced within the assignment.
 - Summarize the final trace:
 
 ```text
